@@ -1,0 +1,83 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # дозволяє запустити вручну з GitHub UI
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    # Деплоїти тільки якщо CI пройшов (потрібен CI workflow)
+    # Якщо хочеш жорсткий зв'язок — розкоментуй:
+    # needs: [lint, unit-tests, build, e2e]
+
+    environment: production  # GitHub Environment з secrets
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: tag
+        run: echo "IMAGE_TAG=sfl-tournament:$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        run: docker build -t ${{ steps.tag.outputs.IMAGE_TAG }} .
+
+      - name: Save Docker image to archive
+        run: docker save ${{ steps.tag.outputs.IMAGE_TAG }} | gzip > sfl-app.tar.gz
+
+      - name: Copy image to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          source: sfl-app.tar.gz
+          target: /tmp/
+
+      - name: Copy docker-compose to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          source: docker-compose.yml
+          target: /opt/sfl-tournament/
+
+      - name: Deploy on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            set -e
+
+            cd /opt/sfl-tournament
+
+            echo "==> Loading new Docker image..."
+            docker load -i /tmp/sfl-app.tar.gz
+            rm -f /tmp/sfl-app.tar.gz
+
+            echo "==> Stopping running containers..."
+            docker compose stop app || true
+
+            echo "==> Updating image tag in compose..."
+            export APP_IMAGE=${{ steps.tag.outputs.IMAGE_TAG }}
+
+            echo "==> Starting updated containers..."
+            docker compose up -d --no-build
+
+            echo "==> Running DB migrations..."
+            docker compose exec -T app npx prisma migrate deploy
+
+            echo "==> Removing unused Docker images..."
+            docker image prune -f
+
+            echo "==> Health check..."
+            sleep 5
+            curl -sf http://localhost:3000 || (echo "Health check failed!" && exit 1)
+
+            echo "==> Deploy complete: ${{ steps.tag.outputs.IMAGE_TAG }}"
