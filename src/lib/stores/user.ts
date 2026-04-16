@@ -51,11 +51,11 @@ function createUserStore() {
           // Redirect based on role
           const user = result.data.user;
           if (user.role === "ADMIN") {
-            goto("/admin");
+            await goto("/admin"); // Додано await
           } else if (user.role === "JURY") {
-            goto("/jury");
+            await goto("/jury"); // Додано await
           } else {
-            goto("/tournaments");
+            await goto("/tournaments"); // Додано await
           }
         } else {
           update((state) => ({ ...state, loading: false }));
@@ -94,7 +94,7 @@ function createUserStore() {
             loading: false,
           }));
 
-          goto("/tournaments");
+          await goto("/tournaments"); // Додано await
         } else {
           update((state) => ({ ...state, loading: false }));
           throw new Error(result.message || "Помилка реєстрації");
@@ -113,12 +113,12 @@ function createUserStore() {
         await fetch("/api/auth/logout", { method: "POST" });
 
         set({ user: null, loading: false });
-        goto("/");
+        await goto("/"); // Додано await
       } catch (error) {
         console.error("Logout error:", error);
         // Force logout even if request fails
         set({ user: null, loading: false });
-        goto("/");
+        await goto("/"); // Додано await
       }
     },
 

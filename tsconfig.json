@@ -25,7 +25,8 @@
     "src/**/*.ts",
     "src/**/*.svelte",
     "tests/**/*.ts",
-    "vite.config.ts"
+    "vite.config.ts",
+    "vites.config.ts"
   ],
   "exclude": ["node_modules", "build", ".svelte-kit"]
 }
