@@ -1,14 +1,14 @@
 // src/hooks.server.ts
-import type { Handle } from '@sveltejs/kit';
-import { auth } from '$lib/server/auth';
+import type { Handle } from "@sveltejs/kit";
+import { auth } from "$lib/server/auth";
 
 export const handle: Handle = async ({ event, resolve }) => {
-    const session = await auth.api.getSession({
-        headers: event.request.headers
-    });
+  const session = await auth.api.getSession({
+    headers: event.request.headers,
+  });
 
-    event.locals.user = session?.user as App.Locals['user'] ?? null;
-    event.locals.session = session?.session ?? null;
+  event.locals.user = (session?.user as App.Locals["user"]) ?? null;
+  event.locals.session = session?.session ?? null;
 
-    return resolve(event);
+  return resolve(event);
 };
