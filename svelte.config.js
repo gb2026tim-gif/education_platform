@@ -1,21 +1,14 @@
-import adapter from "@sveltejs/adapter-static"; // Змінено з adapter-auto
+import adapter from "@sveltejs/adapter-auto";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   preprocess: vitePreprocess(),
   kit: {
-    // Налаштування для GitHub Pages
-    adapter: adapter({
-      pages: "build",
-      assets: "build",
-      fallback: "404.html",
-      precompress: false,
-      strict: true,
-    }),
+    adapter: adapter(),
+    // Поки не деплоїмо на GitHub Pages, base краще залишити порожнім
     paths: {
-      // ВАЖЛИВО: замініть 'education_platform' на точну назву вашого репозиторію
-      base: process.env.NODE_ENV === "production" ? "/education_platform" : "",
+      base: "",
     },
     alias: {
       $lib: "./src/lib",
