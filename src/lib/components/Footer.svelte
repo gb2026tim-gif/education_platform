@@ -1,4 +1,8 @@
 <!-- src/lib/components/Footer.svelte -->
+<script lang="ts">
+    import Logo from '$lib/components/Logo.svelte';
+</script>
+
 <footer>
     <!-- Main footer columns -->
     <div class="bg-[#111116] border-t border-white/5">
@@ -40,12 +44,7 @@
             <!-- Logo -->
             <div class="col-span-2 md:col-span-1 flex items-start justify-end">
                 <a href="/" aria-label="LvlUp — Головна">
-                    <!-- Замінити на: <img src="/images/logo.svg" alt="LvlUp" class="h-[80px] w-auto" /> -->
-                    <svg width="100" height="80" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <text x="0" y="28" font-family="Manrope,sans-serif" font-size="16" font-weight="600" fill="#3E83FF">Lvl</text>
-                        <text x="0" y="72" font-family="Manrope,sans-serif" font-size="48" font-weight="800" fill="#3E83FF">Up</text>
-                        <path d="M68 16 L88 32 L68 48" stroke="#3E83FF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    <Logo size={64} />
                 </a>
             </div>
         </div>
