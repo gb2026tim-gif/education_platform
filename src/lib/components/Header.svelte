@@ -3,17 +3,23 @@
     import { page } from '$app/stores';
 
     let mobileOpen = $state(false);
+    let dark = $state(true);
 
     const navLinks = [
         { label: 'Курси',      href: '/courses' },
         { label: 'Календар',   href: '/calendar' },
-        { label: 'Команда',    href: '/teams' },
+        { label: 'Команда',    href: '/my-teams' },
         { label: 'Рейтинг',    href: '/leaderboard' },
         { label: 'Інформація', href: '/about' }
     ];
 
     function isActive(href: string) {
         return $page.url.pathname === href || $page.url.pathname.startsWith(href + '/');
+    }
+
+    function toggleTheme() {
+        dark = !dark;
+        document.documentElement.classList.toggle('light', !dark);
     }
 </script>
 
@@ -22,7 +28,6 @@
 
         <!-- Logo -->
         <a href="/" class="flex-shrink-0" aria-label="LvlUp — Головна">
-            <!-- Замінити на: <img src="/images/logo.svg" alt="LvlUp" class="h-11 w-auto" /> -->
             <svg width="88" height="44" viewBox="0 0 88 44" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <text x="0" y="18" font-family="Manrope,sans-serif" font-size="13" font-weight="600" fill="#3E83FF">Lvl</text>
                 <text x="0" y="40" font-family="Manrope,sans-serif" font-size="28" font-weight="800" fill="#3E83FF">Up</text>
@@ -34,25 +39,50 @@
         <nav class="hidden md:flex items-center gap-1 flex-1">
             {#each navLinks as link}
                 <a
-                        href={link.href}
-                        class="text-[15px] font-medium px-4 py-[7px] rounded-full border transition-colors duration-150
-                           {isActive(link.href)
-                               ? 'text-white border-white/40'
-                               : 'text-white/70 border-transparent hover:text-white'}"
+                    href={link.href}
+                    class="text-[15px] font-medium px-4 py-[7px] rounded-full border transition-colors duration-150
+                        {isActive(link.href)
+                            ? 'text-white border-white/40'
+                            : 'text-white/70 border-transparent hover:text-white'}"
                 >
                     {link.label}
                 </a>
             {/each}
         </nav>
 
-        <!-- Desktop: search + login -->
-        <div class="hidden md:flex items-center gap-5 ml-auto">
+        <!-- Desktop: theme + search + login -->
+        <div class="hidden md:flex items-center gap-4 ml-auto">
+
+            <!-- Theme toggle -->
+            <button
+                onclick={toggleTheme}
+                class="w-9 h-9 flex items-center justify-center rounded-full text-white/60 hover:text-white transition-colors"
+                aria-label="Змінити тему"
+                title={dark ? 'Світла тема' : 'Темна тема'}
+            >
+                {#if dark}
+                    <!-- Sun icon -->
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round"/>
+                    </svg>
+                {:else}
+                    <!-- Moon icon -->
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                {/if}
+            </button>
+
+            <!-- Search -->
             <button class="w-9 h-9 flex items-center justify-center rounded-full text-white/60 hover:text-white transition-colors" aria-label="Пошук">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M12 12l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
             </button>
+
+            <!-- Login -->
             <a href="/auth/login" class="flex items-center gap-2 text-[14px] font-medium text-white/65 hover:text-white transition-colors">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <circle cx="9" cy="5.5" r="3" stroke="currentColor" stroke-width="1.5"/>
@@ -64,10 +94,10 @@
 
         <!-- Mobile: burger -->
         <button
-                class="md:hidden ml-auto flex items-center justify-center w-10 h-10 text-white"
-                onclick={() => (mobileOpen = !mobileOpen)}
-                aria-label="Меню"
-                aria-expanded={mobileOpen}
+            class="md:hidden ml-auto flex items-center justify-center w-10 h-10 text-white"
+            onclick={() => (mobileOpen = !mobileOpen)}
+            aria-label="Меню"
+            aria-expanded={mobileOpen}
         >
             {#if mobileOpen}
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -86,14 +116,20 @@
         <nav class="md:hidden bg-[#191921] border-t border-white/5 px-5 pt-2 pb-5 flex flex-col gap-1">
             {#each navLinks as link}
                 <a
-                        href={link.href}
-                        onclick={() => (mobileOpen = false)}
-                        class="px-4 py-3 rounded-xl text-[15px] font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                    href={link.href}
+                    onclick={() => (mobileOpen = false)}
+                    class="px-4 py-3 rounded-xl text-[15px] font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors"
                 >
                     {link.label}
                 </a>
             {/each}
             <div class="mt-3 flex flex-col gap-2 border-t border-white/8 pt-3">
+                <button
+                    onclick={toggleTheme}
+                    class="px-4 py-3 rounded-xl text-[15px] font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors text-left flex items-center gap-2"
+                >
+                    {dark ? '☀️ Світла тема' : '🌙 Темна тема'}
+                </button>
                 <a href="/auth/login" onclick={() => (mobileOpen = false)}
                    class="px-4 py-3 rounded-[15px] text-[15px] font-semibold text-center border border-white/25 text-white/70 hover:text-white transition-colors">
                     Увійти
