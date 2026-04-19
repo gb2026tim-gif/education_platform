@@ -7,7 +7,12 @@ export const load: PageServerLoad = async (event) => {
 
 	const [teams, invites] = await Promise.all([
 		prisma.team.findMany({
-			where: { captainId: user.id },
+			where: {
+				OR: [
+					{ captainId: user.id },
+					{ members: { some: { email: user.email } } }
+				]
+			},
 			include: {
 				tournament: { select: { id: true, title: true, status: true } },
 				members: true,
@@ -15,13 +20,7 @@ export const load: PageServerLoad = async (event) => {
 			},
 			orderBy: { createdAt: 'desc' }
 		}),
-		prisma.$queryRaw<Array<{
-			id: string;
-			teamId: string;
-			teamName: string;
-			tournamentTitle: string;
-			status: string;
-		}>>`
+		prisma.$queryRaw`
 			SELECT ti.id, ti."teamId", t.name as "teamName", tour.title as "tournamentTitle", ti.status
 			FROM team_invites ti
 			JOIN teams t ON t.id = ti."teamId"
@@ -39,27 +38,21 @@ export const actions: Actions = {
 		const data = await event.request.formData();
 		const inviteId = data.get('inviteId')?.toString();
 		const teamId = data.get('teamId')?.toString();
-
 		if (!inviteId || !teamId) return;
-
-		await prisma.$executeRaw`
-			UPDATE team_invites SET status = 'ACCEPTED' WHERE id = ${inviteId} AND "userId" = ${user.id}
-		`;
-
+		await prisma.$executeRaw`UPDATE team_invites SET status = 'ACCEPTED' WHERE id = ${inviteId} AND "userId" = ${user.id}`;
+		await prisma.teamMember.upsert({
+			where: { email_teamId: { email: user.email, teamId } },
+			create: { name: user.name, email: user.email, teamId },
+			update: {}
+		});
 		return { success: true };
 	},
-
 	declineInvite: async (event) => {
 		const user = requireAuth(event);
 		const data = await event.request.formData();
 		const inviteId = data.get('inviteId')?.toString();
-
 		if (!inviteId) return;
-
-		await prisma.$executeRaw`
-			UPDATE team_invites SET status = 'DECLINED' WHERE id = ${inviteId} AND "userId" = ${user.id}
-		`;
-
+		await prisma.$executeRaw`UPDATE team_invites SET status = 'DECLINED' WHERE id = ${inviteId} AND "userId" = ${user.id}`;
 		return { success: true };
 	}
 };

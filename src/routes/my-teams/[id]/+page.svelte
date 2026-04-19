@@ -1,6 +1,7 @@
 <!-- src/routes/my-teams/[id]/+page.svelte -->
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { enhance } from '$app/forms';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
@@ -34,7 +35,7 @@
 <div style="min-height:100vh; background:#0a0e14; color:#e8edf5; font-family:'Manrope',sans-serif;">
 	<Header />
 
-	<div style="display:flex; min-height:calc(100vh - 72px);">
+	<div style="display:flex; min-height:calc(100vh - 72px); align-items:stretch;">
 		<Sidebar user={data.user} />
 
 		<main style="flex:1; padding:36px 48px; max-width:1100px;">
@@ -46,10 +47,19 @@
 			</div>
 			<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px;">
 				<h1 style="font-size:22px; font-weight:800; color:#fff;">Акаунт команди</h1>
-				<button style="padding:9px 20px; border-radius:10px; border:1px solid rgba(239,68,68,0.3); background:rgba(239,68,68,0.08); color:#ef4444; font-size:13px; font-weight:600; cursor:pointer; font-family:'Manrope',sans-serif; display:flex; align-items:center; gap:8px;">
-					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-					Покинути команду
-				</button>
+				<form method="POST" action="?/leaveTeam" use:enhance={() => {
+					return async ({ result }) => {
+						if (result.type === 'success') {
+							window.location.href = '/my-teams';
+						}
+					};
+				}}>
+					<button type="submit" style="padding:9px 20px; border-radius:10px; border:1px solid rgba(239,68,68,0.3); background:rgba(239,68,68,0.08); color:#ef4444; font-size:13px; font-weight:600; cursor:pointer; font-family:'Manrope',sans-serif; display:flex; align-items:center; gap:8px;"
+						onclick={(e) => { if (!confirm('Ти впевнена що хочеш покинути команду?')) e.preventDefault(); }}>
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+						{data.isCaptain ? 'Розпустити команду' : 'Покинути команду'}
+					</button>
+				</form>
 			</div>
 
 			<!-- Team hero -->
