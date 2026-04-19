@@ -1,107 +1,166 @@
 <!-- src/lib/components/Header.svelte -->
 <script lang="ts">
     import { page } from '$app/stores';
+    import { signOut } from '$lib/auth-client';
+    import { goto } from '$app/navigation';
+    import { onMount } from 'svelte';
+    import Logo from '$lib/components/Logo.svelte';
 
     let mobileOpen = $state(false);
+    let dark = $state(true);
+    let userMenuOpen = $state(false);
 
     const navLinks = [
         { label: 'Курси',      href: '/courses' },
         { label: 'Календар',   href: '/calendar' },
-        { label: 'Команда',    href: '/teams' },
-        { label: 'Рейтинг',    href: '/leaderboard' },
+        { label: 'Команда',    href: '/my-teams' },
+        { label: 'Рейтинг',   href: '/leaderboard' },
         { label: 'Інформація', href: '/about' }
     ];
 
-    function isActive(href: string) {
+    function isActive(href: string): boolean {
         return $page.url.pathname === href || $page.url.pathname.startsWith(href + '/');
+    }
+
+    onMount(() => {
+        dark = localStorage.getItem('theme') !== 'light';
+    });
+
+    function applyTheme(isDark: boolean) {
+        if (isDark) {
+            document.documentElement.classList.remove('light-mode');
+        } else {
+            document.documentElement.classList.add('light-mode');
+        }
+    }
+
+    function toggleTheme() {
+        dark = !dark;
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+        applyTheme(dark);
+    }
+
+    async function handleLogout() {
+        await signOut();
+        await goto('/auth/login');
+    }
+
+    function handleClickOutside(e: MouseEvent) {
+        const target = e.target as HTMLElement;
+        if (!target.closest('.user-menu-wrap')) {
+            userMenuOpen = false;
+        }
+    }
+
+    const user = $derived($page.data?.user ?? null);
+
+    function getInitials(name: string): string {
+        return name?.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase() ?? '?';
     }
 </script>
 
-<header class="sticky top-0 z-50 bg-[#1D1D26]/96 backdrop-blur-sm border-b border-white/5">
-    <div class="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-20 flex items-center h-[72px] gap-8">
+<svelte:window onclick={handleClickOutside} />
 
-        <!-- Logo -->
-        <a href="/" class="flex-shrink-0" aria-label="LvlUp — Головна">
-            <!-- Замінити на: <img src="/images/logo.svg" alt="LvlUp" class="h-11 w-auto" /> -->
-            <svg width="88" height="44" viewBox="0 0 88 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="0" y="18" font-family="Manrope,sans-serif" font-size="13" font-weight="600" fill="#3E83FF">Lvl</text>
-                <text x="0" y="40" font-family="Manrope,sans-serif" font-size="28" font-weight="800" fill="#3E83FF">Up</text>
-                <path d="M46 8 L60 20 L46 32" stroke="#3E83FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+<header style="position:sticky; top:0; z-index:50; background:var(--header-bg,rgba(29,29,38,0.96)); backdrop-filter:blur(8px); border-bottom:1px solid var(--border,rgba(255,255,255,0.05)); transition:background 0.25s;">
+    <div style="max-width:1280px; margin:0 auto; padding:0 2rem; display:flex; align-items:center; height:72px; gap:2rem;">
+
+        <a href="/" style="flex-shrink:0; text-decoration:none;" aria-label="LvlUp — Головна">
+            <Logo size={40} />
         </a>
 
-        <!-- Desktop nav -->
-        <nav class="hidden md:flex items-center gap-1 flex-1">
+        <nav style="display:flex; align-items:center; gap:4px; flex:1;" class="hidden md:flex">
             {#each navLinks as link}
-                <a
-                        href={link.href}
-                        class="text-[15px] font-medium px-4 py-[7px] rounded-full border transition-colors duration-150
-                           {isActive(link.href)
-                               ? 'text-white border-white/40'
-                               : 'text-white/70 border-transparent hover:text-white'}"
-                >
+                <a href={link.href}
+                   style="font-size:15px; font-weight:500; padding:7px 16px; border-radius:50px;
+                          border:1.5px solid {isActive(link.href) ? 'rgba(255,255,255,0.35)' : 'transparent'};
+                          color:{isActive(link.href) ? 'var(--text)' : 'var(--text-muted)'};
+                          text-decoration:none; transition:all 0.15s;">
                     {link.label}
                 </a>
             {/each}
         </nav>
 
-        <!-- Desktop: search + login -->
-        <div class="hidden md:flex items-center gap-5 ml-auto">
-            <button class="w-9 h-9 flex items-center justify-center rounded-full text-white/60 hover:text-white transition-colors" aria-label="Пошук">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M12 12l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
+        <div style="display:flex; align-items:center; gap:1rem; margin-left:auto;" class="hidden md:flex">
+            <button onclick={toggleTheme} aria-label={dark ? 'Увімкнути світлу тему' : 'Увімкнути темну тему'}
+                    style="width:36px; height:36px; border-radius:50%; background:none; border:none; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                {#if dark}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                {:else}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                {/if}
             </button>
-            <a href="/auth/login" class="flex items-center gap-2 text-[14px] font-medium text-white/65 hover:text-white transition-colors">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle cx="9" cy="5.5" r="3" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M2.5 15.5c0-3.038 2.91-5.5 6.5-5.5s6.5 2.462 6.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-                Log in / Sign in
-            </a>
+
+            <button aria-label="Пошук"
+                    style="width:36px; height:36px; border-radius:50%; background:none; border:none; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+
+            {#if user}
+                <div class="user-menu-wrap" style="position:relative;">
+                    <button onclick={() => userMenuOpen = !userMenuOpen}
+                            aria-label="Меню користувача"
+                            style="width:40px; height:40px; border-radius:50%; overflow:hidden; border:2px solid #3E83FF; background:#0d1b3e; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:700;">
+                        {#if user.image}
+                            <img src={user.image} alt={user.name} style="width:100%; height:100%; object-fit:cover;" />
+                        {:else}
+                            {getInitials(user.name)}
+                        {/if}
+                    </button>
+
+                    {#if userMenuOpen}
+                        <div style="position:absolute; right:0; top:calc(100% + 8px); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:0.5rem; min-width:180px; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.3);">
+                            <div style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--border); margin-bottom:0.25rem;">
+                                <p style="font-size:0.85rem; font-weight:600; color:var(--text);">{user.name}</p>
+                                <p style="font-size:0.75rem; color:var(--text-muted);">{user.email}</p>
+                            </div>
+                            <a href="/dashboard" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Мій кабінет</a>
+                            <a href="/profile" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Профіль</a>
+                            <button onclick={handleLogout}
+                                    style="width:100%; text-align:left; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:#f87171; background:none; border:none; cursor:pointer; margin-top:0.25rem; border-top:1px solid var(--border); padding-top:0.5rem;">
+                                Вийти
+                            </button>
+                        </div>
+                    {/if}
+                </div>
+            {:else}
+                <a href="/auth/login" style="display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none; color:var(--text-muted);">
+                    <svg width="20" height="20" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="5.5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 15.5c0-3.038 2.91-5.5 6.5-5.5s6.5 2.462 6.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <span style="font-size:11px; font-weight:500; white-space:nowrap;">Log in / Sign in</span>
+                </a>
+            {/if}
         </div>
 
-        <!-- Mobile: burger -->
-        <button
-                class="md:hidden ml-auto flex items-center justify-center w-10 h-10 text-white"
-                onclick={() => (mobileOpen = !mobileOpen)}
-                aria-label="Меню"
-                aria-expanded={mobileOpen}
-        >
+        <button class="md:hidden" onclick={() => (mobileOpen = !mobileOpen)}
+                aria-label="Відкрити меню"
+                style="margin-left:auto; background:none; border:none; color:var(--text); cursor:pointer;">
             {#if mobileOpen}
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                    <path d="M5 5l12 12M5 17L17 5" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 5l12 12M5 17L17 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             {:else}
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                    <path d="M3 6h16M3 11h16M3 16h16" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             {/if}
         </button>
     </div>
 
-    <!-- Mobile dropdown -->
     {#if mobileOpen}
-        <nav class="md:hidden bg-[#191921] border-t border-white/5 px-5 pt-2 pb-5 flex flex-col gap-1">
+        <nav style="background:var(--surface); border-top:1px solid var(--border); padding:0.5rem 1.25rem 1.25rem; display:flex; flex-direction:column; gap:4px;">
             {#each navLinks as link}
-                <a
-                        href={link.href}
-                        onclick={() => (mobileOpen = false)}
-                        class="px-4 py-3 rounded-xl text-[15px] font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors"
-                >
+                <a href={link.href} onclick={() => (mobileOpen = false)}
+                   style="padding:0.75rem 1rem; border-radius:12px; font-size:15px; font-weight:500; color:var(--text-muted); text-decoration:none;">
                     {link.label}
                 </a>
             {/each}
-            <div class="mt-3 flex flex-col gap-2 border-t border-white/8 pt-3">
-                <a href="/auth/login" onclick={() => (mobileOpen = false)}
-                   class="px-4 py-3 rounded-[15px] text-[15px] font-semibold text-center border border-white/25 text-white/70 hover:text-white transition-colors">
-                    Увійти
-                </a>
-                <a href="/auth/register" onclick={() => (mobileOpen = false)}
-                   class="px-4 py-3 rounded-[15px] text-[15px] font-semibold text-center bg-[#3E83FF] text-white hover:opacity-90 transition-opacity">
-                    Зареєструватись
-                </a>
+            <div style="margin-top:0.75rem; display:flex; flex-direction:column; gap:0.5rem; border-top:1px solid var(--border); padding-top:0.75rem;">
+                <button onclick={toggleTheme}
+                        style="padding:0.75rem 1rem; border-radius:12px; background:none; border:none; color:var(--text-muted); font-size:15px; font-weight:500; cursor:pointer; text-align:left;">
+                    {dark ? '☀️ Світла тема' : '🌙 Темна тема'}
+                </button>
+                {#if user}
+                    <a href="/dashboard" onclick={() => (mobileOpen = false)} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; border:1px solid rgba(62,131,255,0.4); color:#3E83FF; text-decoration:none;">Мій кабінет</a>
+                    <button onclick={handleLogout} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; background:none; border:1px solid rgba(248,113,113,0.3); color:#f87171; cursor:pointer;">Вийти</button>
+                {:else}
+                    <a href="/auth/login" onclick={() => (mobileOpen = false)} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; border:1px solid var(--border-hover); color:var(--text-muted); text-decoration:none;">Увійти</a>
+                    <a href="/auth/register" onclick={() => (mobileOpen = false)} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; background:#3E83FF; color:#fff; text-decoration:none;">Зареєструватись</a>
+                {/if}
             </div>
         </nav>
     {/if}

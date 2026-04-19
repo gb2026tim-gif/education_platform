@@ -1,4 +1,3 @@
-// src/lib/server/auth.ts
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
@@ -12,5 +11,13 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,
+  },
+  session: {
+    expiresIn: 60 * 60 * 24 * 30, // 30 днів
+    updateAge: 60 * 60 * 24, // оновлювати щодня
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 60 * 24 * 30,
+    },
   },
 });
