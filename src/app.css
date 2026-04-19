@@ -2,17 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html, body {
-	height: 100%;
-	background: #0a0e1a;
-	color: #ffffff;
-	font-family: 'Manrope', sans-serif;
-	-webkit-font-smoothing: antialiased;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0a0e1a; }
-::-webkit-scrollbar-thumb { background: #1e2d45; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #2a3d5a; }
+:root {
+  --bg: #0a0e1a;
+  --bg-secondary: #0d1120;
+  --surface: #111827;
+  --surface-2: #1a2236;
+  --header-bg: rgba(29, 29, 38, 0.96);
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.55);
+  --text-dim: rgba(255, 255, 255, 0.35);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --accent: #3e83ff;
+  --footer-bg: #111116;
+  --footer-bar: #0d0d12;
+  --hero-bg-from: #0d1635;
+  --hero-bg-to: #0a0e1a;
+  --ann-bg-from: #0d1b40;
+  --ann-bg-mid: #1a3060;
+}
+
+.light-mode {
+  --bg: #eef2ff;
+  --bg-secondary: #e8edf8;
+  --surface: #ffffff;
+  --surface-2: #f0f4ff;
+  --header-bg: rgba(255, 255, 255, 0.96);
+  --text: #0a0e1a;
+  --text-muted: rgba(10, 14, 26, 0.55);
+  --text-dim: rgba(10, 14, 26, 0.35);
+  --border: rgba(10, 14, 26, 0.08);
+  --border-hover: rgba(10, 14, 26, 0.2);
+  --accent: #3e83ff;
+  --footer-bg: #dde4f5;
+  --footer-bar: #cdd6ee;
+  --hero-bg-from: #c8d8ff;
+  --hero-bg-to: #eef2ff;
+  --ann-bg-from: #b8ccff;
+  --ann-bg-mid: #d0e0ff;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Manrope", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background 0.25s,
+    color 0.25s;
+}
+
+/* Hero section theming */
+.hero-section {
+  background: linear-gradient(
+    135deg,
+    var(--hero-bg-from) 0%,
+    var(--hero-bg-to) 55%
+  );
+  transition: background 0.25s;
+}
+
+/* Announcements block theming */
+.ann-block {
+  background: linear-gradient(
+    135deg,
+    var(--ann-bg-from) 0%,
+    var(--ann-bg-mid) 50%,
+    var(--ann-bg-from) 100%
+  );
+  transition: background 0.25s;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2d45;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3d5a;
+}

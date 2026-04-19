@@ -34,7 +34,6 @@
 	}
 
 	function getAverageScore() {
-		const allScores = t.submissions.flatMap((s: any) => s.assignments?.map((a: any) => a.score) ?? []);
 		const valid = allScores.filter(Boolean);
 		if (!valid.length) return null;
 		return (valid.reduce((sum: number, s: any) => sum + (s?.total ?? 0), 0) / valid.length).toFixed(1);
@@ -171,7 +170,6 @@
 		<div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
 			<h2 class="mb-4 text-base font-semibold text-gray-900">Оцінки журі</h2>
 			{#each t.submissions as submission}
-				{#each submission.assignments as assignment}
 					{#if assignment.score}
 						<div class="mb-4 rounded-lg border border-gray-100 p-4">
 							<div class="mb-3 grid grid-cols-3 gap-2">
