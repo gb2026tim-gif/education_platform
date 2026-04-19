@@ -30,6 +30,7 @@ model User {
   school        String?
   phone         String?
   discord       String?
+  image         String?
 
   sessions     Session[]
   accounts     Account[]
