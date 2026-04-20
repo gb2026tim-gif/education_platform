@@ -10,12 +10,16 @@
 	let confirmPassword = $state('');
 	let loading = $state(false);
 	let errorMsg = $state('');
+	let showPassword = $state(false);
+	let showConfirm = $state(false);
+	let agreed = $state(false);
 
 	function validate() {
 		if (!name.trim() || name.trim().length < 2) return 'Введіть ПІБ (мінімум 2 символи)';
 		if (!email.includes('@')) return 'Введіть коректний email';
 		if (password.length < 8) return 'Пароль мінімум 8 символів';
 		if (password !== confirmPassword) return 'Паролі не співпадають';
+		if (!agreed) return 'Погодьтесь з умовами використання';
 		return null;
 	}
 
@@ -80,22 +84,42 @@
 				</div>
 				<div class="field">
 					<label for="phone">Номер телефону</label>
-					<div class="phone-wrap">
-						<span class="flag">🇺🇦 +380</span>
-						<input id="phone" type="tel" bind:value={phone} placeholder="XX XXX XX XX" autocomplete="tel" />
-					</div>
+					<input id="phone" type="tel" bind:value={phone} placeholder="+380 XX XXX XX XX" autocomplete="tel" />
 				</div>
 			</div>
 			<div class="row">
 				<div class="field">
 					<label for="password">Пароль</label>
-					<input id="password" type="password" bind:value={password} placeholder="••••••••" autocomplete="new-password" />
+					<div class="input-wrap">
+						<input id="password" type={showPassword ? 'text' : 'password'} bind:value={password} placeholder="••••••••" autocomplete="new-password" />
+						<button type="button" class="eye-btn" onclick={() => showPassword = !showPassword} aria-label="Показати пароль">
+							{#if showPassword}
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+							{:else}
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+							{/if}
+						</button>
+					</div>
 				</div>
 				<div class="field">
-					<label for="confirm">Підтвердити</label>
-					<input id="confirm" type="password" bind:value={confirmPassword} placeholder="••••••••" autocomplete="new-password" />
+					<label for="confirm">Повторіть пароль</label>
+					<div class="input-wrap">
+						<input id="confirm" type={showConfirm ? 'text' : 'password'} bind:value={confirmPassword} placeholder="••••••••" autocomplete="new-password" />
+						<button type="button" class="eye-btn" onclick={() => showConfirm = !showConfirm} aria-label="Показати пароль">
+							{#if showConfirm}
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+							{:else}
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+							{/if}
+						</button>
+					</div>
 				</div>
 			</div>
+			<!-- Checkbox -->
+			<label class="agree-row">
+				<input type="checkbox" bind:checked={agreed} />
+				<span>Погоджуюсь з <a href="/terms">Умовами використання</a> та <a href="/privacy">Політикою конфіденційності</a></span>
+			</label>
 			<div class="actions">
 				<button class="btn-secondary" onclick={() => goto('/auth/login')}>Скасувати</button>
 				<button class="btn-primary" onclick={handleRegister} disabled={loading}>
@@ -145,9 +169,9 @@
 .field input{background:#111827;border:1px solid #1e2d45;border-radius:8px;padding:0.65rem 0.9rem;color:#fff;font-size:0.875rem;outline:none;transition:border-color 0.2s;box-sizing:border-box;}
 .field input:focus{border-color:#3E83FF;}
 .field input::placeholder{color:#2a3a4a;}
-.phone-wrap{display:flex;align-items:center;background:#111827;border:1px solid #1e2d45;border-radius:8px;overflow:hidden;}
-.flag{padding:0.65rem 0.6rem;color:rgba(255,255,255,0.5);font-size:0.78rem;border-right:1px solid #1e2d45;white-space:nowrap;}
-.phone-wrap input{background:transparent;border:none;border-radius:0;padding-left:0.6rem;flex:1;outline:none;color:#fff;font-size:0.875rem;}
+
+
+
 .actions{display:flex;gap:0.75rem;margin-top:1.25rem;}
 .btn-primary{flex:1;background:#3E83FF;color:#fff;border:none;border-radius:8px;padding:0.75rem;font-size:0.9rem;font-weight:600;cursor:pointer;transition:background 0.2s;}
 .btn-primary:hover:not(:disabled){background:#2d6fd4;}
@@ -161,4 +185,12 @@
 
 .robot-video{width:min(320px,90%);border-radius:20px;position:relative;z-index:2;}
 @media(max-width:768px){.left{display:none;}.right{flex:1;}.row{grid-template-columns:1fr;}}
+.input-wrap{position:relative;display:flex;align-items:center;}
+.input-wrap input{width:100%;padding-right:2.2rem;}
+.eye-btn{position:absolute;right:0.6rem;background:none;border:none;color:rgba(255,255,255,0.35);cursor:pointer;display:flex;align-items:center;padding:0;transition:color 0.15s;}
+.eye-btn:hover{color:rgba(255,255,255,0.7);}
+.agree-row{display:flex;align-items:flex-start;gap:0.55rem;margin-bottom:0.75rem;cursor:pointer;font-size:0.82rem;color:rgba(255,255,255,0.5);}
+.agree-row input[type=checkbox]{width:15px;height:15px;accent-color:#3E83FF;flex-shrink:0;margin-top:1px;cursor:pointer;}
+.agree-row a{color:#3E83FF;text-decoration:none;}
+.agree-row a:hover{text-decoration:underline;}
 </style>

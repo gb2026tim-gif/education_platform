@@ -83,7 +83,7 @@
         {:else}
             <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1.25rem;">
                 {#each filtered as t}
-                    {@const cfg = statusConfig[t.status] ?? statusConfig.DRAFT}
+                    {@const cfg = statusConfig[t.status] ?? { label: t.status, color: '#64748B', bg: 'rgba(100,116,139,0.1)', dot: false }}
                     <a href="/tourments/{t.id}" style="text-decoration:none; display:block;">
                         <article
                             style="background:var(--surface,#111827); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:1.75rem; transition:all 0.2s; height:100%; box-sizing:border-box; display:flex; flex-direction:column;"
@@ -122,12 +122,6 @@
                                     <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
                                         <span style="color:rgba(255,255,255,0.35);">Реєстрація</span>
                                         <span style="color:rgba(255,255,255,0.6);">{fmt(t.regStart)} — {fmt(t.regEnd)}</span>
-                                    </div>
-                                {/if}
-                                {#if t.startDate}
-                                    <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-                                        <span style="color:rgba(255,255,255,0.35);">Старт</span>
-                                        <span style="color:rgba(255,255,255,0.6);">{fmt(t.startDate)}</span>
                                     </div>
                                 {/if}
                             </div>
