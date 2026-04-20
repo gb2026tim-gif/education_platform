@@ -1,30 +1,37 @@
+// src/routes/my-teams/+page.server.ts
 import type { PageServerLoad } from "./$types";
 import { requireAuth } from "$lib/server/middleware";
 import { prisma } from "$lib/server/db";
-import { error } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async (event) => {
   const user = requireAuth(event);
 
-  const team = await prisma.team.findUnique({
-    where: { id: event.params.id },
+  const teams = await prisma.team.findMany({
+    where: {
+      captainId: user.id,
+    },
     include: {
-      captain: { select: { id: true, name: true, email: true } },
+      tournament: {
+        select: {
+          id: true,
+          title: true,
+          status: true,
+        },
+      },
       members: true,
-      tournament: true,
       submissions: {
         include: {
           task: { select: { title: true, deadline: true } },
           assignments: {
-            include: { score: true },
+            include: {
+              score: true,
+            },
           },
         },
       },
     },
+    orderBy: { createdAt: "desc" },
   });
 
-  if (!team) throw error(404, "Команду не знайдено");
-  if (team.captainId !== user.id) throw error(403, "Доступ заборонено");
-
-  return { team, user };
+  return { teams, user };
 };
