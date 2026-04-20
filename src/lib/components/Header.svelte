@@ -9,6 +9,21 @@
     let mobileOpen = $state(false);
     let dark = $state(true);
     let userMenuOpen = $state(false);
+    let searchOpen = $state(false);
+    let searchQuery = $state('');
+    let searchInput = $state<HTMLInputElement | null>(null);
+
+    function openSearch() {
+        searchOpen = true;
+        setTimeout(() => searchInput?.focus(), 50);
+    }
+    function closeSearch() {
+        searchOpen = false;
+        searchQuery = '';
+    }
+    function handleSearchKey(e: KeyboardEvent) {
+        if (e.key === 'Escape') closeSearch();
+    }
 
     const navLinks = [
         { label: 'Курси',      href: '/courses' },
@@ -81,6 +96,32 @@
         </nav>
 
         <div style="display:flex; align-items:center; gap:1rem; margin-left:auto;" class="hidden md:flex">
+            <!-- Search: expands LEFT from icon -->
+            <div class="search-wrap" style="position:relative; display:flex; align-items:center;"
+                 onfocusout={(e) => { if (!(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node)) closeSearch(); }}>
+                {#if searchOpen}
+                    <div style="position:absolute; right:0; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:0.4rem; background:var(--surface,#1A1D23); border:1.5px solid rgba(62,131,255,0.5); border-radius:24px; padding:0 0.6rem 0 0.9rem; height:36px; width:240px; animation:searchExpand 0.2s ease-out;">
+                        <input
+                            bind:this={searchInput}
+                            bind:value={searchQuery}
+                            onkeydown={handleSearchKey}
+                            placeholder="Пошук..."
+                            style="flex:1; background:none; border:none; outline:none; color:var(--text,#fff); font-size:13px; font-family:inherit;"
+                        />
+                        <button onclick={closeSearch} style="background:none; border:none; color:var(--text-muted); cursor:pointer; display:flex; padding:0;" aria-label="Закрити">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <div style="width:36px; height:36px;"></div>
+                {:else}
+                    <button onclick={openSearch} aria-label="Пошук"
+                            style="width:36px; height:36px; border-radius:50%; background:none; border:none; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    </button>
+                {/if}
+            </div>
+
+            <!-- Theme toggle — after search -->
             <button onclick={toggleTheme} aria-label={dark ? 'Увімкнути світлу тему' : 'Увімкнути темну тему'}
                     style="width:36px; height:36px; border-radius:50%; background:none; border:none; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center;">
                 {#if dark}
@@ -88,11 +129,6 @@
                 {:else}
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 {/if}
-            </button>
-
-            <button aria-label="Пошук"
-                    style="width:36px; height:36px; border-radius:50%; background:none; border:none; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             </button>
 
             {#if user}
@@ -113,7 +149,7 @@
                                 <p style="font-size:0.85rem; font-weight:600; color:var(--text);">{user.name}</p>
                                 <p style="font-size:0.75rem; color:var(--text-muted);">{user.email}</p>
                             </div>
-                            <a href="/dashboard" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Мій кабінет</a>
+                            <a href="/dashboard" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Дашборд</a>
                             <a href="/profile" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Профіль</a>
                             <button onclick={handleLogout}
                                     style="width:100%; text-align:left; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:#f87171; background:none; border:none; cursor:pointer; margin-top:0.25rem; border-top:1px solid var(--border); padding-top:0.5rem;">
@@ -155,7 +191,7 @@
                     {dark ? '☀️ Світла тема' : '🌙 Темна тема'}
                 </button>
                 {#if user}
-                    <a href="/dashboard" onclick={() => (mobileOpen = false)} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; border:1px solid rgba(62,131,255,0.4); color:#3E83FF; text-decoration:none;">Мій кабінет</a>
+                    <a href="/dashboard" onclick={() => (mobileOpen = false)} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; border:1px solid rgba(62,131,255,0.4); color:#3E83FF; text-decoration:none;">Дашборд</a>
                     <button onclick={handleLogout} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; background:none; border:1px solid rgba(248,113,113,0.3); color:#f87171; cursor:pointer;">Вийти</button>
                 {:else}
                     <a href="/auth/login" onclick={() => (mobileOpen = false)} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; border:1px solid var(--border-hover); color:var(--text-muted); text-decoration:none;">Увійти</a>
@@ -165,3 +201,11 @@
         </nav>
     {/if}
 </header>
+
+<style>
+input:focus { outline: none !important; box-shadow: none !important; }
+@keyframes searchExpand {
+    from { width: 36px; opacity: 0; }
+    to   { width: 240px; opacity: 1; }
+}
+</style>

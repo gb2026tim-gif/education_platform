@@ -23,10 +23,31 @@
 
     const allTournaments = $derived([...data.registration, ...data.running, ...data.finished]);
 
+    // --- FILTERS ---
+    let activeFilter = $state('all');
+
+    const filters = [
+        { value: 'all',          label: 'Всі' },
+        { value: 'RUNNING',      label: 'Тривають' },
+        { value: 'REGISTRATION', label: 'Відкрита реєстрація' },
+        { value: 'FINISHED',     label: 'Завершені' },
+    ];
+
+    const filteredTournaments = $derived(
+        activeFilter === 'all'
+            ? allTournaments
+            : allTournaments.filter((t) => t.status === activeFilter)
+    );
+
+    // Pagination (3 per page, resets on filter change)
     let tournamentPage = $state(0);
+    $effect(() => { activeFilter; tournamentPage = 0; });
+
     const perPage = 3;
-    const totalPages = $derived(Math.ceil(allTournaments.length / perPage));
-    const visibleTournaments = $derived(allTournaments.slice(tournamentPage * perPage, tournamentPage * perPage + perPage));
+    const totalPages = $derived(Math.ceil(filteredTournaments.length / perPage));
+    const visibleTournaments = $derived(
+        filteredTournaments.slice(tournamentPage * perPage, tournamentPage * perPage + perPage)
+    );
 
     const courses = [
         { title: 'Python для початківців', tag: 'Безкоштовно', img: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&q=80' },
@@ -74,7 +95,7 @@
                     <a href="/auth/register" style="padding:0.75rem 1.75rem; border-radius:20px; background:#3E83FF; color:#fff; font-size:0.95rem; font-weight:600; text-decoration:none;">Зареєструватись</a>
                 </div>
             </div>
-            <div style="position:absolute; right:-2rem; top:-72px; bottom:0; width:48%; max-width:560px; border-radius:280px 0 0 280px; overflow:hidden;">
+            <div style="position:absolute; right:2rem; top:-40px; bottom:0; width:44%; max-width:500px; border-radius:280px 0 0 280px; overflow:hidden;">
                 <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Tech education" style="width:100%; height:100%; object-fit:cover;" />
             </div>
         </div>
@@ -114,8 +135,10 @@
     <!-- ТУРНІРИ -->
     <section style="padding:3rem 0;">
         <div style="max-width:1280px; margin:0 auto; padding:0 2rem;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
-                <h2 style="font-size:1.35rem; font-weight:700; color:var(--text);">Список всіх турнірів</h2>
+
+            <!-- Title row -->
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
+                <h2 style="font-size:1.35rem; font-weight:700; color:var(--text); margin:0;">Список всіх турнірів</h2>
                 {#if totalPages > 1}
                     <div style="display:flex; gap:0.5rem;">
                         <button aria-label="Попередні турніри" onclick={prevT} disabled={tournamentPage === 0}
@@ -126,8 +149,24 @@
                 {/if}
             </div>
 
-            {#if allTournaments.length === 0}
-                <p style="color:var(--text-dim); font-size:0.9rem;">Турнірів поки немає</p>
+            <!-- Filter tabs -->
+            <div style="display:flex; gap:0.5rem; margin-bottom:1.25rem; flex-wrap:wrap;">
+                {#each filters as f}
+                    {@const count = f.value === 'all' ? allTournaments.length : allTournaments.filter((t) => t.status === f.value).length}
+                    <button
+                        onclick={() => { activeFilter = f.value; }}
+                        style="padding:0.4rem 1rem; border-radius:100px; font-size:0.82rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s;
+                               background:{activeFilter === f.value ? '#3E83FF' : 'rgba(255,255,255,0.05)'};
+                               color:{activeFilter === f.value ? '#fff' : 'var(--text-muted,rgba(255,255,255,0.5))'};
+                               border:1.5px solid {activeFilter === f.value ? '#3E83FF' : 'var(--border,rgba(255,255,255,0.07))'};">
+                        {f.label}
+                        <span style="margin-left:0.3rem; opacity:0.7; font-weight:500;">({count})</span>
+                    </button>
+                {/each}
+            </div>
+
+            {#if filteredTournaments.length === 0}
+                <p style="color:var(--text-dim); font-size:0.9rem; padding:2rem 0; text-align:center;">Немає турнірів у цій категорії</p>
             {:else}
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;">
                     {#each visibleTournaments as t}
@@ -141,7 +180,7 @@
                                 </div>
                                 <div style="display:flex; align-items:center; gap:0.4rem; color:var(--text-dim); font-size:0.78rem;">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                                    Команди {t._count?.teams ?? 0} · до {new Date(t.regEnd).toLocaleDateString('uk-UA')}
+                                    Команди · 2–5 осіб
                                 </div>
                             </div>
                         </a>
