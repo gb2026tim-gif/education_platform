@@ -1,6 +1,7 @@
-// src/hooks.server.ts
 import type { Handle } from "@sveltejs/kit";
 import { auth } from "$lib/server/auth";
+import { svelteKitHandler } from "better-auth/svelte-kit";
+import { building } from "$app/environment";
 
 export const handle: Handle = async ({ event, resolve }) => {
   const session = await auth.api.getSession({
@@ -10,5 +11,5 @@ export const handle: Handle = async ({ event, resolve }) => {
   event.locals.user = (session?.user as App.Locals["user"]) ?? null;
   event.locals.session = session?.session ?? null;
 
-  return resolve(event);
+  return svelteKitHandler({ event, resolve, auth, building });
 };
