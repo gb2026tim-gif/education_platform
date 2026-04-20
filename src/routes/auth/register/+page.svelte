@@ -38,61 +38,14 @@
 			<p>Sign up to start learning and developing future-ready tech skills.</p>
 
 			<div class="visual">
-				<!-- Кругле фото -->
-				<div class="circle-photo">
-					<img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&q=80" alt="hackathon" />
-					<div class="circle-ring"></div>
-				</div>
-
-				<div class="icon-badge badge-1 float-1">
-					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3E83FF" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-				</div>
-				<div class="icon-badge badge-2 float-2">
-					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-				</div>
-				<div class="icon-badge badge-3 float-3">
-					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-				</div>
-
-				<!-- Floating нотифікація -->
-				<div class="notif float-2">
-					<div class="dot"></div>
-					<span>Нова команда зареєструвалась!</span>
-				</div>
-
-				<svg class="illustration" viewBox="0 0 320 120" fill="none">
-					<rect x="10" y="80" width="300" height="6" rx="3" fill="#1e3a6e"/>
-					<rect x="30" y="86" width="6" height="25" rx="3" fill="#1e3a6e"/>
-					<rect x="284" y="86" width="6" height="25" rx="3" fill="#1e3a6e"/>
-					<rect x="20" y="45" width="80" height="37" rx="6" fill="#0f2050" stroke="#3E83FF" stroke-width="1.5"/>
-					<rect x="26" y="51" width="68" height="24" rx="3" fill="#1a3a6a"/>
-					<rect x="30" y="56" width="30" height="2" rx="1" fill="#3E83FF" opacity="0.8"/>
-					<rect x="30" y="61" width="45" height="2" rx="1" fill="#60a5fa" opacity="0.5"/>
-					<rect x="30" y="66" width="25" height="2" rx="1" fill="#3E83FF" opacity="0.6"/>
-					<rect x="120" y="40" width="80" height="42" rx="6" fill="#0f2050" stroke="#3E83FF" stroke-width="1.5"/>
-					<rect x="126" y="46" width="68" height="28" rx="3" fill="#1a3a6a"/>
-					<rect x="130" y="51" width="35" height="2" rx="1" fill="#3E83FF" opacity="0.8"/>
-					<rect x="130" y="56" width="50" height="2" rx="1" fill="#60a5fa" opacity="0.5"/>
-					<rect x="130" y="61" width="28" height="2" rx="1" fill="#3E83FF" opacity="0.6"/>
-					<rect x="130" y="66" width="40" height="2" rx="1" fill="#60a5fa" opacity="0.4"/>
-					<rect x="220" y="45" width="80" height="37" rx="6" fill="#0f2050" stroke="#3E83FF" stroke-width="1.5"/>
-					<rect x="226" y="51" width="68" height="24" rx="3" fill="#1a3a6a"/>
-					<rect x="230" y="56" width="32" height="2" rx="1" fill="#3E83FF" opacity="0.7"/>
-					<rect x="230" y="61" width="48" height="2" rx="1" fill="#60a5fa" opacity="0.5"/>
-					<circle cx="60" cy="30" r="11" fill="#2a4a8a"/>
-					<path d="M43 48 Q60 38 77 48" fill="#2a4a8a"/>
-					<circle cx="160" cy="25" r="11" fill="#3a5a9a"/>
-					<path d="M143 43 Q160 33 177 43" fill="#3a5a9a"/>
-					<circle cx="260" cy="30" r="11" fill="#2a4a8a"/>
-					<path d="M243 48 Q260 38 277 48" fill="#2a4a8a"/>
-					<g transform="translate(136,0)">
-						<path d="M12 0 L22 0 L22 18 Q22 26 17 29 Q12 26 12 18 Z" fill="#1e3a6e" stroke="#3E83FF" stroke-width="1.5"/>
-						<path d="M12 4 L7 4 Q2 4 2 11 Q2 17 10 19" fill="none" stroke="#3E83FF" stroke-width="1.5"/>
-						<path d="M22 4 L27 4 Q32 4 32 11 Q32 17 24 19" fill="none" stroke="#3E83FF" stroke-width="1.5"/>
-						<rect x="14" y="29" width="6" height="4" rx="1" fill="#1e3a6e" stroke="#3E83FF" stroke-width="1"/>
-						<rect x="10" y="33" width="14" height="3" rx="1.5" fill="#3E83FF"/>
-					</g>
-				</svg>
+				<video
+					src="/videos/register-robot.webm"
+					autoplay
+					loop
+					muted
+					playsinline
+					class="robot-video"
+				></video>
 			</div>
 
 			<div class="stats-row">
@@ -170,19 +123,10 @@
 
 .visual{position:relative;display:flex;flex-direction:column;align-items:center;margin-bottom:1.75rem;}
 
-.circle-photo{width:120px;height:120px;border-radius:50%;overflow:hidden;border:3px solid rgba(62,131,255,0.4);position:relative;z-index:2;margin-bottom:-15px;box-shadow:0 0 0 8px rgba(62,131,255,0.07);}
-.circle-photo img{width:100%;height:100%;object-fit:cover;}
-.circle-ring{position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(62,131,255,0.2);animation:spin 12s linear infinite;}
 
-.icon-badge{position:absolute;background:rgba(13,27,64,0.9);border:1px solid rgba(62,131,255,0.3);border-radius:12px;padding:8px;z-index:3;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
-.badge-1{top:0;left:5%;}
-.badge-2{top:0;right:5%;}
-.badge-3{top:45%;right:-5px;transform:translateY(-50%);}
 
-.notif{position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:rgba(13,27,64,0.95);border:1px solid rgba(62,131,255,0.25);border-radius:20px;padding:5px 12px;display:flex;align-items:center;gap:6px;font-size:0.68rem;white-space:nowrap;z-index:4;box-shadow:0 4px 16px rgba(0,0,0,0.3);}
-.dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:blink 1.5s infinite;}
 
-.illustration{width:100%;max-width:340px;}
+
 
 .stats-row{display:flex;align-items:center;gap:1.5rem;}
 .stat-item{text-align:center;}
@@ -213,12 +157,8 @@
 .switch{text-align:center;margin-top:1rem;color:rgba(255,255,255,0.45);font-size:0.85rem;}
 .switch a{color:#3E83FF;text-decoration:none;font-weight:600;}
 
-.float-1{animation:floaty 3s ease-in-out infinite;}
-.float-2{animation:floaty 3s ease-in-out infinite 1s;}
-.float-3{animation:floaty 3s ease-in-out infinite 2s;}
-@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 
+.robot-video{width:min(320px,90%);border-radius:20px;position:relative;z-index:2;}
 @media(max-width:768px){.left{display:none;}.right{flex:1;}.row{grid-template-columns:1fr;}}
 </style>

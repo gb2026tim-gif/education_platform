@@ -25,65 +25,14 @@
 			<p>Приєднуйся до тисяч учасників які вже навчаються та змагаються на платформі.</p>
 
 			<div class="visual">
-				<!-- Кругле фото -->
-				<div class="circle-photo">
-					<img src="https://images.unsplash.com/photo-1603354350317-6f7aaa5911c5?w=400&q=80" alt="coding" />
-					<div class="circle-ring"></div>
-				</div>
-
-				<!-- Іконки навколо -->
-				<div class="icon-badge badge-1 float-1">
-					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3E83FF" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-				</div>
-				<div class="icon-badge badge-2 float-2">
-					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3E83FF" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-				</div>
-				<div class="icon-badge badge-3 float-3">
-					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-				</div>
-
-				<!-- SVG ілюстрація під колом -->
-				<svg class="illustration" viewBox="0 0 320 140" fill="none">
-					<rect x="10" y="90" width="300" height="6" rx="3" fill="#1e3a6e"/>
-					<rect x="30" y="96" width="6" height="30" rx="3" fill="#1e3a6e"/>
-					<rect x="284" y="96" width="6" height="30" rx="3" fill="#1e3a6e"/>
-					<rect x="20" y="52" width="80" height="40" rx="6" fill="#0f2050" stroke="#3E83FF" stroke-width="1.5"/>
-					<rect x="26" y="58" width="68" height="26" rx="3" fill="#1a3a6a"/>
-					<rect x="30" y="63" width="30" height="2" rx="1" fill="#3E83FF" opacity="0.8"/>
-					<rect x="30" y="68" width="45" height="2" rx="1" fill="#60a5fa" opacity="0.5"/>
-					<rect x="30" y="73" width="25" height="2" rx="1" fill="#3E83FF" opacity="0.6"/>
-					<rect x="120" y="46" width="80" height="46" rx="6" fill="#0f2050" stroke="#3E83FF" stroke-width="1.5"/>
-					<rect x="126" y="52" width="68" height="32" rx="3" fill="#1a3a6a"/>
-					<rect x="130" y="57" width="35" height="2" rx="1" fill="#3E83FF" opacity="0.8"/>
-					<rect x="130" y="62" width="50" height="2" rx="1" fill="#60a5fa" opacity="0.5"/>
-					<rect x="130" y="67" width="28" height="2" rx="1" fill="#3E83FF" opacity="0.6"/>
-					<rect x="130" y="72" width="40" height="2" rx="1" fill="#60a5fa" opacity="0.4"/>
-					<rect x="220" y="52" width="80" height="40" rx="6" fill="#0f2050" stroke="#3E83FF" stroke-width="1.5"/>
-					<rect x="226" y="58" width="68" height="26" rx="3" fill="#1a3a6a"/>
-					<rect x="230" y="63" width="32" height="2" rx="1" fill="#3E83FF" opacity="0.7"/>
-					<rect x="230" y="68" width="48" height="2" rx="1" fill="#60a5fa" opacity="0.5"/>
-					<rect x="230" y="73" width="22" height="2" rx="1" fill="#3E83FF" opacity="0.6"/>
-					<circle cx="60" cy="36" r="12" fill="#2a4a8a"/>
-					<path d="M42 55 Q60 44 78 55" fill="#2a4a8a"/>
-					<circle cx="160" cy="30" r="12" fill="#3a5a9a"/>
-					<path d="M142 49 Q160 38 178 49" fill="#3a5a9a"/>
-					<circle cx="260" cy="36" r="12" fill="#2a4a8a"/>
-					<path d="M242 55 Q260 44 278 55" fill="#2a4a8a"/>
-					<g transform="translate(133,0)">
-						<path d="M14 0 L26 0 L26 22 Q26 32 20 35 Q14 32 14 22 Z" fill="#1e3a6e" stroke="#3E83FF" stroke-width="1.5"/>
-						<path d="M14 5 L8 5 Q2 5 2 13 Q2 21 12 23" fill="none" stroke="#3E83FF" stroke-width="1.5"/>
-						<path d="M26 5 L32 5 Q38 5 38 13 Q38 21 28 23" fill="none" stroke="#3E83FF" stroke-width="1.5"/>
-						<rect x="16" y="35" width="8" height="5" rx="2" fill="#1e3a6e" stroke="#3E83FF" stroke-width="1"/>
-						<rect x="12" y="40" width="16" height="3" rx="1.5" fill="#3E83FF"/>
-					</g>
-					<g opacity="0.35" transform="translate(4,4)">
-						<circle cx="12" cy="12" r="8" fill="none" stroke="#3E83FF" stroke-width="1.5" stroke-dasharray="4 2"/>
-						<circle cx="12" cy="12" r="4" fill="none" stroke="#3E83FF" stroke-width="1"/>
-					</g>
-					<g opacity="0.25" transform="translate(290,10)">
-						<circle cx="10" cy="10" r="7" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="3 2"/>
-					</g>
-				</svg>
+				<video
+					src="/videos/login-robot.webm"
+					autoplay
+					loop
+					muted
+					playsinline
+					class="robot-video"
+				></video>
 			</div>
 
 			<div class="stats-row">
@@ -133,16 +82,16 @@
 
 .visual{position:relative;display:flex;flex-direction:column;align-items:center;margin-bottom:2rem;}
 
-.circle-photo{width:130px;height:130px;border-radius:50%;overflow:hidden;border:3px solid rgba(62,131,255,0.4);position:relative;z-index:2;margin-bottom:-20px;box-shadow:0 0 0 8px rgba(62,131,255,0.08);}
-.circle-photo img{width:100%;height:100%;object-fit:cover;}
-.circle-ring{position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(62,131,255,0.2);animation:spin 12s linear infinite;}
 
-.icon-badge{position:absolute;background:rgba(13,27,64,0.9);border:1px solid rgba(62,131,255,0.3);border-radius:12px;padding:8px;z-index:3;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
-.badge-1{top:0;left:10%;}
-.badge-2{top:0;right:10%;}
-.badge-3{top:50%;right:0;transform:translateY(-50%);}
 
-.illustration{width:100%;max-width:360px;position:relative;z-index:1;}
+
+
+
+
+
+
+
+
 
 .stats-row{display:flex;align-items:center;gap:1.5rem;}
 .stat-item{text-align:center;}
@@ -166,11 +115,12 @@
 .switch{text-align:center;margin-top:1.5rem;color:rgba(255,255,255,0.45);font-size:0.875rem;}
 .switch a{color:#3E83FF;text-decoration:none;font-weight:600;}
 
-.float-1{animation:floaty 3s ease-in-out infinite;}
-.float-2{animation:floaty 3s ease-in-out infinite 1s;}
-.float-3{animation:floaty 3s ease-in-out infinite 2s;}
-@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
+
+
+
+
+
+.robot-video{width:min(320px,90%);border-radius:20px;position:relative;z-index:2;}
 @media(max-width:768px){.left{display:none;}.right{flex:1;}}
 </style>
