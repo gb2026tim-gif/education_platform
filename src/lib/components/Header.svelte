@@ -76,7 +76,7 @@
 
 <svelte:window onclick={handleClickOutside} />
 
-<header style="position:sticky; top:0; z-index:50; background:var(--header-bg,rgba(29,29,38,0.96)); backdrop-filter:blur(8px); border-bottom:1px solid var(--border,rgba(255,255,255,0.05)); transition:background 0.25s;">
+<header style="position:relative; background:var(--header-bg,rgba(29,29,38,0.96)); backdrop-filter:blur(8px); border-bottom:1px solid var(--border,rgba(255,255,255,0.05)); transition:background 0.25s;">
     <div style="max-width:1280px; margin:0 auto; padding:0 2rem; display:flex; align-items:center; height:72px; gap:2rem;">
 
         <a href="/" style="flex-shrink:0; text-decoration:none;" aria-label="LvlUp — Головна">
