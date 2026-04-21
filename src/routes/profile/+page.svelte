@@ -51,7 +51,7 @@
             </div>
             <h1 style="font-size:40px; font-weight:800; color:var(--text); margin-bottom:24px; letter-spacing:-0.5px;">Мій акаунт</h1>
 
-            {#if p}
+            {#if p != null}
 
                 <!-- Profile hero -->
                 <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px 32px; margin-bottom:20px; display:flex; align-items:center; gap:24px;">
@@ -75,16 +75,16 @@
                     <div style="flex:1;">
                         <div style="font-size:26px; font-weight:800; color:var(--text); margin-bottom:4px;">{p.firstName && p.lastName ? p.firstName + ' ' + p.lastName : p.name}</div>
                         <div style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">{p.email}</div>
-                        {#if p.captainOf.length > 0}
-                            <div style="font-size:13px; color:var(--text-muted);">Турнір: {p.captainOf[0].tournament.title}</div>
+                        {#if p.captainOf && p.captainOf.length > 0}
+                            <div style="font-size:13px; color:var(--text-muted);">Турнір: {p.captainOf?.[0]?.tournament?.title}</div>
                         {/if}
                     </div>
 
                     <!-- Activity block -->
-                    {#if p.captainOf.length > 0}
+                    {#if p.captainOf && p.captainOf.length > 0}
                         <div style="background:rgba(61,142,240,0.12); border:1px solid rgba(61,142,240,0.35); border-radius:12px; padding:16px 20px; min-width:180px;">
                             <div style="font-size:11px; font-weight:700; letter-spacing:0.08em; color:var(--accent, #3d8ef0); text-transform:uppercase; margin-bottom:10px;">Активність:</div>
-                            {#each p.captainOf as team}
+                            {#each (p.captainOf ?? []) as team}
                                 <div style="margin-bottom:8px;">
                                     <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">Турнір: <span style="color:#3d8ef0;">{team.tournament.title}</span></div>
                                     <div style="display:flex; gap:6px; flex-wrap:wrap;">
