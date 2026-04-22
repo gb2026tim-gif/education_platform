@@ -389,7 +389,7 @@
                         {#each t.members as member}
                             <div class="mrow">
                                 <div class="mavatar" style="background:rgba(62,207,124,.12); border:1.5px solid rgba(62,207,124,.25); color:#166534;">
-                                    {member.name[0].toUpperCase()}
+                                    {member.name?.[0]?.toUpperCase() ?? "?"}
                                 </div>
                                 <div style="flex:1; min-width:0;">
                                     <div class="mname">{member.name}</div>

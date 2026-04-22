@@ -297,7 +297,7 @@
                             <a href="/my-teams/{team.id}" class="team-card">
                                 <div class="card-top">
                                     <div style="display:flex;align-items:center;gap:16px;flex:1;min-width:0;">
-                                        <div class="t-avatar">{team.name[0].toUpperCase()}</div>
+                                        <div class="t-avatar">{team.name?.[0]?.toUpperCase() ?? "?"}</div>
                                         <div style="min-width:0;">
                                             <div class="t-name">{team.name}</div>
                                             <div class="t-captain">Командир · {team.captain?.name ?? 'Невідомо'}</div>
