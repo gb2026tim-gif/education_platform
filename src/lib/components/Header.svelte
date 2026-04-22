@@ -76,7 +76,7 @@
 
 <svelte:window onclick={handleClickOutside} />
 
-<header style="position:relative; background:var(--header-bg,rgba(29,29,38,0.96)); backdrop-filter:blur(8px); border-bottom:1px solid var(--border,rgba(255,255,255,0.05)); transition:background 0.25s;">
+<header style="z-index: 1000; position:relative; background:var(--header-bg,rgba(29,29,38,0.96)); backdrop-filter:blur(8px); border-bottom:1px solid var(--border,rgba(255,255,255,0.05)); transition:background 0.25s;">
     <div style="max-width:1280px; margin:0 auto; padding:0 2rem; display:flex; align-items:center; height:72px; gap:2rem;">
 
         <a href="/" style="flex-shrink:0; text-decoration:none;" aria-label="LvlUp — Головна">
@@ -144,12 +144,11 @@
                     </button>
 
                     {#if userMenuOpen}
-                        <div style="position:absolute; right:0; top:calc(100% + 8px); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:0.5rem; min-width:180px; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.3);">
+                        <div style="position:absolute; right:0; top:calc(100% + 8px); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:0.5rem; min-width:180px; z-index:100000000000000000000; box-shadow:0 8px 24px rgba(0,0,0,0.3);">
                             <div style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--border); margin-bottom:0.25rem;">
                                 <p style="font-size:0.85rem; font-weight:600; color:var(--text);">{user.name}</p>
                                 <p style="font-size:0.75rem; color:var(--text-muted);">{user.email}</p>
                             </div>
-                            <a href="/dashboard" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Дашборд</a>
                             <a href="/profile" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Профіль</a>
                             <button onclick={handleLogout}
                                     style="width:100%; text-align:left; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:#f87171; background:none; border:none; cursor:pointer; margin-top:0.25rem; border-top:1px solid var(--border); padding-top:0.5rem;">
