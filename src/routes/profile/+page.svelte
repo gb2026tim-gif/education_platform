@@ -87,7 +87,7 @@
         border-radius: 8px;
         padding: 10px 14px;
         color: var(--text);
-        font-size: 14px;
+        font-size: 16px;
         font-family: 'Manrope', sans-serif;
         outline: none;
         box-sizing: border-box;
@@ -117,13 +117,13 @@
     }
 
     .panel-title {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 700;
         color: var(--text);
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 20px;
+        margin-bottom: 22px;
     }
     .panel-accent { width: 4px; height: 22px; background: #3d8ef0; border-radius: 2px; display: block; }
 
@@ -150,7 +150,7 @@
     .btn-primary {
         padding: 11px 28px; border-radius: 10px;
         background: #3d8ef0; border: none;
-        color: #fff; font-size: 14px; font-weight: 700;
+        color: #fff; font-size: 16px; font-weight: 700;
         cursor: pointer; font-family: 'Manrope', sans-serif;
         transition: background .15s;
     }
@@ -159,7 +159,7 @@
     .btn-secondary {
         padding: 11px 28px; border-radius: 10px;
         border: 1px solid var(--border-hover); background: none;
-        color: var(--text-muted); font-size: 14px; font-weight: 600;
+        color: var(--text-muted); font-size: 16px; font-weight: 600;
         cursor: pointer; font-family: 'Manrope', sans-serif;
         transition: border-color .15s, color .15s;
     }
@@ -167,13 +167,13 @@
 
     /* ── certificates ──────────────────────────── */
     .section-heading {
-        font-size: 22px;
+        font-size: 28px;
         font-weight: 800;
         color: var(--text);
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
     }
 
     .cert-section {
@@ -186,14 +186,14 @@
     :global(.light-mode) .cert-section { background: #f4f7ff; border-color: rgba(61,142,240,.12); }
 
     .cert-cat-label {
-        font-size: 13px; font-weight: 700; color: var(--text-muted);
+        font-size: 15px; font-weight: 700; color: var(--text-muted);
         letter-spacing: .06em; text-transform: uppercase;
         margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
     }
 
     .cert-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+        grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
         gap: 14px;
     }
 
@@ -214,9 +214,9 @@
     :global(.light-mode) .cert-img { border-color: rgba(10,14,26,.08); }
 
     .cert-body   { padding: 12px 14px; }
-    .cert-title  { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-    .cert-sub    { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
-    .cert-date   { font-size: 11px; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
+    .cert-title  { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .cert-sub    { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
+    .cert-date   { font-size: 14px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
 
     .cert-overlay {
         position: absolute; inset: 0;
@@ -230,7 +230,7 @@
         display: flex; flex-direction: column; align-items: center; gap: 7px;
         background: rgba(61,142,240,.9); border: none;
         padding: 12px 20px; border-radius: 10px; color: #fff;
-        font-size: 13px; font-weight: 700; cursor: pointer;
+        font-size: 15px; font-weight: 700; cursor: pointer;
         font-family: 'Manrope', sans-serif; transition: background .15s;
     }
     .cert-dl-btn:hover { background: #3d8ef0; }
@@ -242,12 +242,12 @@
     <div style="display:flex; align-items:flex-start;">
         <Sidebar user={p} />
 
-        <main style="flex:1; padding:32px 44px; max-width:1100px;">
+        <main style="flex:1; padding:40px 56px; max-width:1200px; margin:0 auto;">
 
-            <div style="font-size:13px; color:var(--text-dim); margin-bottom:4px;">
+            <div style="font-size:15px; color:var(--text-muted); margin-bottom:6px;">
                 Кабінет / <span style="color:var(--text-muted);">Мій акаунт</span>
             </div>
-            <h1 style="font-size:36px; font-weight:800; color:var(--text); margin-bottom:24px; letter-spacing:-0.5px;">Мій акаунт</h1>
+            <h1 style="font-size:44px; font-weight:800; color:var(--text); margin-bottom:28px; letter-spacing:-0.5px;">Мій акаунт</h1>
 
             {#if p != null}
 
@@ -271,29 +271,29 @@
                             <input type="file" accept="image/jpeg,image/png,image/webp" onchange={handleAvatarUpload} style="display:none;" />
                         </label>
                         {#if uploadError}
-                            <div style="position:absolute;top:100%;left:0;font-size:11px;color:#f87171;white-space:nowrap;margin-top:4px;">{uploadError}</div>
+                            <div style="position:absolute;top:100%;left:0;font-size:14px;color:#f87171;white-space:nowrap;margin-top:4px;">{uploadError}</div>
                         {/if}
                     </div>
 
                     <div style="flex:1;">
-                        <div style="font-size:24px;font-weight:800;color:var(--text);margin-bottom:4px;">
+                        <div style="font-size:28px;font-weight:800;color:var(--text);margin-bottom:6px;">
                             {p.firstName && p.lastName ? p.firstName + ' ' + p.lastName : p.name}
                         </div>
-                        <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">{p.email}</div>
+                        <div style="font-size:16px;color:var(--text-muted);margin-bottom:10px;">{p.email}</div>
                         {#if p.captainOf && p.captainOf.length > 0}
-                            <div style="font-size:13px;color:var(--text-muted);">Турнір: {p.captainOf[0]?.tournament?.title}</div>
+                            <div style="font-size:15px;color:var(--text-muted);">Турнір: {p.captainOf[0]?.tournament?.title}</div>
                         {/if}
                     </div>
 
                     {#if p.captainOf && p.captainOf.length > 0}
                         <div style="background:rgba(61,142,240,.1);border:1px solid rgba(61,142,240,.3);border-radius:12px;padding:16px 20px;min-width:180px;">
-                            <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#3d8ef0;text-transform:uppercase;margin-bottom:10px;">Активність:</div>
+                            <div style="font-size:14px;font-weight:700;letter-spacing:.08em;color:#3d8ef0;text-transform:uppercase;margin-bottom:12px;">Активність:</div>
                             {#each (p.captainOf ?? []) as team}
                                 <div style="margin-bottom:8px;">
-                                    <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">Турнір: <span style="color:#3d8ef0;">{team.tournament.title}</span></div>
+                                    <div style="font-size:15px;color:var(--text-muted);margin-bottom:8px;">Турнір: <span style="color:#3d8ef0;">{team.tournament.title}</span></div>
                                     <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                        <span style="padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(61,142,240,.22);color:#3d8ef0;">Командир</span>
-                                        <span style="padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(61,142,240,.22);color:#3d8ef0;">Команда: {team.name}</span>
+                                        <span style="padding:4px 12px;border-radius:12px;font-size:14px;font-weight:600;background:rgba(61,142,240,.22);color:#3d8ef0;">Командир</span>
+                                        <span style="padding:4px 12px;border-radius:12px;font-size:14px;font-weight:600;background:rgba(61,142,240,.22);color:#3d8ef0;">Команда: {team.name}</span>
                                     </div>
                                 </div>
                             {/each}
@@ -302,10 +302,10 @@
                 </div>
 
                 {#if form?.error}
-                    <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:12px 16px;margin-bottom:16px;color:#f87171;font-size:14px;">{form.error}</div>
+                    <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:12px 16px;margin-bottom:16px;color:#f87171;font-size:16px;">{form.error}</div>
                 {/if}
                 {#if saved || form?.success}
-                    <div style="background:rgba(62,207,124,.1);border:1px solid rgba(62,207,124,.3);border-radius:12px;padding:12px 16px;margin-bottom:16px;color:#3ecf7c;font-size:14px;">Збережено успішно!</div>
+                    <div style="background:rgba(62,207,124,.1);border:1px solid rgba(62,207,124,.3);border-radius:12px;padding:12px 16px;margin-bottom:16px;color:#3ecf7c;font-size:16px;">Збережено успішно!</div>
                 {/if}
 
                 <form method="POST" action="?/updateProfile" use:enhance={() => {
@@ -316,26 +316,26 @@
                         setTimeout(() => saved = false, 3000);
                     };
                 }}>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px;">
 
                         <!-- Особисті дані -->
                         <div class="panel">
                             <div class="panel-title"><span class="panel-accent"></span>Особисті дані</div>
                             <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
                                 <div>
-                                    <label for="firstName" style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:6px;">Ім'я <span style="color:#3d8ef0;">*</span></label>
+                                    <label for="firstName" style="display:block;font-size:16px;color:var(--text-muted);margin-bottom:8px;">Ім'я <span style="color:#3d8ef0;">*</span></label>
                                     <input id="firstName" name="firstName" type="text" disabled={!editing} value={p.firstName ?? ''} required placeholder="Іван" class="field-input" />
                                 </div>
                                 <div>
-                                    <label for="lastName" style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:6px;">Прізвище <span style="color:#3d8ef0;">*</span></label>
+                                    <label for="lastName" style="display:block;font-size:16px;color:var(--text-muted);margin-bottom:8px;">Прізвище <span style="color:#3d8ef0;">*</span></label>
                                     <input id="lastName" name="lastName" type="text" disabled={!editing} value={p.lastName ?? ''} required placeholder="Шевченко" class="field-input" />
                                 </div>
                                 <div>
-                                    <label for="city" style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:6px;">Місто</label>
+                                    <label for="city" style="display:block;font-size:16px;color:var(--text-muted);margin-bottom:8px;">Місто</label>
                                     <input id="city" name="city" type="text" disabled={!editing} value={p.city ?? ''} placeholder="Львів" class="field-input" />
                                 </div>
                                 <div>
-                                    <label for="school" style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:6px;">Місце навчання</label>
+                                    <label for="school" style="display:block;font-size:16px;color:var(--text-muted);margin-bottom:8px;">Місце навчання</label>
                                     <input id="school" name="school" type="text" disabled={!editing} value={p.school ?? ''} placeholder="ФКТБП" class="field-input" />
                                 </div>
                             </div>
@@ -347,9 +347,9 @@
                             <div style="display:flex;flex-direction:column;gap:14px;">
                                 <div>
                                     <!-- email is read-only display, no input — use <p> not <label> -->
-                                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px;">E-mail <span style="color:#3d8ef0;">*</span></p>
+                                    <p style="font-size:16px;color:var(--text-muted);margin-bottom:8px;">E-mail <span style="color:#3d8ef0;">*</span></p>
                                     <div style="display:flex;align-items:center;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:10px 14px;gap:8px;">
-                                        <span style="color:var(--text);font-size:14px;flex:1;">{p.email}</span>
+                                        <span style="color:var(--text);font-size:16px;flex:1;">{p.email}</span>
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-dim);">
                                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                                             <polyline points="22,6 12,13 2,6"/>
@@ -358,11 +358,11 @@
                                 </div>
                                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
                                     <div>
-                                        <label for="phone" style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:6px;">Телефон</label>
+                                        <label for="phone" style="display:block;font-size:16px;color:var(--text-muted);margin-bottom:8px;">Телефон</label>
                                         <input id="phone" name="phone" type="tel" disabled={!editing} value={p.phone ?? ''} placeholder="+380-XX-XXX-XX-XX" class="field-input" />
                                     </div>
                                     <div>
-                                        <label for="discord" style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:6px;">Discord</label>
+                                        <label for="discord" style="display:block;font-size:16px;color:var(--text-muted);margin-bottom:8px;">Discord</label>
                                         <input id="discord" name="discord" type="text" disabled={!editing} value={p.discord ?? ''} placeholder="username" class="field-input" />
                                     </div>
                                 </div>
@@ -374,15 +374,15 @@
                     <div class="panel" style="display:flex;align-items:center;gap:40px;margin-bottom:20px;">
                         <div class="panel-title" style="margin-bottom:0;flex-shrink:0;"><span class="panel-accent"></span>Безпека</div>
                         <div style="flex:1;max-width:320px;">
-                            <label for="password-display" style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:6px;">Пароль</label>
+                            <label for="password-display" style="display:block;font-size:16px;color:var(--text-muted);margin-bottom:8px;">Пароль</label>
                             <input id="password-display" type="password" value="••••••••" disabled
-                                   style="width:100%;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text-dim);font-size:14px;font-family:'Manrope',sans-serif;outline:none;box-sizing:border-box;cursor:not-allowed;" />
+                                   style="width:100%;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text-muted);font-size:16px;font-family:'Manrope',sans-serif;outline:none;box-sizing:border-box;cursor:not-allowed;" />
                         </div>
                     </div>
 
                     <!-- Bottom bar -->
                     <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:40px;">
-                        <div style="flex:1;background:rgba(61,142,240,.07);border:1px solid rgba(61,142,240,.18);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--text-muted);line-height:1.6;min-width:200px;">
+                        <div style="flex:1;background:rgba(61,142,240,.07);border:1px solid rgba(61,142,240,.18);border-radius:12px;padding:14px 18px;font-size:15px;color:var(--text-muted);line-height:1.6;min-width:200px;">
                             Хочеш взяти участь у турнірі? Перейди до
                             <a href="/tourments" style="color:#3d8ef0;text-decoration:none;">Акаунту команди</a>
                             — там можна переглянути турніри з відкритою реєстрацією, створити команду або доєднатись.
@@ -404,7 +404,7 @@
                         <span class="panel-accent" style="height:28px;"></span>
                         Мої сертифікати
                     </div>
-                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">Наведи на сертифікат, щоб завантажити</p>
+                    <p style="font-size:15px;color:var(--text-muted);margin-bottom:20px;">Наведи на сертифікат, щоб завантажити</p>
 
                     <!-- Course certs -->
                     <div class="cert-section">
