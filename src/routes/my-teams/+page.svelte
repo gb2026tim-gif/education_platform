@@ -51,7 +51,7 @@
 
     .main-area {
         flex: 1;
-        padding: 32px 40px;
+        padding: 40px 56px;
         position: relative;
         background:
                 radial-gradient(ellipse 100% 55% at 40% -5%, rgba(18,55,150,.65) 0%, transparent 60%),
@@ -131,9 +131,9 @@
         transition: transform .2s;
     }
 
-    .t-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .t-name { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
 
-    .t-captain { font-size: 12px; color: rgba(255,255,255,.5); }
+    .t-captain { font-size: 15px; color: rgba(255,255,255,.75); }
     :global(.light-mode) .t-captain { color: rgba(10,14,26,.5); }
 
     .view-btn {
@@ -141,7 +141,7 @@
         border-radius: 9px;
         background: #3d8ef0;
         color: #fff;
-        font-size: 13px;
+        font-size: 16px;
         font-weight: 700;
         border: none;
         cursor: pointer;
@@ -151,27 +151,27 @@
     }
     .view-btn:hover { background: #2d7de0; transform: scale(1.03); }
 
-    .badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge { padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 700; white-space: nowrap; }
 
     .badge-blue { background: rgba(61,142,240,.14); color: #5aaeff; border: 1px solid rgba(61,142,240,.25); }
     :global(.light-mode) .badge-blue { color: #1a5cc8; }
 
-    .stat-text { font-size: 12px; color: rgba(255,255,255,.55); display: flex; align-items: center; gap: 6px; }
+    .stat-text { font-size: 15px; color: rgba(255,255,255,.55); display: flex; align-items: center; gap: 6px; }
     :global(.light-mode) .stat-text { color: rgba(10,14,26,.55); }
 
-    .tour-lbl { font-size: 12px; color: rgba(255,255,255,.4); }
+    .tour-lbl { font-size: 15px; color: rgba(255,255,255,.4); }
     :global(.light-mode) .tour-lbl { color: rgba(10,14,26,.45); }
 
-    .tour-lbl span { color: rgba(255,255,255,.65); font-weight: 600; }
+    .tour-lbl span { color: rgba(255,255,255,.9); font-weight: 600; }
     :global(.light-mode) .tour-lbl span { color: rgba(10,14,26,.7); }
 
-    .bc { font-size: 12px; color: rgba(255,255,255,.35); margin-bottom: 8px; }
+    .bc { font-size: 14px; color: rgba(255,255,255,.65); margin-bottom: 8px; }
     :global(.light-mode) .bc { color: rgba(10,14,26,.4); }
 
     .bc span { color: rgba(255,255,255,.55); }
     :global(.light-mode) .bc span { color: rgba(10,14,26,.6); }
 
-    .ptitle { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 28px; }
+    .ptitle { font-size: 32px; font-weight: 800; color: var(--text); margin-bottom: 32px; }
 
     .empty-box {
         background: rgba(255,255,255,.04);
@@ -286,8 +286,8 @@
                                 <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                             </svg>
                         </div>
-                        <div style="font-size:16px;font-weight:700;color:#3d8ef0;margin-bottom:10px;">Ти ще не належиш до команди</div>
-                        <div style="font-size:13px;color:var(--text-muted);max-width:300px;line-height:1.7;">
+                        <div style="font-size:18px;font-weight:700;color:#3d8ef0;margin-bottom:12px;">Ти ще не належиш до команди</div>
+                        <div style="font-size:16px;color:var(--text-muted);max-width:340px;line-height:1.7;">
                             Перейди на сторінку <a href="/tourments" style="color:#3d8ef0;text-decoration:none;">Турніри</a>, вибери один з активних та зареєструй свою команду
                         </div>
                     </div>
@@ -329,7 +329,7 @@
     {#each pendingInvites as invite}
         <div class="invite-toast" role="alert">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                <span style="font-size:13px;font-weight:700;color:var(--text);">Запрошення до команди</span>
+                <span style="font-size:16px;font-weight:700;color:var(--text);">Запрошення до команди</span>
                 <button type="button" onclick={() => dismiss(invite.id)}
                         style="background:none;border:none;color:var(--text-dim);cursor:pointer;"
                         aria-label="Закрити">
@@ -338,17 +338,17 @@
                     </svg>
                 </button>
             </div>
-            <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">
+            <p style="font-size:15px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">
                 Тебе запросили до команди <span style="color:#3d8ef0;font-weight:600;">{invite.teamName}</span>
                 на турнір <span style="color:#3d8ef0;font-weight:600;">{invite.tournamentTitle}</span>
             </p>
             <div style="display:flex;gap:8px;justify-content:flex-end;">
                 <form method="POST" action="?/declineInvite">
                     <input type="hidden" name="inviteId" value={invite.id} />
-                    <button type="submit" style="padding:8px 18px;border-radius:8px;border:1px solid var(--border-hover);background:transparent;color:var(--text-muted);font-size:12px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;">Відхилити</button>
+                    <button type="submit" style="padding:8px 18px;border-radius:8px;border:1px solid var(--border-hover);background:transparent;color:var(--text-muted);font-size:15px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;">Відхилити</button>
                 </form>
                 <button type="button" onclick={() => openModal(invite)}
-                        style="padding:8px 18px;border-radius:8px;border:none;background:#3d8ef0;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">
+                        style="padding:8px 18px;border-radius:8px;border:none;background:#3d8ef0;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">
                     Прийняти
                 </button>
             </div>
@@ -372,12 +372,12 @@
                         <path d="M18 6L6 18M6 6l12 12"/>
                     </svg>
                 </button>
-                <h2 style="font-size:20px;font-weight:800;color:var(--text);margin-bottom:6px;">Доєднатись до команди</h2>
-                <p style="font-size:13px;color:var(--text-muted);margin-bottom:28px;">
+                <h2 style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:6px;">Доєднатись до команди</h2>
+                <p style="font-size:15px;color:var(--text-muted);margin-bottom:28px;">
                     Турнір: <span style="color:#3d8ef0;">{activeInvite.tournamentTitle}</span>
                 </p>
                 <div style="margin-bottom:24px;">
-                    <label for="invite-code" style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:8px;">Код запрошення від капітана</label>
+                    <label for="invite-code" style="display:block;font-size:16px;color:var(--text-muted);margin-bottom:8px;">Код запрошення від капітана</label>
                     <input id="invite-code" type="text" placeholder="XXX-XXX" class="modal-input" />
                 </div>
                 <form method="POST" action="?/acceptInvite">

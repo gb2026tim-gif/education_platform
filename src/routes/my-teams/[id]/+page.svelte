@@ -66,7 +66,7 @@
 
     .main-area {
         flex: 1;
-        padding: 32px 40px;
+        padding: 40px 56px;
         position: relative;
         background:
                 radial-gradient(ellipse 100% 55% at 40% -5%, rgba(18,55,150,.65) 0%, transparent 60%),
@@ -98,12 +98,12 @@
         box-shadow: 0 4px 24px rgba(61,142,240,.1);
     }
 
-    .hero-top { padding: 24px 32px; display: flex; align-items: center; gap: 20px; }
+    .hero-top { padding: 26px 36px; display: flex; align-items: center; gap: 22px; }
 
     .stats-bar {
         border-top: 1px solid rgba(255,255,255,.07);
-        padding: 0 32px;
-        height: 54px;
+        padding: 0 36px;
+        height: 60px;
         display: flex;
         align-items: center;
         background: rgba(0,0,0,.25);
@@ -125,27 +125,27 @@
         font-size: 26px; font-weight: 800; color: #5aaeff; flex-shrink: 0;
     }
 
-    .htitle { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
-    .hsub   { font-size: 13px; color: rgba(255,255,255,.45); }
+    .htitle { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .hsub   { font-size: 16px; color: rgba(255,255,255,.8); }
     :global(.light-mode) .hsub { color: rgba(10,14,26,.5); }
 
-    .stat-chip { display: flex; align-items: center; gap: 7px; font-size: 13px; color: rgba(255,255,255,.55); white-space: nowrap; }
+    .stat-chip { display: flex; align-items: center; gap: 8px; font-size: 15px; color: rgba(255,255,255,.85); white-space: nowrap; }
     :global(.light-mode) .stat-chip { color: rgba(10,14,26,.55); }
 
-    .badge-status { padding: 5px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .badge-status { padding: 6px 18px; border-radius: 20px; font-size: 14px; font-weight: 700; white-space: nowrap; }
 
     .badge-blue {
-        padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap;
+        padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; white-space: nowrap;
         background: rgba(61,142,240,.15); color: #5aaeff; border: 1px solid rgba(61,142,240,.25);
     }
     :global(.light-mode) .badge-blue { background: rgba(61,142,240,.12); color: #1a5cc8; }
 
-    .tour-lbl { font-size: 13px; color: rgba(255,255,255,.45); display: flex; align-items: center; gap: 6px; }
+    .tour-lbl { font-size: 15px; color: rgba(255,255,255,.8); display: flex; align-items: center; gap: 6px; }
     :global(.light-mode) .tour-lbl { color: rgba(10,14,26,.5); }
 
     .tour-val {
-        font-size: 13px; font-weight: 700; color: #5aaeff;
-        background: rgba(61,142,240,.12); padding: 2px 10px; border-radius: 6px;
+        font-size: 15px; font-weight: 700; color: #5aaeff;
+        background: rgba(61,142,240,.12); padding: 3px 12px; border-radius: 6px;
         border: 1px solid rgba(61,142,240,.22);
     }
     :global(.light-mode) .tour-val { color: #1a5cc8; }
@@ -155,7 +155,7 @@
         background: rgba(255,255,255,.04);
         border: 1px solid rgba(255,255,255,.08);
         border-radius: 16px;
-        padding: 24px;
+        padding: 28px;
         backdrop-filter: blur(6px);
     }
 
@@ -165,13 +165,13 @@
         box-shadow: 0 2px 16px rgba(0,0,0,.06);
     }
 
-    .p-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 18px; }
+    .p-title { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
     .p-accent { width: 3px; height: 17px; background: #3d8ef0; border-radius: 2px; display: block; }
 
     /* ── member rows ─────────────────────────── */
     .mrow {
         display: flex; align-items: center; gap: 12px;
-        padding: 10px 14px; border-radius: 10px;
+        padding: 15px 18px; border-radius: 10px;
         background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.06);
         margin-bottom: 8px; transition: border-color .15s;
     }
@@ -180,14 +180,14 @@
     :global(.light-mode) .mrow:hover { border-color: rgba(61,142,240,.28); }
 
     .mavatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
-    .mname   { font-size: 13px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .memail  { font-size: 11px; color: rgba(255,255,255,.3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .mname   { font-size: 16px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .memail  { font-size: 14px; color: rgba(255,255,255,.65); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     :global(.light-mode) .memail { color: rgba(10,14,26,.4); }
 
     /* ── resource rows ───────────────────────── */
     .rrow {
         display: flex; align-items: center; justify-content: space-between;
-        padding: 13px 16px; border-radius: 10px;
+        padding: 15px 18px; border-radius: 10px;
         background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.07);
         margin-bottom: 8px; transition: border-color .15s;
     }
@@ -206,16 +206,16 @@
     .ricon-svg { color: rgba(255,255,255,.5); }
     :global(.light-mode) .ricon-svg { color: #3d6abf; }
 
-    .rlabel { font-size: 12px; color: rgba(255,255,255,.45); margin-bottom: 2px; }
+    .rlabel { font-size: 15px; color: rgba(255,255,255,.8); margin-bottom: 4px; }
     :global(.light-mode) .rlabel { color: rgba(10,14,26,.5); }
 
-    .rval { font-size: 12px; color: rgba(255,255,255,.28); }
+    .rval { font-size: 15px; color: rgba(255,255,255,.65); }
     :global(.light-mode) .rval { color: rgba(10,14,26,.38); }
 
-    .rlink { font-size: 12px; color: #5aaeff; text-decoration: none; }
+    .rlink { font-size: 15px; color: #5aaeff; text-decoration: none; }
     .rlink:hover { text-decoration: underline; }
 
-    .raction { font-size: 12px; color: #5aaeff; background: none; border: none; cursor: pointer; font-family: 'Manrope', sans-serif; font-weight: 600; flex-shrink: 0; padding: 0; }
+    .raction { font-size: 14px; color: #5aaeff; background: none; border: none; cursor: pointer; font-family: 'Manrope', sans-serif; font-weight: 600; flex-shrink: 0; padding: 0; }
     :global(.light-mode) .raction { color: #1a5cc8; }
 
     /* ── deadline ────────────────────────────── */
@@ -231,7 +231,7 @@
     .invite-input {
         flex: 1; padding: 10px 14px; border-radius: 9px;
         border: 1px solid rgba(255,255,255,.1); background: rgba(0,0,0,.3);
-        color: var(--text); font-size: 13px; font-family: 'Manrope', sans-serif; outline: none;
+        color: var(--text); font-size: 15px; font-family: 'Manrope', sans-serif; outline: none;
         transition: border-color .15s;
     }
     :global(.light-mode) .invite-input { background: rgba(61,142,240,.06); border-color: rgba(61,142,240,.2); color: #0a0e1a; }
@@ -242,7 +242,7 @@
     .invite-btn {
         padding: 10px 18px; border-radius: 9px;
         border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.07); color: rgba(255,255,255,.7);
-        font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Manrope', sans-serif; white-space: nowrap;
+        font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Manrope', sans-serif; white-space: nowrap;
         transition: background .15s, border-color .15s, color .15s;
     }
     :global(.light-mode) .invite-btn { background: rgba(61,142,240,.1); border-color: rgba(61,142,240,.25); color: #1a5cc8; }
@@ -250,8 +250,8 @@
     .invite-btn:disabled { opacity: .35; cursor: not-allowed; }
 
     /* invite status messages — :global because class applied dynamically */
-    :global(.im-done)  { font-size: 12px; margin-top: 6px; padding: 6px 10px; border-radius: 7px; color: #166534; background: rgba(62,207,124,.1); border: 1px solid rgba(62,207,124,.25); }
-    :global(.im-error) { font-size: 12px; margin-top: 6px; padding: 6px 10px; border-radius: 7px; color: #991b1b; background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2); }
+    :global(.im-done)  { font-size: 14px; margin-top: 6px; padding: 6px 10px; border-radius: 7px; color: #166534; background: rgba(62,207,124,.1); border: 1px solid rgba(62,207,124,.25); }
+    :global(.im-error) { font-size: 14px; margin-top: 6px; padding: 6px 10px; border-radius: 7px; color: #991b1b; background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2); }
 
     /* ── CTA buttons ─────────────────────────── */
     .cta-row { display: flex; gap: 10px; margin-top: 4px; }
@@ -259,7 +259,7 @@
     .btn-gray {
         flex: 1; padding: 12px; border-radius: 10px;
         border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06); color: rgba(255,255,255,.6);
-        font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Manrope', sans-serif;
+        font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Manrope', sans-serif;
         text-align: center; text-decoration: none; display: block; transition: border-color .15s, color .15s, background .15s;
     }
     :global(.light-mode) .btn-gray { border-color: rgba(61,142,240,.2); background: rgba(61,142,240,.07); color: rgba(10,14,26,.6); }
@@ -267,7 +267,7 @@
 
     .btn-blue {
         flex: 1; padding: 12px; border-radius: 10px; border: none; background: #3d8ef0;
-        color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Manrope', sans-serif;
+        color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Manrope', sans-serif;
         text-align: center; text-decoration: none; display: block; transition: background .15s;
     }
     .btn-blue:hover { background: #2d7de0; }
@@ -276,7 +276,7 @@
     .leave-btn {
         padding: 8px 16px; border-radius: 8px;
         border: 1px solid rgba(239,68,68,.3); background: rgba(239,68,68,.07);
-        color: #dc2626; font-size: 12px; font-weight: 600; cursor: pointer;
+        color: #dc2626; font-size: 14px; font-weight: 600; cursor: pointer;
         font-family: 'Manrope', sans-serif; display: flex; align-items: center; gap: 6px;
         transition: background .15s, border-color .15s;
     }
@@ -289,18 +289,18 @@
     :global(.light-mode) .del-btn:hover { color: #dc2626; }
 
     /* ── breadcrumb & title ──────────────────── */
-    .bc    { font-size: 12px; color: rgba(255,255,255,.35); margin-bottom: 8px; }
+    .bc    { font-size: 14px; color: rgba(255,255,255,.7); margin-bottom: 8px; }
     :global(.light-mode) .bc { color: rgba(10,14,26,.4); }
     .bc a  { color: rgba(255,255,255,.5); text-decoration: none; }
     :global(.light-mode) .bc a { color: rgba(10,14,26,.55); }
     .bc a:hover { text-decoration: underline; }
-    .ptitle { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 22px; }
+    .ptitle { font-size: 32px; font-weight: 800; color: var(--text); margin-bottom: 26px; }
 
     /* ── no-task placeholder ─────────────────── */
     .no-task {
         padding: 10px 14px; border-radius: 10px;
         background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
-        margin-bottom: 16px; font-size: 12px; color: rgba(255,255,255,.3);
+        margin-bottom: 16px; font-size: 15px; color: rgba(255,255,255,.65);
     }
     :global(.light-mode) .no-task { background: rgba(61,142,240,.05); border-color: rgba(61,142,240,.12); color: rgba(10,14,26,.4); }
 </style>
@@ -383,7 +383,7 @@
                                 <div class="mname">{t.captain?.name ?? ''}</div>
                                 <div class="memail">{t.captain?.email ?? ''}</div>
                             </div>
-                            <span class="badge-blue" style="font-size:11px; padding:3px 10px;">Командир</span>
+                            <span class="badge-blue" style="font-size:14px; padding:4px 12px;">Командир</span>
                         </div>
 
                         {#each t.members as member}
@@ -395,7 +395,7 @@
                                     <div class="mname">{member.name}</div>
                                     <div class="memail">{member.email}</div>
                                 </div>
-                                <span style="padding:3px 10px; border-radius:8px; font-size:11px; font-weight:700; background:rgba(62,207,124,.14); color:#166534; white-space:nowrap;">Підтверджено</span>
+                                <span style="padding:3px 10px; border-radius:8px; font-size:14px; font-weight:700; background:rgba(62,207,124,.14); color:#166534; white-space:nowrap;">Підтверджено</span>
                                 {#if data.isCaptain}
                                     <button type="button" class="del-btn" aria-label="Видалити учасника"
                                             onmouseenter={hoverRed}
@@ -409,7 +409,7 @@
                         {/each}
 
                         {#if t.members.length === 0}
-                            <div style="text-align:center; padding:16px; color:rgba(255,255,255,.25); font-size:13px;">Немає інших учасників</div>
+                            <div style="text-align:center; padding:16px; color:rgba(255,255,255,.65); font-size:15px;">Немає інших учасників</div>
                         {/if}
 
                         <!-- Invite row — captain only -->
@@ -448,7 +448,7 @@
                                     <circle cx="12" cy="12" r="10"/>
                                     <polyline points="12 6 12 12 16 14"/>
                                 </svg>
-                                <span style="font-size:13px; color:#ef4444; font-weight:700;">Дедлайн : {formatDate(deadline)} 23:59</span>
+                                <span style="font-size:15px; color:#ef4444; font-weight:700;">Дедлайн : {formatDate(deadline)} 23:59</span>
                             </div>
                         {:else}
                             <div class="no-task">Завдань поки немає — команду ще не зареєстровано на активний турнір</div>
@@ -536,4 +536,4 @@
     </div>
 
     <Footer />
-</div>
+</div>s
