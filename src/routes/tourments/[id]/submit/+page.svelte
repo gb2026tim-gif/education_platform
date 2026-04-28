@@ -5,39 +5,48 @@
     import Header from '$lib/components/Header.svelte';
     import Footer from '$lib/components/Footer.svelte';
     import Sidebar from '$lib/components/Sidebar.svelte';
-
     let { data, form }: { data: PageData; form: ActionData } = $props();
-
-    let gh   = $state(data.submission?.githubUrl   ?? '');
-    let vid  = $state(data.submission?.videoUrl    ?? '');
-    let demo = $state(data.submission?.demoUrl     ?? '');
-    let desc = $state(data.submission?.description ?? '');
+    const submission = $derived(data.submission);
+    const deadline = $derived(data.task.deadline);
+    let gh = $state('');
+    let vid = $state('');
+    let demo = $state('');
+    let desc = $state('');
     let edit = $state('');
     let saving = $state(false);
-
-    function toggle(f: string) { edit = edit === f ? '' : f; }
-
+    let timer = $state('');
+    $effect(() => {
+        gh = submission?.githubUrl ?? '';
+        vid = submission?.videoUrl ?? '';
+        demo = submission?.demoUrl ?? '';
+        desc = submission?.description ?? '';
+    });
+    function toggle(f: string) {
+        edit = edit === f ? '' : f;
+    }
     function getTimer(d: string | Date): string {
         const ms = new Date(d).getTime() - Date.now();
         if (ms <= 0) return 'Дедлайн минув';
         const days = Math.floor(ms / 86400000);
         const h = String(Math.floor((ms % 86400000) / 3600000)).padStart(2, '0');
-        const m = String(Math.floor((ms % 3600000)  / 60000)).padStart(2, '0');
-        const s = String(Math.floor((ms % 60000)    / 1000)).padStart(2, '0');
+        const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0');
+        const s = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
         return `${days}д ${h}:${m}:${s}`;
     }
-    let timer = $state(getTimer(data.task.deadline));
     $effect(() => {
-        const id = setInterval(() => { timer = getTimer(data.task.deadline); }, 1000);
+        const update = () => {
+            timer = getTimer(deadline);
+        };
+        update();
+        const id = setInterval(update, 1000);
         return () => clearInterval(id);
     });
-    const isPast = $derived(new Date(data.task.deadline).getTime() < Date.now());
-
+    const isPast = $derived(timer === 'Дедлайн минув');
     const statusItems = $derived([
-        { label: 'GitHub',     ok: gh.trim().length > 0   },
-        { label: 'Відео-демо', ok: vid.trim().length > 0  },
-        { label: 'Live demo',  ok: demo.trim().length > 0 },
-        { label: 'Опис',       ok: desc.trim().length > 0 },
+        { label: 'GitHub', ok: gh.trim().length > 0 },
+        { label: 'Відео-демо', ok: vid.trim().length > 0 },
+        { label: 'Live demo', ok: demo.trim().length > 0 },
+        { label: 'Опис', ok: desc.trim().length > 0 }
     ]);
 </script>
 

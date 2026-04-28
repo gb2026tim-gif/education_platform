@@ -4,38 +4,45 @@
     import Header from '$lib/components/Header.svelte';
     import Footer from '$lib/components/Footer.svelte';
     import Sidebar from '$lib/components/Sidebar.svelte';
-
     let { data }: { data: PageData } = $props();
-
+    const deadline = $derived(data.task.deadline);
     // ── Countdown ────────────────────────────────────────────────
     function getTimer(d: string | Date): string {
         const ms = new Date(d).getTime() - Date.now();
         if (ms <= 0) return 'Дедлайн минув';
         const days = Math.floor(ms / 86400000);
         const h = String(Math.floor((ms % 86400000) / 3600000)).padStart(2, '0');
-        const m = String(Math.floor((ms % 3600000)  / 60000)).padStart(2, '0');
-        const s = String(Math.floor((ms % 60000)    / 1000)).padStart(2, '0');
+        const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0');
+        const s = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
         return `${days}д ${h}:${m}:${s}`;
     }
-    let timer = $state(getTimer(data.task.deadline));
+    let timer = $state('');
     $effect(() => {
-        const id = setInterval(() => { timer = getTimer(data.task.deadline); }, 1000);
+        const update = () => {
+            timer = getTimer(deadline);
+        };
+        update();
+        const id = setInterval(update, 1000);
         return () => clearInterval(id);
     });
-    const isPast = $derived(new Date(data.task.deadline).getTime() < Date.now());
-
+    const isPast = $derived(timer === 'Дедлайн минув');
     // ── Parse techStack: "Backend: SvelteKit\nFrontend: Svelte" → grid ──
     const techRows = $derived(
-        (data.task.techStack ?? '').split('\n').filter(Boolean).map(line => {
-            const i = line.indexOf(':');
-            return i < 0
-                ? { label: '', val: line.trim() }
-                : { label: line.slice(0, i).trim(), val: line.slice(i + 1).trim() };
-        })
+        (data.task.techStack ?? '')
+            .split('\n')
+            .filter(Boolean)
+            .map((line) => {
+                const i = line.indexOf(':');
+                return i < 0
+                    ? { label: '', val: line.trim() }
+                    : { label: line.slice(0, i).trim(), val: line.slice(i + 1).trim() };
+            })
     );
-
     // ── Parse description: split on "•" bullet lines ──────────────
-    interface Block { type: 'p' | 'li'; text: string }
+    interface Block {
+        type: 'p' | 'li';
+        text: string;
+    }
     function parseDesc(raw: string): Block[] {
         const out: Block[] = [];
         for (const line of raw.split('\n')) {
@@ -50,8 +57,8 @@
         return out;
     }
     const descBlocks = $derived(parseDesc(data.task.description));
-    const descParas  = $derived(descBlocks.filter(b => b.type === 'p'));
-    const descItems  = $derived(descBlocks.filter(b => b.type === 'li'));
+    const descParas = $derived(descBlocks.filter((b) => b.type === 'p'));
+    const descItems = $derived(descBlocks.filter((b) => b.type === 'li'));
 </script>
 
 <svelte:head><title>{data.tournament.title} — Завдання</title></svelte:head>
