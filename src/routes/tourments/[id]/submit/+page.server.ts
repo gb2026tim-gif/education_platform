@@ -56,11 +56,11 @@ export const actions: Actions = {
         const tournamentId = event.params.id;
         const fd = await event.request.formData();
 
-        const taskId     = fd.get("taskId")?.toString();
-        const teamId     = fd.get("teamId")?.toString();
-        const githubUrl  = fd.get("githubUrl")?.toString().trim() ?? "";
-        const videoUrl   = fd.get("videoUrl")?.toString().trim() ?? "";
-        const demoUrl    = fd.get("demoUrl")?.toString().trim() ?? "";
+        const taskId = fd.get("taskId")?.toString();
+        const teamId = fd.get("teamId")?.toString();
+        const githubUrl = fd.get("githubUrl")?.toString().trim() ?? "";
+        const videoUrl = fd.get("videoUrl")?.toString().trim() ?? "";
+        const demoUrl = fd.get("demoUrl")?.toString().trim() ?? "";
         const description = fd.get("description")?.toString().trim() ?? "";
 
         if (!taskId || !teamId) return fail(400, { error: "Невірні дані форми" });
