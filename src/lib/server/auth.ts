@@ -8,6 +8,13 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  // Дозволяємо запити з dev-сервера Vite
+  trustedOrigins: [
+    "http://localhost:5173",
+    "http://localhost:4173",
+    "http://127.0.0.1:5173",
+    process.env.BETTER_AUTH_URL ?? "",
+  ].filter(Boolean),
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,
