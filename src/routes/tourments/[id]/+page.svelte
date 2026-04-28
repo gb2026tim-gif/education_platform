@@ -284,7 +284,7 @@
                 <div>
                     {#each t.teams as team}
                         <div class="team-row">
-                            <div class="team-avatar">{team.name[0].toUpperCase()}</div>
+                            <div class="team-avatar">{team.name?.charAt(0).toUpperCase() || '?'}</div>
                             <div class="team-info">
                                 <div class="team-name">{team.name}</div>
                                 <div class="team-sub">{team.captain.name} · {team._count.members + 1} учасників</div>
