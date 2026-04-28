@@ -96,7 +96,7 @@
                 </div>
             </div>
             <div style="position:absolute; right:2rem; top:-40px; bottom:0; width:44%; max-width:500px; border-radius:280px 0 0 280px; overflow:hidden;">
-                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Tech education" style="width:100%; height:100%; object-fit:cover;" />
+                <img src="/img/hero.jpg" alt="Tech education" style="width:100%; height:100%; object-fit:cover;" />
             </div>
         </div>
     </section>

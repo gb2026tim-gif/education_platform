@@ -1,6 +1,5 @@
-<!-- src/lib/components/Header.svelte -->
 <script lang="ts">
-    import { page } from '$app/stores';
+    import { page } from '$app/state';
     import { signOut } from '$lib/auth-client';
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
@@ -28,13 +27,13 @@
     const navLinks = [
         { label: 'Курси',      href: '/courses' },
         { label: 'Календар',   href: '/calendar' },
-        { label: 'Команда',    href: '/my-teams' },
+        { label: 'Турніри',    href: '/tournaments' },
         { label: 'Рейтинг',   href: '/leaderboard' },
         { label: 'Інформація', href: '/about' }
     ];
 
     function isActive(href: string): boolean {
-        return $page.url.pathname === href || $page.url.pathname.startsWith(href + '/');
+        return page.url.pathname === href || page.url.pathname.startsWith(href + '/');
     }
 
     onMount(() => {
@@ -60,6 +59,12 @@
         await goto('/auth/login');
     }
 
+    function handleSearchFocusOut(e: FocusEvent) {
+        const cur = e.currentTarget as HTMLElement;
+        const rel = e.relatedTarget as Node;
+        if (!cur.contains(rel)) closeSearch();
+    }
+
     function handleClickOutside(e: MouseEvent) {
         const target = e.target as HTMLElement;
         if (!target.closest('.user-menu-wrap')) {
@@ -67,7 +72,7 @@
         }
     }
 
-    const user = $derived($page.data?.user ?? null);
+    const user = $derived(page.data?.user ?? null);
 
     function getInitials(name: string): string {
         return name?.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase() ?? '?';
@@ -76,7 +81,7 @@
 
 <svelte:window onclick={handleClickOutside} />
 
-<header style="z-index: 1000; position:relative; background:var(--header-bg,rgba(29,29,38,0.96)); backdrop-filter:blur(8px); border-bottom:1px solid var(--border,rgba(255,255,255,0.05)); transition:background 0.25s;">
+<header style="z-index:1000; position:relative; background:var(--header-bg,rgba(29,29,38,0.96)); backdrop-filter:blur(8px); border-bottom:1px solid var(--border,rgba(255,255,255,0.05)); transition:background 0.25s;">
     <div style="max-width:1280px; margin:0 auto; padding:0 2rem; display:flex; align-items:center; height:72px; gap:2rem;">
 
         <a href="/" style="flex-shrink:0; text-decoration:none;" aria-label="LvlUp — Головна">
@@ -86,27 +91,26 @@
         <nav style="display:flex; align-items:center; gap:4px; flex:1;" class="hidden md:flex">
             {#each navLinks as link}
                 <a href={link.href}
-                   style="font-size:15px; font-weight:500; padding:7px 16px; border-radius:50px;
-                          border:1.5px solid {isActive(link.href) ? 'rgba(255,255,255,0.35)' : 'transparent'};
-                          color:{isActive(link.href) ? 'var(--text)' : 'var(--text-muted)'};
-                          text-decoration:none; transition:all 0.15s;">
+                   style={isActive(link.href)
+                     ? 'font-size:17px;font-weight:700;padding:10px 18px;border-radius:13px;border:1.5px solid #3E83FF;color:#3E83FF;box-shadow:0 0 10px #3E83FF4D;text-decoration:none;transition:all 0.15s;'
+                     : 'font-size:17px;font-weight:500;padding:10px 18px;border-radius:13px;border:1.5px solid transparent;color:var(--text-muted);text-decoration:none;transition:all 0.15s;'}>
                     {link.label}
                 </a>
             {/each}
         </nav>
 
         <div style="display:flex; align-items:center; gap:1rem; margin-left:auto;" class="hidden md:flex">
-            <!-- Search: expands LEFT from icon -->
-            <div class="search-wrap" style="position:relative; display:flex; align-items:center;"
-                 onfocusout={(e) => { if (!(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node)) closeSearch(); }}>
+
+            <!-- Search -->
+            <div class="search-wrap" style="position:relative; display:flex; align-items:center;" onfocusout={handleSearchFocusOut}>
                 {#if searchOpen}
                     <div style="position:absolute; right:0; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:0.4rem; background:var(--surface,#1A1D23); border:1.5px solid rgba(62,131,255,0.5); border-radius:24px; padding:0 0.6rem 0 0.9rem; height:36px; width:240px; animation:searchExpand 0.2s ease-out;">
                         <input
-                            bind:this={searchInput}
-                            bind:value={searchQuery}
-                            onkeydown={handleSearchKey}
-                            placeholder="Пошук..."
-                            style="flex:1; background:none; border:none; outline:none; color:var(--text,#fff); font-size:13px; font-family:inherit;"
+                                bind:this={searchInput}
+                                bind:value={searchQuery}
+                                onkeydown={handleSearchKey}
+                                placeholder="Пошук..."
+                                style="flex:1; background:none; border:none; outline:none; color:var(--text,#fff); font-size:13px; font-family:inherit;"
                         />
                         <button onclick={closeSearch} style="background:none; border:none; color:var(--text-muted); cursor:pointer; display:flex; padding:0;" aria-label="Закрити">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -121,7 +125,7 @@
                 {/if}
             </div>
 
-            <!-- Theme toggle — after search -->
+            <!-- Theme toggle -->
             <button onclick={toggleTheme} aria-label={dark ? 'Увімкнути світлу тему' : 'Увімкнути темну тему'}
                     style="width:36px; height:36px; border-radius:50%; background:none; border:none; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center;">
                 {#if dark}
@@ -144,14 +148,15 @@
                     </button>
 
                     {#if userMenuOpen}
-                        <div style="position:absolute; right:0; top:calc(100% + 8px); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:0.5rem; min-width:180px; z-index:100000000000000000000; box-shadow:0 8px 24px rgba(0,0,0,0.3);">
+                        <div style="position:absolute; right:0; top:calc(100% + 8px); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:0.5rem; min-width:180px; z-index:9999; box-shadow:0 8px 24px rgba(0,0,0,0.3);">
                             <div style="padding:0.5rem 0.75rem; border-bottom:1px solid var(--border); margin-bottom:0.25rem;">
                                 <p style="font-size:0.85rem; font-weight:600; color:var(--text);">{user.name}</p>
                                 <p style="font-size:0.75rem; color:var(--text-muted);">{user.email}</p>
                             </div>
+                            <a href="/dashboard" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Дашборд</a>
                             <a href="/profile" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Профіль</a>
                             <button onclick={handleLogout}
-                                    style="width:100%; text-align:left; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:#f87171; background:none; border:none; cursor:pointer; margin-top:0.25rem; border-top:1px solid var(--border); padding-top:0.5rem;">
+                                    style="width:100%; text-align:left; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:#f87171; background:none; border:none; cursor:pointer; margin-top:0.25rem; border-top:1px solid var(--border);">
                                 Вийти
                             </button>
                         </div>
@@ -165,6 +170,7 @@
             {/if}
         </div>
 
+        <!-- Mobile burger -->
         <button class="md:hidden" onclick={() => (mobileOpen = !mobileOpen)}
                 aria-label="Відкрити меню"
                 style="margin-left:auto; background:none; border:none; color:var(--text); cursor:pointer;">
@@ -202,9 +208,9 @@
 </header>
 
 <style>
-input:focus { outline: none !important; box-shadow: none !important; }
-@keyframes searchExpand {
-    from { width: 36px; opacity: 0; }
-    to   { width: 240px; opacity: 1; }
-}
+    input:focus { outline: none !important; box-shadow: none !important; }
+    @keyframes searchExpand {
+        from { width: 36px; opacity: 0; }
+        to   { width: 240px; opacity: 1; }
+    }
 </style>
