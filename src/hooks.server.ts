@@ -1,21 +1,25 @@
-// src/app.d.ts
-declare global {
-    namespace App {
-        interface Locals {
-            user: {
-                id: string;
-                email: string;
-                name: string;
-                role: "ADMIN" | "JURY" | "TEAM";
-                emailVerified: boolean;
-                createdAt: Date;
-                updatedAt: Date;
-                image?: string | null;
-            } | null;
-            session: import("better-auth").Session | null;
-            juryJurorId?: string | null;
-        }
-    }
-}
+import { auth } from "$lib/server/auth";
+import { getJurySession } from "$lib/server/jury-auth";
+import type { Handle } from "@sveltejs/kit";
 
-export {};
+export const handle: Handle = async ({ event, resolve }) => {
+  const jurySession = getJurySession(event.cookies);
+  event.locals.juryJurorId = jurySession?.jurorId ?? null;
+
+  if (event.url.pathname.startsWith("/api/auth")) {
+    return auth.handler(event.request);
+  }
+
+  if (!event.url.pathname.startsWith("/jury/")) {
+    const session = await auth.api.getSession({
+      headers: event.request.headers,
+    });
+    event.locals.user = session?.user ?? null;
+    event.locals.session = session?.session ?? null;
+  } else {
+    event.locals.user = null;
+    event.locals.session = null;
+  }
+
+  return resolve(event);
+};
