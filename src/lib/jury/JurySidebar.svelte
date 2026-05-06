@@ -201,4 +201,36 @@
   .logout-btn:hover {
     background: rgba(248, 81, 73, 0.1);
   }
+
+  /* Light mode */
+  :global(.light-mode) .sidebar {
+    background: #ffffff;
+    border-right-color: rgba(10,14,26,.08);
+  }
+  :global(.light-mode) .nav-label {
+    color: rgba(10,14,26,.35);
+  }
+  :global(.light-mode) .nav-item {
+    color: rgba(10,14,26,.55);
+  }
+  :global(.light-mode) .nav-item:hover {
+    background: rgba(31,111,235,.07);
+    color: #0a0e1a;
+  }
+  :global(.light-mode) .nav-item.active {
+    background: rgba(31,111,235,.12);
+    color: #1a5cc8;
+  }
+  :global(.light-mode) .logout-wrap {
+    background: #ffffff;
+    border-top-color: rgba(10,14,26,.08);
+  }
+  :global(.light-mode) .juror-name { color: #0a0e1a; }
+  :global(.light-mode) .juror-email { color: rgba(10,14,26,.5); }
+  :global(.light-mode) .logout-btn { color: rgba(10,14,26,.5); }
+  :global(.light-mode) .logout-btn:hover {
+    color: #dc2626;
+    background: rgba(220,38,38,.07);
+  }
+  :global(.light-mode) .juror-avatar { border-color: #e0e8ff; }
 </style>

@@ -12,7 +12,13 @@ export const load: LayoutServerLoad = async ({ locals, route }) => {
   if (locals.juryJurorId) {
     const juror = await prisma.juror.findUnique({
       where: { id: locals.juryJurorId },
-      select: { id:true, name:true, email:true, avatarUrl:true, passwordChanged:true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+        passwordChanged: true,
+      },
     });
     if (juror) return { juror };
   }
@@ -21,12 +27,28 @@ export const load: LayoutServerLoad = async ({ locals, route }) => {
   if (locals.user?.role === "JURY") {
     let juror = await prisma.juror.findUnique({
       where: { email: locals.user.email },
-      select: { id:true, name:true, email:true, avatarUrl:true, passwordChanged:true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+        passwordChanged: true,
+      },
     });
     if (!juror) {
       juror = await prisma.juror.create({
-        data: { name: locals.user.name, email: locals.user.email, passwordChanged: true },
-        select: { id:true, name:true, email:true, avatarUrl:true, passwordChanged:true },
+        data: {
+          name: locals.user.name,
+          email: locals.user.email,
+          passwordChanged: true,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatarUrl: true,
+          passwordChanged: true,
+        },
       });
     }
     return { juror };

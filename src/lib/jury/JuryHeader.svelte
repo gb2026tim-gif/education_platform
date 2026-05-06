@@ -5,6 +5,20 @@
   }
   let { jurorName = "", avatarUrl = "" }: Props = $props();
 
+  let isDark = $state(true);
+
+  $effect(() => {
+    const saved = localStorage.getItem("theme");
+    isDark = saved !== "light";
+    document.documentElement.classList.toggle("light-mode", !isDark);
+  });
+
+  function toggleTheme() {
+    isDark = !isDark;
+    document.documentElement.classList.toggle("light-mode", !isDark);
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+
   function getInitial(name: string) {
     return name?.[0]?.toUpperCase() ?? "J";
   }
@@ -26,7 +40,7 @@
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
       </svg>
     </button>
-    <button class="icon-btn" aria-label="Тема">
+    <button class="icon-btn" aria-label="Тема" onclick={toggleTheme}>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
       </svg>
@@ -139,4 +153,29 @@
     white-space: nowrap;
   }
   .user-name.sign-in { color: #8b949e; }
+
+  /* Light mode */
+  :global(.light-mode) .jury-header {
+    background: #ffffff;
+    border-bottom-color: rgba(10,14,26,.08);
+  }
+  :global(.light-mode) .logo-lv { color: #0a0e1a; }
+  :global(.light-mode) .panel-badge {
+    border-color: rgba(31,111,235,.3);
+    color: #0a0e1a;
+    background: rgba(31,111,235,.06);
+  }
+  :global(.light-mode) .icon-btn {
+    color: rgba(10,14,26,.45);
+  }
+  :global(.light-mode) .icon-btn:hover {
+    background: rgba(10,14,26,.06);
+    color: #0a0e1a;
+  }
+  :global(.light-mode) .user-chip {
+    background: #f0f4ff;
+    border-color: rgba(10,14,26,.1);
+  }
+  :global(.light-mode) .user-name { color: #0a0e1a; }
+  :global(.light-mode) .user-avatar-placeholder { border-color: #e0e8ff; }
 </style>
