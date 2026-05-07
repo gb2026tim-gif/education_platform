@@ -6,22 +6,42 @@
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
-  // Initialize from existing evaluation or use defaults
-  let backendCode           = $state(data.assignment.evaluation?.backendCode           ?? 50);
-  let databaseStructure     = $state(data.assignment.evaluation?.databaseStructure     ?? 50);
-  let frontendCode          = $state(data.assignment.evaluation?.frontendCode          ?? 50);
-  let backendFunctionality  = $state(data.assignment.evaluation?.backendFunctionality  ?? 50);
-  let databaseFunctionality = $state(data.assignment.evaluation?.databaseFunctionality ?? 50);
-  let frontendFunctionality = $state(data.assignment.evaluation?.frontendFunctionality ?? 50);
-  let comment        = $state(data.assignment.evaluation?.comment               ?? "");
-  let reqRest        = $state(data.assignment.evaluation?.requirementsRest      ?? false);
-  let reqDb          = $state(data.assignment.evaluation?.requirementsDb        ?? false);
-  let reqAuth        = $state(data.assignment.evaluation?.requirementsAuth      ?? false);
-  let reqFrontend    = $state(data.assignment.evaluation?.requirementsFrontend  ?? false);
-  let reqDeploy      = $state(data.assignment.evaluation?.requirementsDeploy    ?? false);
+  // Use $derived to safely access data properties for $state initialization
+  const ev = $derived(data.assignment.evaluation);
+
+  let backendCode           = $state(50);
+  let databaseStructure     = $state(50);
+  let frontendCode          = $state(50);
+  let backendFunctionality  = $state(50);
+  let databaseFunctionality = $state(50);
+  let frontendFunctionality = $state(50);
+  let comment        = $state("");
+  let reqRest        = $state(false);
+  let reqDb          = $state(false);
+  let reqAuth        = $state(false);
+  let reqFrontend    = $state(false);
+  let reqDeploy      = $state(false);
   let loadingDraft   = $state(false);
   let loadingSubmit  = $state(false);
   let descExpanded   = $state(false);
+
+  // Initialize state from evaluation when data loads
+  $effect(() => {
+    if (ev) {
+      backendCode           = ev.backendCode           ?? 50;
+      databaseStructure     = ev.databaseStructure     ?? 50;
+      frontendCode          = ev.frontendCode          ?? 50;
+      backendFunctionality  = ev.backendFunctionality  ?? 50;
+      databaseFunctionality = ev.databaseFunctionality ?? 50;
+      frontendFunctionality = ev.frontendFunctionality ?? 50;
+      comment     = ev.comment               ?? "";
+      reqRest     = ev.requirementsRest      ?? false;
+      reqDb       = ev.requirementsDb        ?? false;
+      reqAuth     = ev.requirementsAuth      ?? false;
+      reqFrontend = ev.requirementsFrontend  ?? false;
+      reqDeploy   = ev.requirementsDeploy    ?? false;
+    }
+  });
 
   const average = $derived(
     Number((
