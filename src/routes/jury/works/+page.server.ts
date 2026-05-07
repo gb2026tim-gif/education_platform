@@ -5,7 +5,9 @@ import { redirect } from "@sveltejs/kit";
 async function getJurorId(locals: App.Locals): Promise<string | null> {
   if (locals.juryJurorId) return locals.juryJurorId;
   if (locals.user?.role === "JURY") {
-    const juror = await prisma.juror.findUnique({ where: { email: locals.user.email } });
+    const juror = await prisma.juror.findUnique({
+      where: { email: locals.user.email },
+    });
     return juror?.id ?? null;
   }
   return null;
@@ -30,7 +32,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   return {
     stats: { total, evaluated, pending: total - evaluated },
-    tournaments: Array.from(tournamentsMap.entries()).map(([id, name]) => ({ id, name })),
+    tournaments: Array.from(tournamentsMap.entries()).map(([id, name]) => ({
+      id,
+      name,
+    })),
     works: assignments.map((a) => ({
       workId: a.workId,
       teamLabel: `Команда ${a.displayNumber}`,
@@ -41,18 +46,28 @@ export const load: PageServerLoad = async ({ locals }) => {
       githubUrl: a.work.githubUrl,
       videoUrl: a.work.videoUrl,
       average: a.evaluation
-        ? Number(((a.evaluation.backendCode + a.evaluation.databaseStructure +
-            a.evaluation.frontendCode + a.evaluation.backendFunctionality +
-            a.evaluation.databaseFunctionality + a.evaluation.frontendFunctionality) / 6).toFixed(2))
+        ? Number(
+            (
+              (a.evaluation.backendCode +
+                a.evaluation.databaseStructure +
+                a.evaluation.frontendCode +
+                a.evaluation.backendFunctionality +
+                a.evaluation.databaseFunctionality +
+                a.evaluation.frontendFunctionality) /
+              6
+            ).toFixed(2),
+          )
         : null,
-      scores: a.evaluation ? {
-        backendCode: a.evaluation.backendCode,
-        databaseStructure: a.evaluation.databaseStructure,
-        frontendCode: a.evaluation.frontendCode,
-        backendFunctionality: a.evaluation.backendFunctionality,
-        databaseFunctionality: a.evaluation.databaseFunctionality,
-        frontendFunctionality: a.evaluation.frontendFunctionality,
-      } : null,
+      scores: a.evaluation
+        ? {
+            backendCode: a.evaluation.backendCode,
+            databaseStructure: a.evaluation.databaseStructure,
+            frontendCode: a.evaluation.frontendCode,
+            backendFunctionality: a.evaluation.backendFunctionality,
+            databaseFunctionality: a.evaluation.databaseFunctionality,
+            frontendFunctionality: a.evaluation.frontendFunctionality,
+          }
+        : null,
       comment: a.evaluation?.comment ?? null,
     })),
   };

@@ -18,16 +18,25 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
   const { password } = body;
   if (!password || password.length < 8) {
-    return json({ error: "Пароль занадто короткий (мінімум 8 символів)" }, { status: 400 });
+    return json(
+      { error: "Пароль занадто короткий (мінімум 8 символів)" },
+      { status: 400 },
+    );
   }
   if (!/[A-Z]/.test(password)) {
-    return json({ error: "Потрібна хоча б одна велика літера" }, { status: 400 });
+    return json(
+      { error: "Потрібна хоча б одна велика літера" },
+      { status: 400 },
+    );
   }
   if (!/[0-9]/.test(password)) {
     return json({ error: "Потрібна хоча б одна цифра" }, { status: 400 });
   }
   if (!/[@#$!%^&*()_+\-=[\]{}|;':",.<>?]/.test(password)) {
-    return json({ error: "Потрібен спеціальний символ (@, #, $, ...)" }, { status: 400 });
+    return json(
+      { error: "Потрібен спеціальний символ (@, #, $, ...)" },
+      { status: 400 },
+    );
   }
 
   const hash = await bcrypt.hash(password, 12);

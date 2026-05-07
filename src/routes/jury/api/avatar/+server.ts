@@ -23,7 +23,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   }
 
   if (file.size > 2 * 1024 * 1024) {
-    return json({ error: "Файл занадто великий (максимум 2MB)" }, { status: 400 });
+    return json(
+      { error: "Файл занадто великий (максимум 2MB)" },
+      { status: 400 },
+    );
   }
 
   const ext = file.name.split(".").pop() ?? "jpg";

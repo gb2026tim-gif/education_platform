@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (locals.juryJurorId) throw redirect(302, "/jury/account");
-  if (locals.user?.role === "JURY")  throw redirect(302, "/jury/account");
+  if (locals.user?.role === "JURY") throw redirect(302, "/jury/account");
   if (locals.user?.role === "ADMIN") throw redirect(302, "/admin");
   if (locals.user) throw redirect(302, "/my-teams");
   return {};
@@ -16,11 +16,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
   login: async ({ request, cookies }) => {
     const fd = await request.formData();
-    const email    = fd.get("email")?.toString().trim().toLowerCase() ?? "";
+    const email = fd.get("email")?.toString().trim().toLowerCase() ?? "";
     const password = fd.get("password")?.toString() ?? "";
 
-    if (!email || !password)
-      return fail(400, { error: "Заповніть всі поля" });
+    if (!email || !password) return fail(400, { error: "Заповніть всі поля" });
 
     // 1. jurors таблиця — bcrypt пароль (5 журі з seed-jury.ts)
     const juror = await prisma.juror.findUnique({ where: { email } });
@@ -28,16 +27,14 @@ export const actions: Actions = {
       if (!juror.passwordHash)
         return fail(401, { error: "Невірний email або пароль" });
       const valid = await bcrypt.compare(password, juror.passwordHash);
-      if (!valid)
-        return fail(401, { error: "Невірний email або пароль" });
+      if (!valid) return fail(401, { error: "Невірний email або пароль" });
       setJurySessionCookie(cookies, juror.id);
       throw redirect(302, "/jury/account");
     }
 
     // 2. users таблиця — Better Auth (katya, sergii тощо)
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user)
-      return fail(401, { error: "Невірний email або пароль" });
+    if (!user) return fail(401, { error: "Невірний email або пароль" });
 
     // Використовуємо Better Auth API для перевірки пароля
     try {
@@ -45,8 +42,7 @@ export const actions: Actions = {
         body: { email, password },
         asResponse: false,
       });
-      if (!res?.user)
-        return fail(401, { error: "Невірний email або пароль" });
+      if (!res?.user) return fail(401, { error: "Невірний email або пароль" });
 
       if (user.role === "JURY") {
         let j = await prisma.juror.findUnique({ where: { email } });
@@ -60,7 +56,6 @@ export const actions: Actions = {
       }
       if (user.role === "ADMIN") throw redirect(302, "/admin");
       throw redirect(302, "/my-teams");
-
     } catch (e: unknown) {
       if (e && typeof e === "object" && "status" in e) throw e;
       return fail(401, { error: "Невірний email або пароль" });

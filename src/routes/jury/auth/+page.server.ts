@@ -13,5 +13,5 @@ export const actions: Actions = {
   logout: async ({ cookies }) => {
     clearJurySessionCookie(cookies);
     throw redirect(302, "/jury/login");
-  }
+  },
 };

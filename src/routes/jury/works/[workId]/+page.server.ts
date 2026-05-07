@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
   const assignment = await prisma.assignment.findFirst({
     where: { jurorId: locals.juryJurorId, workId: params.workId },
-    include: { evaluation: true, work: { include: { tournament: true } } }
+    include: { evaluation: true, work: { include: { tournament: true } } },
   });
 
   if (!assignment) throw redirect(302, "/jury/works");
@@ -19,7 +19,11 @@ export const load: PageServerLoad = async ({ locals, params }) => {
   const list = await prisma.assignment.findMany({
     where: { jurorId: locals.juryJurorId },
     orderBy: { displayNumber: "asc" },
-    select: { workId: true, displayNumber: true, work: { select: { tournament: { select: { title: true } } } } }
+    select: {
+      workId: true,
+      displayNumber: true,
+      work: { select: { tournament: { select: { title: true } } } },
+    },
   });
 
   const index = list.findIndex((item) => item.workId === params.workId);
@@ -34,7 +38,7 @@ export const actions: Actions = {
     if (!locals.juryJurorId) throw redirect(302, "/jury/login");
     const form = await request.formData();
     const assignment = await prisma.assignment.findFirst({
-      where: { jurorId: locals.juryJurorId, workId: params.workId }
+      where: { jurorId: locals.juryJurorId, workId: params.workId },
     });
     if (!assignment) return fail(404, { error: "Роботу не знайдено" });
 
@@ -50,18 +54,18 @@ export const actions: Actions = {
       requirementsDb: form.get("requirementsDb") === "on",
       requirementsAuth: form.get("requirementsAuth") === "on",
       requirementsFrontend: form.get("requirementsFrontend") === "on",
-      requirementsDeploy: form.get("requirementsDeploy") === "on"
+      requirementsDeploy: form.get("requirementsDeploy") === "on",
     };
 
     await prisma.evaluation.upsert({
       where: { assignmentId: assignment.id },
       update: payload,
-      create: { assignmentId: assignment.id, ...payload }
+      create: { assignmentId: assignment.id, ...payload },
     });
 
     await prisma.assignment.update({
       where: { id: assignment.id },
-      data: { isDraft: true }
+      data: { isDraft: true },
     });
 
     return { success: true };
@@ -70,7 +74,7 @@ export const actions: Actions = {
     if (!locals.juryJurorId) throw redirect(302, "/jury/login");
     const form = await request.formData();
     const assignment = await prisma.assignment.findFirst({
-      where: { jurorId: locals.juryJurorId, workId: params.workId }
+      where: { jurorId: locals.juryJurorId, workId: params.workId },
     });
     if (!assignment) return fail(404, { error: "Роботу не знайдено" });
 
@@ -86,20 +90,20 @@ export const actions: Actions = {
       requirementsDb: form.get("requirementsDb") === "on",
       requirementsAuth: form.get("requirementsAuth") === "on",
       requirementsFrontend: form.get("requirementsFrontend") === "on",
-      requirementsDeploy: form.get("requirementsDeploy") === "on"
+      requirementsDeploy: form.get("requirementsDeploy") === "on",
     };
 
     await prisma.evaluation.upsert({
       where: { assignmentId: assignment.id },
       update: payload,
-      create: { assignmentId: assignment.id, ...payload }
+      create: { assignmentId: assignment.id, ...payload },
     });
 
     await prisma.assignment.update({
       where: { id: assignment.id },
-      data: { evaluated: true, isDraft: false, evaluatedAt: new Date() }
+      data: { evaluated: true, isDraft: false, evaluatedAt: new Date() },
     });
 
     throw redirect(302, "/jury/works");
-  }
+  },
 };
