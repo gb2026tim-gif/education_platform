@@ -68,7 +68,7 @@
     {#if juror}
       <div class="juror-mini">
         <div class="juror-avatar">
-          {juror.name[0].toUpperCase()}
+          {juror.name?.[0]?.toUpperCase() ?? "J"}
         </div>
         <div class="juror-info">
           <div class="juror-name">{juror.name}</div>

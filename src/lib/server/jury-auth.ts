@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { dev } from "$app/environment";
-import { env } from "$env/dynamic/private";
+import { env } from "$env/static/private";
 import { error } from "@sveltejs/kit";
 
 const COOKIE_NAME = "jury_session";

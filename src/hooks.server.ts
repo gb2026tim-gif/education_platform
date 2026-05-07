@@ -14,7 +14,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     const session = await auth.api.getSession({
       headers: event.request.headers,
     });
-    event.locals.user = session?.user ?? null;
+    event.locals.user = (session?.user as typeof event.locals.user) ?? null;
     event.locals.session = session?.session ?? null;
   } else {
     event.locals.user = null;

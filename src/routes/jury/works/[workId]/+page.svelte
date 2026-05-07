@@ -240,7 +240,7 @@
   </div>
 </div>
 
-<form class="grid">
+<form class="grid" use:enhance>
   <!-- Hidden scoring inputs (bound to sliders via $state) -->
   <input type="hidden" name="backendCode"           value={backendCode} />
   <input type="hidden" name="databaseStructure"     value={databaseStructure} />
@@ -389,7 +389,6 @@
           type="submit"
           formaction="?/submitFinal"
           formmethod="POST"
-          use:enhance={() => { loadingSubmit = true; return async ({update}) => { await update(); loadingSubmit = false; }; }}
           class="btn-submit"
           disabled={loadingSubmit}
         >
@@ -400,7 +399,6 @@
           type="submit"
           formaction="?/saveDraft"
           formmethod="POST"
-          use:enhance={() => { loadingDraft = true; return async ({update}) => { await update(); loadingDraft = false; }; }}
           class="btn-draft"
           disabled={loadingDraft}
         >
