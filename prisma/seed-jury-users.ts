@@ -5,18 +5,20 @@ const prisma = new PrismaClient();
 
 async function main() {
   const jurors = [
-    { name: "Іван Шевченко",    email: "ivan.shevchenko@jury.lvlup.com" },
-    { name: "Оксана Мельник",   email: "oksana.melnyk@jury.lvlup.com"   },
-    { name: "Дмитро Коваль",    email: "dmytro.koval@jury.lvlup.com"    },
-    { name: "Аліна Бондаренко", email: "alina.bondarenko@jury.lvlup.com"},
-    { name: "Тарас Лисенко",    email: "taras.lysenko@jury.lvlup.com"   },
-    { name: "Катерина Зибіна",  email: "katya@sigmasoftware.com"        },
-    { name: "Сергій Кашубін",   email: "sergii@google.com"              },
+    { name: "Іван Шевченко", email: "ivan.shevchenko@jury.lvlup.com" },
+    { name: "Оксана Мельник", email: "oksana.melnyk@jury.lvlup.com" },
+    { name: "Дмитро Коваль", email: "dmytro.koval@jury.lvlup.com" },
+    { name: "Аліна Бондаренко", email: "alina.bondarenko@jury.lvlup.com" },
+    { name: "Тарас Лисенко", email: "taras.lysenko@jury.lvlup.com" },
+    { name: "Катерина Зибіна", email: "katya@sigmasoftware.com" },
+    { name: "Сергій Кашубін", email: "sergii@google.com" },
   ];
 
   for (const j of jurors) {
     // Перевіряємо чи вже є
-    const existing = await prisma.user.findUnique({ where: { email: j.email } });
+    const existing = await prisma.user.findUnique({
+      where: { email: j.email },
+    });
     if (!existing) {
       await auth.api.signUpEmail({
         body: {
