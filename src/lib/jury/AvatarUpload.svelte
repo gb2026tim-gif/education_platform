@@ -29,7 +29,7 @@
 <div>
   <label class="relative block h-36 w-32 cursor-pointer overflow-hidden rounded-lg border border-[--border]">
     <img src={avatarUrl || "/favicon.png"} alt="Аватар" class="h-full w-full object-cover" />
-    <input type="file" accept="image/*" class="hidden" on:change={uploadAvatar} />
+    <input type="file" accept="image/*" class="hidden" onchange={uploadAvatar} />
   </label>
   {#if uploading}<p class="mt-1 text-xs text-[--text-secondary]">Завантаження...</p>{/if}
   {#if uploadError}<p class="mt-1 text-xs text-red-400">{uploadError}</p>{/if}

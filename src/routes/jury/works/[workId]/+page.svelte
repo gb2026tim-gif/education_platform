@@ -6,21 +6,20 @@
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
-  const ev = data.assignment.evaluation;
-
   // Scoring state — initialized from existing evaluation or defaults
-  let backendCode           = $state(ev?.backendCode           ?? 50);
-  let databaseStructure     = $state(ev?.databaseStructure     ?? 50);
-  let frontendCode          = $state(ev?.frontendCode          ?? 50);
-  let backendFunctionality  = $state(ev?.backendFunctionality  ?? 50);
-  let databaseFunctionality = $state(ev?.databaseFunctionality ?? 50);
-  let frontendFunctionality = $state(ev?.frontendFunctionality ?? 50);
-  let comment        = $state(ev?.comment               ?? "");
-  let reqRest        = $state(ev?.requirementsRest      ?? false);
-  let reqDb          = $state(ev?.requirementsDb        ?? false);
-  let reqAuth        = $state(ev?.requirementsAuth      ?? false);
-  let reqFrontend    = $state(ev?.requirementsFrontend  ?? false);
-  let reqDeploy      = $state(ev?.requirementsDeploy    ?? false);
+
+  let backendCode           = $state(_ev?.backendCode           ?? 50);
+  let databaseStructure     = $state(_ev?.databaseStructure     ?? 50);
+  let frontendCode          = $state(_ev?.frontendCode          ?? 50);
+  let backendFunctionality  = $state(_ev?.backendFunctionality  ?? 50);
+  let databaseFunctionality = $state(_ev?.databaseFunctionality ?? 50);
+  let frontendFunctionality = $state(_ev?.frontendFunctionality ?? 50);
+  let comment        = $state(_ev?.comment               ?? "");
+  let reqRest        = $state(_ev?.requirementsRest      ?? false);
+  let reqDb          = $state(_ev?.requirementsDb        ?? false);
+  let reqAuth        = $state(_ev?.requirementsAuth      ?? false);
+  let reqFrontend    = $state(_ev?.requirementsFrontend  ?? false);
+  let reqDeploy      = $state(_ev?.requirementsDeploy    ?? false);
   let loadingDraft   = $state(false);
   let loadingSubmit  = $state(false);
   let descExpanded   = $state(false);
@@ -323,14 +322,14 @@
           { label: "Frontend підключення до API",                get: () => reqFrontend, set: () => reqFrontend = !reqFrontend },
           { label: "Деплой на публічний хостинг",               get: () => reqDeploy,   set: () => reqDeploy = !reqDeploy },
         ] as req}
-          <label class="req-item" onclick={req.set}>
+          <div class="req-item" role="checkbox" aria-checked={req.get()} tabindex="0" onclick={req.set} onkeydown={(e) => e.key === "Enter" && req.set()}>
             <div class="checkbox" class:checked={req.get()}>
               {#if req.get()}
                 <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
               {/if}
             </div>
             <span class="req-label">{req.label}</span>
-          </label>
+          </div>
         {/each}
       </div>
 

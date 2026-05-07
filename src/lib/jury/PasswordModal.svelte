@@ -53,7 +53,6 @@
 </script>
 
 {#if open}
-  <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
   <div class="overlay" onclick={(e) => { if (e.target === e.currentTarget) close(); }}
     onkeydown={handleKeydown} role="dialog" aria-modal="true" aria-label="Змінити пароль" tabindex="-1">
     <div class="modal">
