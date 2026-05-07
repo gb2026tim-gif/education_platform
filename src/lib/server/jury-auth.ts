@@ -1,6 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { dev } from "$app/environment";
-import { env } from "$env/static/private";
 import { error } from "@sveltejs/kit";
 
 const COOKIE_NAME = "jury_session";
@@ -8,7 +7,9 @@ const SESSION_TTL_SECONDS = 60 * 60 * 8;
 
 function getSecret() {
   const secret =
-    env.JURY_SESSION_SECRET ?? env.JWT_SECRET ?? env.BETTER_AUTH_SECRET;
+    process.process.env.JURY_SESSION_SECRET ??
+    process.env.JWT_SECRET ??
+    process.env.BETTER_AUTH_SECRET;
   if (!secret) {
     if (dev) {
       return "dev-jury-secret-change-me";
