@@ -6,25 +6,23 @@
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
-  // Scoring state — initialized from existing evaluation or defaults
-
-  let backendCode           = $state(_ev?.backendCode           ?? 50);
-  let databaseStructure     = $state(_ev?.databaseStructure     ?? 50);
-  let frontendCode          = $state(_ev?.frontendCode          ?? 50);
-  let backendFunctionality  = $state(_ev?.backendFunctionality  ?? 50);
-  let databaseFunctionality = $state(_ev?.databaseFunctionality ?? 50);
-  let frontendFunctionality = $state(_ev?.frontendFunctionality ?? 50);
-  let comment        = $state(_ev?.comment               ?? "");
-  let reqRest        = $state(_ev?.requirementsRest      ?? false);
-  let reqDb          = $state(_ev?.requirementsDb        ?? false);
-  let reqAuth        = $state(_ev?.requirementsAuth      ?? false);
-  let reqFrontend    = $state(_ev?.requirementsFrontend  ?? false);
-  let reqDeploy      = $state(_ev?.requirementsDeploy    ?? false);
+  // Initialize from existing evaluation or use defaults
+  let backendCode           = $state(data.assignment.evaluation?.backendCode           ?? 50);
+  let databaseStructure     = $state(data.assignment.evaluation?.databaseStructure     ?? 50);
+  let frontendCode          = $state(data.assignment.evaluation?.frontendCode          ?? 50);
+  let backendFunctionality  = $state(data.assignment.evaluation?.backendFunctionality  ?? 50);
+  let databaseFunctionality = $state(data.assignment.evaluation?.databaseFunctionality ?? 50);
+  let frontendFunctionality = $state(data.assignment.evaluation?.frontendFunctionality ?? 50);
+  let comment        = $state(data.assignment.evaluation?.comment               ?? "");
+  let reqRest        = $state(data.assignment.evaluation?.requirementsRest      ?? false);
+  let reqDb          = $state(data.assignment.evaluation?.requirementsDb        ?? false);
+  let reqAuth        = $state(data.assignment.evaluation?.requirementsAuth      ?? false);
+  let reqFrontend    = $state(data.assignment.evaluation?.requirementsFrontend  ?? false);
+  let reqDeploy      = $state(data.assignment.evaluation?.requirementsDeploy    ?? false);
   let loadingDraft   = $state(false);
   let loadingSubmit  = $state(false);
   let descExpanded   = $state(false);
 
-  // Auto-computed average score
   const average = $derived(
     Number((
       (backendCode + databaseStructure + frontendCode +

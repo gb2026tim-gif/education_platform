@@ -7,7 +7,7 @@ const SESSION_TTL_SECONDS = 60 * 60 * 8;
 
 function getSecret() {
   const secret =
-    process.process.env.JURY_SESSION_SECRET ??
+    process.env.JURY_SESSION_SECRET ??
     process.env.JWT_SECRET ??
     process.env.BETTER_AUTH_SECRET;
   if (!secret) {
