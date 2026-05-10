@@ -4,7 +4,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   const tournament = await prisma.tournament.findFirst({
-    where: { title: { contains: "CODE4FUTURE" } },
+    // findFirst — бере перший доступний турнір
+    orderBy: { createdAt: "desc" },
     include: { tasks: true },
   });
 

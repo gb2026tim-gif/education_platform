@@ -29,7 +29,8 @@
 		loading = true; errorMsg = '';
 		const res = await signUp.email({ email, password, name: name.trim() });
 		if (res.error) { errorMsg = res.error.message ?? 'Помилка реєстрації'; loading = false; return; }
-		await goto('/dashboard');
+		// Після реєстрації — редірект через server щоб визначити роль
+		window.location.href = '/auth/redirect';
 	}
 </script>
 
@@ -115,7 +116,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- Checkbox -->
 			<label class="agree-row">
 				<input type="checkbox" bind:checked={agreed} />
 				<span>Погоджуюсь з <a href="/terms">Умовами використання</a> та <a href="/privacy">Політикою конфіденційності</a></span>
@@ -147,9 +147,6 @@
 
 	.visual{position:relative;display:flex;flex-direction:column;align-items:center;margin-bottom:2.25rem;}
 
-
-
-
 	.stats-row{display:flex;align-items:center;gap:2.25rem;}
 	.stat-item{text-align:center;}
 	.n{display:block;font-size:2rem;font-weight:800;color:#3E83FF;}
@@ -168,21 +165,17 @@
 	.field input:focus{border-color:#3E83FF;}
 	.field input::placeholder{color:#2a3a4a;}
 
-
-
 	.actions{display:flex;gap:1rem;margin-top:1.5rem;}
-	.btn-primary{flex:1;background:#3E83FF;color:#fff;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:600;cursor:pointer;transition:background 0.2s;}
+	.btn-primary{flex:1;background:#3E83FF;color:#fff;border:none;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:600;cursor:pointer;transition:background 0.2s;font-family:inherit;}
 	.btn-primary:hover:not(:disabled){background:#2d6fd4;}
 	.btn-primary:disabled{opacity:0.55;cursor:not-allowed;}
-	.btn-secondary{flex:1;background:transparent;color:rgba(255,255,255,0.55);border:1px solid #1e2d45;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:600;cursor:pointer;}
+	.btn-secondary{flex:1;background:transparent;color:rgba(255,255,255,0.55);border:1px solid #1e2d45;border-radius:10px;padding:0.9rem;font-size:0.95rem;font-weight:600;cursor:pointer;font-family:inherit;}
 	.btn-secondary:hover{border-color:#3E83FF;color:#fff;}
 	.switch{text-align:center;margin-top:1.25rem;color:rgba(255,255,255,0.45);font-size:0.88rem;}
 	.switch a{color:#3E83FF;text-decoration:none;font-weight:600;}
 
-	@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-
 	.robot-video{width:min(370px,90%);border-radius:20px;position:relative;z-index:2;}
-	@media(max-width:768px){.left{display:none;}.right{flex:1;padding:1.5rem;}.row{grid-template-columns:1fr;}}
+
 	.input-wrap{position:relative;display:flex;align-items:center;}
 	.input-wrap input{width:100%;padding-right:2.5rem;}
 	.eye-btn{position:absolute;right:0.75rem;background:none;border:none;color:rgba(255,255,255,0.35);cursor:pointer;display:flex;align-items:center;padding:0;transition:color 0.15s;}
@@ -191,4 +184,27 @@
 	.agree-row input[type=checkbox]{width:16px;height:16px;accent-color:#3E83FF;flex-shrink:0;margin-top:2px;cursor:pointer;}
 	.agree-row a{color:#3E83FF;text-decoration:none;}
 	.agree-row a:hover{text-decoration:underline;}
+
+	/* Light mode */
+	:global(.light-mode) .page{background:#f0f4ff;color:#0a0e1a;}
+	:global(.light-mode) .left{background:linear-gradient(160deg,#dde8ff 0%,#e8f0ff 100%);}
+	:global(.light-mode) .content h1{color:#0a0e1a;}
+	:global(.light-mode) .content p{color:rgba(10,14,26,0.5);}
+	:global(.light-mode) .l{color:rgba(10,14,26,0.4);}
+	:global(.light-mode) .right{background:#f8faff;border-left-color:rgba(10,14,26,0.06);}
+	:global(.light-mode) .card h2{color:#0a0e1a;}
+	:global(.light-mode) .sub{color:rgba(10,14,26,0.45);}
+	:global(.light-mode) .field label{color:rgba(10,14,26,0.55);}
+	:global(.light-mode) .field input{background:#fff;border-color:rgba(10,14,26,0.12);color:#0a0e1a;}
+	:global(.light-mode) .field input::placeholder{color:rgba(10,14,26,0.3);}
+	:global(.light-mode) .btn-secondary{color:rgba(10,14,26,0.55);border-color:rgba(10,14,26,0.15);}
+	:global(.light-mode) .switch{color:rgba(10,14,26,0.45);}
+	:global(.light-mode) .agree-row{color:rgba(10,14,26,0.5);}
+	:global(.light-mode) .eye-btn{color:rgba(10,14,26,0.35);}
+
+	@media(max-width:768px){
+		.left{display:none;}
+		.right{flex:1;padding:1.5rem;}
+		.row{grid-template-columns:1fr;}
+	}
 </style>

@@ -24,36 +24,36 @@ model User {
   updatedAt     DateTime @updatedAt
 
   // Additional profile fields
-  firstName     String?
-  lastName      String?
-  city          String?
-  school        String?
-  phone         String?
-  discord       String?
-  image         String?
+  firstName String?
+  lastName  String?
+  city      String?
+  school    String?
+  phone     String?
+  discord   String?
+  image     String?
 
-  sessions     Session[]
-  accounts     Account[]
-  captainOf    Team[]           @relation("TeamCaptain")
-  tournaments  Tournament[]     @relation("TournamentAdmin")
-  juryScores   JuryAssignment[]
+  sessions    Session[]
+  accounts    Account[]
+  captainOf   Team[]           @relation("TeamCaptain")
+  tournaments Tournament[]     @relation("TournamentAdmin")
+  juryScores  JuryAssignment[]
 
   @@map("users")
 }
 
 model Account {
-  id            String    @id @default(cuid())
-  accountId     String
-  providerId    String
-  userId        String
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken   String?
-  refreshToken  String?
-  idToken       String?
-  expiresAt     DateTime?
-  password      String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id           String    @id @default(cuid())
+  accountId    String
+  providerId   String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken  String?
+  refreshToken String?
+  idToken      String?
+  expiresAt    DateTime?
+  password     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@map("accounts")
 }
@@ -95,6 +95,7 @@ model Tournament {
 
   teams Team[]
   tasks Task[]
+  works Work[]
 
   @@map("tournaments")
 }
@@ -127,9 +128,9 @@ model Team {
 }
 
 model TeamMember {
-  id     String @id @default(cuid())
-  name   String
-  email  String
+  id    String @id @default(cuid())
+  name  String
+  email String
 
   teamId String
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
@@ -217,4 +218,83 @@ model Score {
   assignment   JuryAssignment @relation(fields: [assignmentId], references: [id])
 
   @@map("scores")
+}
+
+model Juror {
+  id              String       @id @default(cuid())
+  name            String
+  email           String       @unique
+  avatarUrl       String?      @map("avatar_url")
+  passwordHash    String?      @map("password_hash")
+  passwordChanged Boolean      @default(false) @map("password_changed")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  tokens          JuryToken[]
+  assignments     Assignment[]
+
+  @@map("jurors")
+}
+
+model Work {
+  id           String       @id @default(cuid())
+  teamName     String       @map("team_name")
+  tournamentId String       @map("tournament_id")
+  tournament   Tournament   @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  githubUrl    String?      @map("github_url")
+  videoUrl     String?      @map("video_url")
+  liveDemoUrl  String?      @map("live_demo_url")
+  description  String?
+  createdAt    DateTime     @default(now()) @map("created_at")
+  assignments  Assignment[]
+
+  @@map("works")
+}
+
+model Assignment {
+  id            String      @id @default(cuid())
+  jurorId       String      @map("juror_id")
+  juror         Juror       @relation(fields: [jurorId], references: [id], onDelete: Cascade)
+  workId        String      @map("work_id")
+  work          Work        @relation(fields: [workId], references: [id], onDelete: Cascade)
+  displayNumber Int         @map("display_number")
+  evaluated     Boolean     @default(false)
+  isDraft       Boolean     @default(false) @map("is_draft")
+  evaluatedAt   DateTime?   @map("evaluated_at")
+  evaluation    Evaluation?
+
+  @@unique([jurorId, workId])
+  @@map("assignments")
+}
+
+model Evaluation {
+  id                    String     @id @default(cuid())
+  assignmentId          String     @unique @map("assignment_id")
+  assignment            Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  backendCode           Int        @default(50) @map("backend_code")
+  databaseStructure     Int        @default(50) @map("database_structure")
+  frontendCode          Int        @default(50) @map("frontend_code")
+  backendFunctionality  Int        @default(50) @map("backend_functionality")
+  databaseFunctionality Int        @default(50) @map("database_functionality")
+  frontendFunctionality Int        @default(50) @map("frontend_functionality")
+  comment               String?
+  requirementsRest      Boolean    @default(false) @map("requirements_rest")
+  requirementsDb        Boolean    @default(false) @map("requirements_db")
+  requirementsAuth      Boolean    @default(false) @map("requirements_auth")
+  requirementsFrontend  Boolean    @default(false) @map("requirements_frontend")
+  requirementsDeploy    Boolean    @default(false) @map("requirements_deploy")
+  createdAt             DateTime   @default(now()) @map("created_at")
+  updatedAt             DateTime   @updatedAt @map("updated_at")
+
+  @@map("evaluations")
+}
+
+model JuryToken {
+  id        String   @id @default(cuid())
+  jurorId   String   @map("juror_id")
+  juror     Juror    @relation(fields: [jurorId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  used      Boolean  @default(false)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("jury_tokens")
 }

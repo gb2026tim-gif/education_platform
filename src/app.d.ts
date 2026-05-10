@@ -13,6 +13,7 @@ declare global {
         image?: string | null;
       } | null;
       session: import("better-auth").Session | null;
+      juryJurorId?: string | null;
     }
   }
 }
