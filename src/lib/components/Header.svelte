@@ -27,7 +27,7 @@
     const navLinks = [
         { label: 'Курси',      href: '/courses' },
         { label: 'Календар',   href: '/calendar' },
-        { label: 'Турніри',    href: '/tournaments' },
+        { label: 'Турніри',    href: '/tourments' },
         { label: 'Рейтинг',   href: '/leaderboard' },
         { label: 'Інформація', href: '/about' }
     ];
