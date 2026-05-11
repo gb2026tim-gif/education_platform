@@ -24,7 +24,11 @@ async function main() {
     where: { tournament: { title: { contains: "CODE4FUTURE" } } },
   });
   await prisma.tournament.deleteMany({
-    where: { title: { in: ["CODE4FUTURE 2026", "Hackathon Spring 2025", "WebDev Cup 2024"] } },
+    where: {
+      title: {
+        in: ["CODE4FUTURE 2026", "Hackathon Spring 2025", "WebDev Cup 2024"],
+      },
+    },
   });
 
   // 1. REGISTRATION — open registration
@@ -35,9 +39,9 @@ async function main() {
         "Командний турнір з програмування для школярів та студентів. Учасники розробляють веб-платформу з підтримкою командної роботи в реальному часі. Завдання буде опубліковано після старту реєстрації. Оцінювання проводитиметься журі за технічними та функціональними критеріями. Команди-переможці отримають сертифікати та призи від партнерів.",
       status: "REGISTRATION",
       regStart: new Date("2026-04-01"),
-      regEnd:   new Date("2026-05-25"),
+      regEnd: new Date("2026-05-25"),
       maxTeams: 20,
-      adminId:  admin.id,
+      adminId: admin.id,
     },
   });
 
@@ -62,9 +66,9 @@ async function main() {
         "Database: PostgreSQL або MongoDB",
         "Deploy: Обов'язково",
       ].join("\n"),
-      startAt:  new Date("2026-04-15"),
+      startAt: new Date("2026-04-15"),
       deadline: new Date("2026-05-25T23:59:00"),
-      status:   "ACTIVE",
+      status: "ACTIVE",
       tournamentId: t1.id,
     },
   });
@@ -78,9 +82,9 @@ async function main() {
         "Командний хакатон для веб-розробників. Завдання — розробити повнофункціональний застосунок за 48 годин. Наразі відбувається оцінювання робіт журі. Результати будуть опубліковані після завершення оцінювання.",
       status: "RUNNING",
       regStart: new Date("2025-03-01"),
-      regEnd:   new Date("2025-04-01"),
+      regEnd: new Date("2025-04-01"),
       maxTeams: 16,
-      adminId:  admin.id,
+      adminId: admin.id,
     },
   });
   console.log(`✅ Created: ${t2.title} [RUNNING]`);
@@ -93,9 +97,9 @@ async function main() {
         "Завершений турнір з веб-розробки. Учасники змагались у створенні інноваційних веб-застосунків. Переможці нагороджені сертифікатами та цінними призами від технологічних партнерів.",
       status: "FINISHED",
       regStart: new Date("2024-09-01"),
-      regEnd:   new Date("2024-10-01"),
+      regEnd: new Date("2024-10-01"),
       maxTeams: 16,
-      adminId:  admin.id,
+      adminId: admin.id,
     },
   });
   console.log(`✅ Created: ${t3.title} [FINISHED]`);
@@ -108,5 +112,8 @@ async function main() {
 }
 
 main()
-  .catch((e) => { console.error("❌", e.message); process.exit(1); })
+  .catch((e) => {
+    console.error("❌", e.message);
+    process.exit(1);
+  })
   .finally(() => prisma.$disconnect());
