@@ -36,6 +36,7 @@
         return `${hours} год. залишилось`;
     }
 
+    const cfg = $derived(statusCfg[t?.status ?? 'DRAFT'] ?? statusCfg.DRAFT);
     const isRegistrationOpen = $derived(t?.status === 'REGISTRATION');
     const canRegister = $derived(isRegistrationOpen && !data.userTeam);
     const hasTeam = $derived(!!data.userTeam);
@@ -215,7 +216,6 @@
                     <div class="hero">
                         <div class="hero-top">
                             <h1 class="hero-title">{t.title}</h1>
-                            {@const cfg = statusCfg[t.status] ?? statusCfg.DRAFT}
                             <span class="status-badge" style="background:{cfg.bg}; color:{cfg.color};">
                                 {#if cfg.pulse}<span class="pulse-dot" style="background:{cfg.color};"></span>{/if}
                                 {cfg.label}
@@ -304,7 +304,6 @@
                     <div class="reg-widget">
                         <div class="rw-title">{t.title}</div>
 
-                        {@const cfg = statusCfg[t.status] ?? statusCfg.DRAFT}
                         <span class="rw-status" style="background:{cfg.bg}; color:{cfg.color};">
                             {#if cfg.pulse}<span class="pulse-dot" style="background:{cfg.color};"></span>{/if}
                             {cfg.label}
