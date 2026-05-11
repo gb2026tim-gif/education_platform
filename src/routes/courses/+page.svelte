@@ -7,6 +7,7 @@
 
     let { data }: { data: PageData } = $props();
 
+    const DEFAULT_CFG = { label: 'Невідомо', color: '#64748B', bg: 'rgba(100,116,139,.1)', pulse: false };
     const statusCfg: Record<string, { label: string; color: string; bg: string; pulse: boolean }> = {
         RUNNING:      { label: "Тривають оцінювання", color: "#4ADE80", bg: "rgba(74,222,128,.12)",  pulse: true  },
         REGISTRATION: { label: "Реєстрація відкрита", color: "#3E83FF", bg: "rgba(62,131,255,.12)", pulse: false },
@@ -196,7 +197,7 @@
             {:else}
                 {#each data.teams as team}
                     {@const t = team.tournament}
-                    {@const cfg = statusCfg[t.status] ?? statusCfg.DRAFT}
+                    {@const cfg = statusCfg[t.status] ?? DEFAULT_CFG}
                     {@const task = t.tasks?.[0]}
                     {@const submitted = hasSubmission(team)}
 

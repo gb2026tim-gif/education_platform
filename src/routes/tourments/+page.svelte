@@ -29,6 +29,7 @@
             : allTournaments.filter((t: any) => t.status === activeFilter)
     );
 
+    const DEFAULT_CFG = { label: 'Невідомо', color: '#64748B', bg: 'rgba(100,116,139,.1)', pulse: false };
     const statusCfg: Record<string, { label: string; color: string; bg: string; pulse: boolean }> = {
         RUNNING:      { label: 'Тривають оцінювання', color: '#4ADE80', bg: 'rgba(74,222,128,0.12)',  pulse: true  },
         REGISTRATION: { label: 'Реєстрація відкрита', color: '#3E83FF', bg: 'rgba(62,131,255,0.12)', pulse: false },
@@ -223,8 +224,8 @@
                 </div>
             {:else}
                 {#each filtered as t}
-                    {@const cfg = statusCfg[t.status] ?? statusCfg.DRAFT}
-                    {@const teamsCount = t._count?.teams ?? t.teams?.length ?? 0}
+                    {@const cfg = statusCfg[t.status] ?? DEFAULT_CFG}
+                    {@const teamsCount = t._count?.teams ?? 0}
                     {@const tags = getTags(t)}
 
                     <div class="t-card">

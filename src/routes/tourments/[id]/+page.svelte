@@ -8,6 +8,7 @@
     let { data }: { data: PageData } = $props();
     const t = $derived(data.tournament);
 
+    const DEFAULT_CFG = { label: 'Невідомо', color: '#64748B', bg: 'rgba(100,116,139,.1)', pulse: false };
     const statusCfg: Record<string, { label: string; color: string; bg: string; pulse: boolean }> = {
         RUNNING:      { label: 'Тривають оцінювання', color: '#4ADE80', bg: 'rgba(74,222,128,.12)', pulse: true  },
         REGISTRATION: { label: 'Реєстрація відкрита', color: '#3E83FF', bg: 'rgba(62,131,255,.12)', pulse: false },
@@ -36,7 +37,7 @@
         return `${hours} год. залишилось`;
     }
 
-    const cfg = $derived(statusCfg[t?.status ?? 'DRAFT'] ?? statusCfg.DRAFT);
+    const cfg = $derived(statusCfg[t?.status ?? 'DRAFT'] ?? DEFAULT_CFG);
     const isRegistrationOpen = $derived(t?.status === 'REGISTRATION');
     const canRegister = $derived(isRegistrationOpen && !data.userTeam);
     const hasTeam = $derived(!!data.userTeam);
@@ -283,7 +284,7 @@
                         {:else}
                             {#each t.teams as team}
                                 <div class="team-row">
-                                    <div class="team-avatar">{team.name[0].toUpperCase()}</div>
+                                    <div class="team-avatar">{team.name?.[0]?.toUpperCase() ?? "?"}</div>
                                     <div>
                                         <div class="team-name">{team.name}</div>
                                         <div class="team-sub">
