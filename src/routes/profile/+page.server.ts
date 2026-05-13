@@ -19,7 +19,13 @@ export const load: PageServerLoad = async (event) => {
     },
   });
 
-  return { profile: fullUser };
+  const completedEnrollments = await prisma.enrollment.findMany({
+    where: { userId: user.id },
+    include: { course: { select: { id: true, title: true, duration: true } } },
+    orderBy: { enrolledAt: "desc" },
+  });
+
+  return { profile: fullUser, completedEnrollments };
 };
 
 export const actions = {

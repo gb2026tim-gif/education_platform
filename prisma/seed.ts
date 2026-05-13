@@ -16,6 +16,11 @@ async function main() {
   await prisma.task.deleteMany();
   await prisma.tournament.deleteMany();
   await prisma.session.deleteMany();
+  await prisma.lessonProgress.deleteMany();
+  await prisma.enrollment.deleteMany();
+  await prisma.lesson.deleteMany();
+  await prisma.module.deleteMany();
+  await prisma.course.deleteMany();
   await prisma.user.deleteMany();
 
   console.log("👥 Creating users...");

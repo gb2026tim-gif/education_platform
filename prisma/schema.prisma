@@ -34,6 +34,9 @@ model User {
 
   sessions    Session[]
   accounts    Account[]
+  authoredCourses Course[]       @relation("CourseAuthor")
+  enrollments     Enrollment[]   @relation("CourseEnrollments")
+  lessonProgress  LessonProgress[] @relation("LessonProgress")
   captainOf   Team[]           @relation("TeamCaptain")
   tournaments Tournament[]     @relation("TournamentAdmin")
   juryScores  JuryAssignment[]
@@ -297,4 +300,94 @@ model JuryToken {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("jury_tokens")
+}
+// Add these models to prisma/schema.prisma
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  shortDesc   String   @map("short_desc")
+  coverUrl    String?  @map("cover_url")
+  price       Float    @default(0)
+  isFree      Boolean  @default(true) @map("is_free")
+  level       String   @default("BEGINNER") // BEGINNER, INTERMEDIATE, ADVANCED
+  category    String   @default("Programming")
+  duration    Int      @default(0) // total minutes
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  authorId    String   @map("author_id")
+  author      User     @relation("CourseAuthor", fields: [authorId], references: [id])
+
+  modules     Module[]
+  enrollments Enrollment[]
+
+  @@map("courses")
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  courseId    String   @map("course_id")
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  lessons     Lesson[]
+
+  @@map("modules")
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  content     String?  @db.Text
+  videoUrl    String?  @map("video_url")
+  duration    Int      @default(0) // minutes
+  order       Int      @default(0)
+  isFree      Boolean  @default(false) @map("is_free")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  moduleId    String   @map("module_id")
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  progress    LessonProgress[]
+
+  @@map("lessons")
+}
+
+model Enrollment {
+  id          String   @id @default(cuid())
+  enrolledAt  DateTime @default(now()) @map("enrolled_at")
+  completedAt DateTime? @map("completed_at")
+
+  userId      String   @map("user_id")
+  user        User     @relation("CourseEnrollments", fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId    String   @map("course_id")
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("enrollments")
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  completed   Boolean  @default(false)
+  watchedSec  Int      @default(0) @map("watched_sec")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  userId      String   @map("user_id")
+  user        User     @relation("LessonProgress", fields: [userId], references: [id], onDelete: Cascade)
+
+  lessonId    String   @map("lesson_id")
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("lesson_progress")
 }
