@@ -8,13 +8,27 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  // Додаємо опис полів користувача, щоб Better Auth бачив 'role'
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "TEAM"
+      },
+      firstName: { // Оскільки ми його додавали раніше
+        type: "string",
+        required: false
+      }
+    }
+  },
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,
   },
   session: {
-    expiresIn: 60 * 60 * 24 * 30, // 30 днів
-    updateAge: 60 * 60 * 24, // оновлювати щодня
+    expiresIn: 60 * 60 * 24 * 30,
+    updateAge: 60 * 60 * 24,
     cookieCache: {
       enabled: true,
       maxAge: 60 * 60 * 24 * 30,
