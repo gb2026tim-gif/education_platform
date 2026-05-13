@@ -89,7 +89,7 @@ export const load: PageServerLoad = async ({ locals }) => {
       events.push({
         id: `rs-${t.id}`,
         title: `Старт реєстрації`,
-        date: t.regStart.toISOString().split("T")[0],
+        date: t.regStart!.toISOString().split("T")[0],
         type: "registration",
         color: "#3E83FF",
         tournamentId: t.id,
@@ -101,7 +101,7 @@ export const load: PageServerLoad = async ({ locals }) => {
       events.push({
         id: `re-${t.id}`,
         title: `Закриття реєстрації`,
-        date: t.regEnd.toISOString().split("T")[0],
+        date: t.regEnd!.toISOString().split("T")[0],
         type: "reg-end",
         color: "#FB923C",
         tournamentId: t.id,
@@ -114,7 +114,7 @@ export const load: PageServerLoad = async ({ locals }) => {
       events.push({
         id: `ts-${task.id}`,
         title: `Турнір стартує`,
-        date: task.startAt.toISOString().split("T")[0],
+        date: task.startAt!.toISOString().split("T")[0],
         type: "task-start",
         color: "#4ADE80",
         tournamentId: task.tournament.id,
@@ -123,7 +123,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     events.push({
       id: `td-${task.id}`,
       title: `Здача проєктів`,
-      date: task.deadline.toISOString().split("T")[0],
+      date: task.deadline!.toISOString().split("T")[0],
       type: "deadline",
       color: "#f85149",
       tournamentId: task.tournament.id,
@@ -137,7 +137,7 @@ export const load: PageServerLoad = async ({ locals }) => {
         events.push({
           id: `md-${sub.id}`,
           title: `Мій дедлайн`,
-          date: new Date(sub.task.deadline).toISOString().split("T")[0],
+          date: new Date(sub.task.deadline!).toISOString().split("T")[0],
           type: "my-deadline",
           color: "#A855F7",
           tournamentId: team.tournament.id,
