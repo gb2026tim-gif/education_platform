@@ -91,7 +91,7 @@
 
     // Group upcoming by date
     const upcomingGrouped = $derived((() => {
-        const groups: Record<string, any[]> = {};
+        const groups: Record<string, typeof upcoming> = {};
         for (const ev of upcoming) {
             if (!groups[ev.date]) groups[ev.date] = [];
             groups[ev.date].push(ev);
