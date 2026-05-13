@@ -24,10 +24,10 @@
         let cur: typeof qs[0] | null = null;
         for (const line of lines) {
             const qm = line.match(/^\*\*(\d+)\.\s+(.+?)\*\*$/);
-            if (qm) { if (cur) qs.push(cur); cur = { text: qm[2], options: [] }; continue; }
+            if (qm) { if (cur) qs.push(cur); cur = { text: qm[2] ?? '', options: [] }; continue; }
             if (cur) {
                 const om = line.match(/^-\s+[a-d]\)\s+(.+?)(\s+✅)?$/);
-                if (om) cur.options.push({ text: om[1], correct: !!om[2] });
+                if (om) cur.options.push({ text: om[1] ?? '', correct: !!om[2] });
             }
         }
         if (cur && cur.options.length > 0) qs.push(cur);
