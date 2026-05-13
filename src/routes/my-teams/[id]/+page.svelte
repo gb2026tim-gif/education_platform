@@ -22,7 +22,7 @@
     }
 
     const submission = $derived(t.submissions[0] ?? null);
-    const task       = $derived(t.submissions[0]?.task ?? null);
+    const task       = $derived(data.tournamentTask ?? t.submissions[0]?.task ?? null);
     const deadline   = $derived(task?.deadline ?? null);
 
     async function sendInvite() {

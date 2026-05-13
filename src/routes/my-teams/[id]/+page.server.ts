@@ -1,8 +1,7 @@
-// src/routes/my-teams/[id]/+page.server.ts
-import type { PageServerLoad, Actions } from "./$types";
-import { error, fail, redirect } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
 import { requireAuth } from "$lib/server/middleware";
 import { prisma } from "$lib/server/db";
+import { error } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async (event) => {
   const user = requireAuth(event);
@@ -30,73 +29,11 @@ export const load: PageServerLoad = async (event) => {
   const isCaptain = team.captainId === user.id;
   if (!isCaptain && !isMember) throw error(404, "Команда не знайдена");
 
-  return { team, user, isCaptain };
-};
+  // Get active task for this tournament separately
+  const tournamentTask = await prisma.task.findFirst({
+    where: { tournamentId: team.tournamentId, status: "ACTIVE" },
+    select: { id: true, title: true, deadline: true },
+  });
 
-export const actions: Actions = {
-  leaveTeam: async (event) => {
-    // Actions receive RequestEvent — read locals.user directly
-    const user = event.locals.user;
-    if (!user) throw redirect(302, "/auth/login");
-
-    const teamId = event.params.id;
-
-    const team = await prisma.team.findUnique({
-      where: { id: teamId },
-      include: { members: true },
-    });
-
-    if (!team) throw error(404, "Команда не знайдена");
-
-    if (team.captainId === user.id) {
-      await prisma.juryAssignment.deleteMany({
-        where: { submission: { teamId } },
-      });
-      await prisma.submission.deleteMany({ where: { teamId } });
-      await prisma.teamMember.deleteMany({ where: { teamId } });
-      await prisma.team.delete({ where: { id: teamId } });
-    } else {
-      await prisma.teamMember.deleteMany({
-        where: { teamId, email: user.email },
-      });
-    }
-
-    return { success: true };
-  },
-
-  inviteMember: async (event) => {
-    const user = event.locals.user;
-    if (!user) throw redirect(302, "/auth/login");
-
-    const teamId = event.params.id;
-    const data = await event.request.formData();
-    const email = data.get("email")?.toString()?.trim();
-
-    if (!email) return fail(400, { error: "Email обов'язковий" });
-
-    const team = await prisma.team.findUnique({ where: { id: teamId } });
-    if (!team || team.captainId !== user.id) {
-      return fail(403, { error: "Тільки капітан може запрошувати" });
-    }
-
-    const existing = await prisma.teamMember.findFirst({
-      where: { teamId, email },
-    });
-    if (existing) return fail(400, { error: "Цей учасник вже в команді" });
-
-    const invitedUser = await prisma.user.findUnique({ where: { email } });
-    if (invitedUser) {
-      try {
-        await prisma.$executeRaw`
-                    INSERT INTO team_invites (id, "teamId", "userId", status, "createdAt", "updatedAt")
-                    VALUES (gen_random_uuid()::text, ${teamId}, ${invitedUser.id}, 'PENDING', now(), now())
-                        ON CONFLICT DO NOTHING
-                `;
-      } catch {
-        // table may not exist — silently skip
-      }
-    }
-
-    return { success: true, invited: email };
-  },
+  return { team, user, isCaptain, tournamentTask };
 };
