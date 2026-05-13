@@ -496,7 +496,7 @@
                                                 {#if ev.description}<div class="up-ev-desc">{ev.description}</div>{/if}
                                             </div>
                                             <span class="up-badge" style="background:{c.color}20;color:{c.color};">{c.label}</span>
-                                        </div>
+                                        </button>
                                     {/each}
                                 </div>
                             {/each}
