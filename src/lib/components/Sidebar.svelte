@@ -32,8 +32,12 @@
 
             <div class="nav-section">
                 <span class="nav-label">Навчання</span>
-                <a href="/courses" class="nav-item" class:active={isActive('/courses')}>
+                <a href="/my-courses" class="nav-item" class:active={isActive("/my-courses")}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Мої курси
+                </a>
+                <a href="/courses" class="nav-item" class:active={isActive('/courses')}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
                     Мої турніри
                 </a>
             </div>

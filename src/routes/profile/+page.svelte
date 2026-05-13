@@ -53,11 +53,36 @@
         { id: 't4', type: 'tournament', title: 'Олімпіада з робототехніки', subtitle: 'Сертифікат учасника',             date: '2026', imageUrl: '/certs/cert-tournament-4.png', filename: 'cert-robotics.png' },
     ];
 
-    const courseCerts     = $derived(CERTIFICATES.filter(c => c.type === 'course'));
+    // Real course certificates from completed enrollments
+    const courseCerts = $derived(
+        (data.completedEnrollments ?? []).map((e: any) => ({
+            id:       e.course.id,
+            type:     'course' as const,
+            title:    e.course.title,
+            subtitle: 'Завершення курсу · LvUp',
+            date:     new Date(e.enrolledAt).toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' }),
+            courseId: e.course.id,
+            imageUrl: '/certs/cert-course-default.png',
+            filename: `certificate-${e.course.title}.html`,
+        }))
+    );
     const tournamentCerts = $derived(CERTIFICATES.filter(c => c.type === 'tournament'));
 
-    async function downloadCert(cert: Certificate) {
+    async function downloadCert(cert: any) {
         try {
+            // Course certificate — generate from API
+            if (cert.courseId) {
+                const res = await fetch(`/api/courses/${cert.courseId}/certificate`);
+                if (!res.ok) throw new Error('fail');
+                const blob = await res.blob();
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `LvUp-Certificate-${cert.title.replace(/\s+/g, '-')}.html`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+                return;
+            }
+            // Tournament certificate — download image
             const res  = await fetch(cert.imageUrl);
             const blob = await res.blob();
             const url  = URL.createObjectURL(blob);
@@ -416,6 +441,11 @@
                             Сертифікати за курси
                         </div>
                         <div class="cert-grid">
+                            {#if courseCerts.length === 0}
+                                <div style="color:var(--text-dim);font-size:14px;padding:20px 0;">
+                                    Ще немає сертифікатів. Завершіть курс щоб отримати сертифікат!
+                                </div>
+                            {/if}
                             {#each courseCerts as cert}
                                 <div
                                         class="cert-card"
@@ -424,7 +454,11 @@
                                         aria-label="Завантажити сертифікат: {cert.title}"
                                         onclick={() => downloadCert(cert)}
                                         onkeydown={(e) => handleCertKey(e, cert)}>
-                                    <img src={cert.imageUrl} alt={cert.title} class="cert-img" loading="lazy" />
+                                    <div class="cert-img" style="background:linear-gradient(135deg,#0a1535 0%,#1a3a7a 50%,#0a1535 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-bottom:1px solid rgba(62,131,255,.2);">
+                                        <div style="font-size:36px;">🎓</div>
+                                        <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.15em;text-transform:uppercase;">Certificate</div>
+                                        <div style="font-size:10px;color:#3E83FF;font-weight:600;">LvUp</div>
+                                    </div>
                                     <div class="cert-body">
                                         <div class="cert-title">{cert.title}</div>
                                         <div class="cert-sub">{cert.subtitle}</div>
