@@ -24,7 +24,10 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  // Additional profile fields
+  // Поле для логіки запрошень (щоб бачити, чи адмін змінив тимчасовий пароль)
+  mustChangePassword Boolean @default(false)
+
+  // Profile fields
   firstName     String?
   lastName      String?
   city          String?
@@ -112,6 +115,10 @@ model Team {
   city      String?
   contact   String?
   status    TeamStatus @default(PENDING)
+
+  // ДОДАНО: Поле для швидкої перевірки статусу підтвердження
+  verified  Boolean    @default(false)
+
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -125,6 +132,18 @@ model Team {
 
   @@unique([captainId, tournamentId])
   @@map("teams")
+}
+
+// Модель для збереження кодів запрошень
+model Invitation {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  role      Role     @default(JURY)
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@map("invitations")
 }
 
 model TeamMember {

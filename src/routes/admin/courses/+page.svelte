@@ -1,324 +1,306 @@
 <script lang="ts">
+  // src/routes/admin/courses/+page.svelte
   import { enhance } from '$app/forms';
+  import { fade, slide, fly, scale } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
 
   let { data, form } = $props();
 
-  interface CourseRow {
-    id: string;
-    title: string;
-    status: string;
-    category: string;
-    isPaid: boolean;
-    certTemplate: { id: string; name: string } | null;
-    _count: { modules: number; enrollments: number };
+  // --- Стейт інтерфейсу ---
+  let showModal = $state(false);
+  let loading = $state(false);
+  let activeTab = $state('general');
+  let searchTerm = $state('');
+
+  // --- Стейт форми ---
+  let title = $state('');
+  let description = $state('');
+  let category = $state('IT & Розробка');
+  let isPaid = $state(false);
+
+  // Конструктор уроків
+  let lessons = $state([
+    { id: crypto.randomUUID(), title: '', videoUrl: '', summary: '', testUrl: '', expanded: true }
+  ]);
+
+  // --- Функції логіки ---
+  function addLesson() {
+    lessons = [...lessons, { id: crypto.randomUUID(), title: '', videoUrl: '', summary: '', testUrl: '', expanded: true }];
   }
 
-  const published = $derived((data.courses as CourseRow[]).filter(c => c.status === 'PUBLISHED'));
-  const drafts    = $derived((data.courses as CourseRow[]).filter(c => c.status === 'DRAFT'));
-
-  let showModal  = $state(false);
-  let modLoading = $state(false);
-
-  let title    = $state('');
-  let desc     = $state('');
-  let category = $state('Програмування');
-  let modules: string[] = $state(['']);
-
-  function addModule()              { modules = [...modules, '']; }
-  function removeModule(i: number)  { modules = modules.filter((_, idx) => idx !== i); }
-  function closeModal(e: MouseEvent) {
-    if (e.target === e.currentTarget) showModal = false;
+  function removeLesson(id: string) {
+    if (lessons.length > 1) lessons = lessons.filter(l => l.id !== id);
   }
 
-  const categoryIcons: Record<string, string> = {
-    'Програмування': '< >',
-    'Бази даних': '🗄',
-    'Дизайн': '🎨',
-    'Загальне': '📚',
+  const toggleLesson = (id: string) => {
+    lessons = lessons.map(l => l.id === id ? { ...l, expanded: !l.expanded } : l);
   };
-  const categoryColors: Record<string, string> = {
-    'Програмування': '#166534',
-    'Бази даних': '#1e3a5f',
-    'Дизайн': '#4c1d95',
-    'Загальне': '#1e3a5f',
-  };
+
+  // Пошук
+  let filteredCourses = $derived(
+          data.courses?.filter(c => c.title.toLowerCase().includes(searchTerm.toLowerCase())) || []
+  );
+
+  // Допоміжні стилі для IDE (щоб не було "Statement expected")
+  const inputStyle = "width: 100%; background: #0f172a; border: 1px solid #1e293b; color: white; padding: 12px 16px; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s;";
+  const labelStyle = "display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.025em;";
 </script>
 
-<svelte:head><title>Курси — LvUp Admin</title></svelte:head>
+<div class="admin-container" style="min-height: 100vh; background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif;">
 
-<div style="max-width:1100px;margin:0 auto;padding:2rem;">
-
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+  <header style="max-width: 1400px; margin: 0 auto; padding: 40px 20px; display: flex; justify-content: space-between; align-items: flex-end;">
     <div>
-      <p style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin:0 0 4px;">Адмін / Курси</p>
-      <h1 style="margin:0;font-size:1.75rem;font-weight:800;">Курси</h1>
+      <h1 style="font-size: 3rem; font-weight: 900; margin: 0; background: linear-gradient(to right, #fff, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        Керування курсами
+      </h1>
+      <p style="color: #64748b; margin-top: 8px; font-size: 1.1rem;">Створюйте контент, додавайте тести та видавайте сертифікати</p>
     </div>
-    <button onclick={() => showModal = true}
-            style="background:#3E83FF;color:#fff;padding:0.7rem 1.4rem;border-radius:10px;
-             border:none;font-weight:600;font-size:0.95rem;cursor:pointer;">
-      + Створити курс
-    </button>
-  </div>
 
-  {#if form?.error}
-    <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);
-                color:#f87171;padding:0.75rem 1rem;border-radius:8px;margin-bottom:1.5rem;">
-      {form.error}
-    </div>
-  {/if}
-
-  <!-- Опубліковані -->
-  {#if published.length > 0}
-    <div style="margin-bottom:2rem;">
-      <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem;">
-        <span style="width:3px;height:16px;background:#3E83FF;border-radius:2px;display:block;"></span>
-        <p style="margin:0;font-size:0.78rem;font-weight:700;color:rgba(255,255,255,0.45);
-                  text-transform:uppercase;letter-spacing:0.08em;">
-          Опубліковані ({published.length})
-        </p>
+    <div style="display: flex; gap: 16px;">
+      <div style="position: relative;">
+        <input
+                bind:value={searchTerm}
+                placeholder="Пошук за назвою..."
+                style="background: #0f172a; border: 1px solid #1e293b; padding: 12px 20px 12px 45px; border-radius: 14px; color: white; width: 300px;"
+        />
+        <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;">
-        {#each published as c}
-          <div style="background:#0d1b3e;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;">
-            <div style="background:{categoryColors[c.category] ?? '#1e3a5f'};
-                        height:120px;display:flex;align-items:center;justify-content:center;position:relative;">
-              <span style="font-size:2.5rem;" aria-hidden="true">{categoryIcons[c.category] ?? '📘'}</span>
-              <span style="position:absolute;top:10px;right:10px;background:{c.isPaid ? '#92400e' : '#14532d'};
-                           color:{c.isPaid ? '#fbbf24' : '#4ade80'};padding:3px 10px;border-radius:20px;
-                           font-size:0.75rem;font-weight:600;">
-                {c.isPaid ? 'Платний' : 'Безкоштовно'}
-              </span>
+      <button
+              onclick={() => { showModal = true; activeTab = 'general'; }}
+              style="background: #3b82f6; color: white; border: none; padding: 12px 28px; border-radius: 14px; font-weight: 700; cursor: pointer; transition: transform 0.2s; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);">
+        + Новий курс
+      </button>
+    </div>
+  </header>
+
+  <main style="max-width: 1400px; margin: 0 auto; padding: 0 20px 60px;">
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 24px;">
+      {#each filteredCourses as course}
+        <div
+                in:scale={{ duration: 400, start: 0.95, easing: quintOut }}
+                style="background: #0f172a; border: 1px solid #1e293b; border-radius: 24px; overflow: hidden; position: relative; transition: border-color 0.3s;">
+
+          <div style="height: 180px; background: linear-gradient(45deg, #1e3a8a, #3b82f6); padding: 30px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <span style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); padding: 6px 14px; border-radius: 99px; font-size: 0.75rem; font-weight: 700;">{course.category}</span>
+              <div style="width: 10px; height: 10px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 10px #4ade80;"></div>
             </div>
-            <div style="padding:1rem;">
-              <h3 style="margin:0 0 4px;font-size:1rem;font-weight:700;">{c.title}</h3>
-              <p style="margin:0 0 0.75rem;font-size:0.82rem;color:rgba(255,255,255,0.45);">
-                {c._count.modules} модулів · {c._count.enrollments} учасників
-              </p>
-              <div style="display:flex;gap:0.5rem;">
-                <a href="/admin/courses/{c.id}/edit"
-                   style="padding:0.4rem 0.9rem;border:1px solid rgba(255,255,255,0.12);border-radius:8px;
-                          color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.82rem;">
-                  Редагувати
-                </a>
-                <a href="/admin/courses/{c.id}/participants"
-                   style="padding:0.4rem 0.9rem;border:1px solid rgba(255,255,255,0.12);border-radius:8px;
-                          color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.82rem;">
-                  Учасники
-                </a>
-                <form method="POST" action="?/delete" use:enhance style="margin:0;">
-                  <input type="hidden" name="id" value={c.id} />
-                  <button type="submit"
-                          style="padding:0.4rem 0.9rem;border:1px solid rgba(248,113,113,0.2);border-radius:8px;
-                           color:#f87171;background:none;font-size:0.82rem;cursor:pointer;">
-                    Видалити
-                  </button>
-                </form>
+            <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0; line-height: 1.2;">{course.title}</h2>
+          </div>
+
+          <div style="padding: 24px;">
+            <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; height: 3em; overflow: hidden;">{course.description}</p>
+
+            <div style="display: flex; gap: 20px; margin-bottom: 24px; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 16px;">
+              <div>
+                <span style="display: block; font-size: 0.7rem; color: #64748b; text-transform: uppercase;">Модулі</span>
+                <span style="font-size: 1.2rem; font-weight: 700;">{course._count?.modules || 0}</span>
+              </div>
+              <div style="width: 1px; background: #1e293b;"></div>
+              <div>
+                <span style="display: block; font-size: 0.7rem; color: #64748b; text-transform: uppercase;">Студенти</span>
+                <span style="font-size: 1.2rem; font-weight: 700;">{course._count?.enrollments || 0}</span>
               </div>
             </div>
-          </div>
-        {/each}
-      </div>
-    </div>
-  {/if}
 
-  <!-- Чернетки -->
-  {#if drafts.length > 0}
-    <div>
-      <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem;">
-        <span style="width:3px;height:16px;background:rgba(255,255,255,0.2);border-radius:2px;display:block;"></span>
-        <p style="margin:0;font-size:0.78rem;font-weight:700;color:rgba(255,255,255,0.45);
-                  text-transform:uppercase;letter-spacing:0.08em;">
-          Чернетки ({drafts.length})
-        </p>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;">
-        {#each drafts as c}
-          <div style="background:#0d1b3e;border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;opacity:0.8;">
-            <div style="background:#1a1f2e;height:120px;display:flex;align-items:center;justify-content:center;position:relative;">
-              <span style="font-size:2rem;opacity:0.4;" aria-hidden="true">{categoryIcons[c.category] ?? '📘'}</span>
-              <span style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.08);
-                           color:rgba(255,255,255,0.5);padding:3px 10px;border-radius:20px;font-size:0.75rem;">
-                Чернетка
-              </span>
-            </div>
-            <div style="padding:1rem;">
-              <h3 style="margin:0 0 4px;font-size:1rem;font-weight:700;">{c.title}</h3>
-              <p style="margin:0 0 0.75rem;font-size:0.82rem;color:rgba(255,255,255,0.4);">
-                {c._count.modules} модулів · не опубліковано
-              </p>
-              <div style="display:flex;gap:0.5rem;">
-                <a href="/admin/courses/{c.id}/edit"
-                   style="padding:0.4rem 0.9rem;border:1px solid rgba(255,255,255,0.12);border-radius:8px;
-                          color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.82rem;">
-                  Редагувати
-                </a>
-                <form method="POST" action="?/publish" use:enhance style="margin:0;">
-                  <input type="hidden" name="id" value={c.id} />
-                  <button type="submit"
-                          style="padding:0.4rem 0.9rem;border:none;border-radius:8px;
-                           color:#4ade80;background:rgba(34,197,94,0.1);font-size:0.82rem;
-                           cursor:pointer;font-weight:600;">
-                    Опублікувати
-                  </button>
-                </form>
-                <form method="POST" action="?/delete" use:enhance style="margin:0;">
-                  <input type="hidden" name="id" value={c.id} />
-                  <button type="submit"
-                          style="padding:0.4rem 0.9rem;border:1px solid rgba(248,113,113,0.2);border-radius:8px;
-                           color:#f87171;background:none;font-size:0.82rem;cursor:pointer;">
-                    Видалити
-                  </button>
-                </form>
-              </div>
+            <div style="display: flex; gap: 10px;">
+              <a href="/admin/courses/{course.id}" style="flex: 1; text-align: center; background: #1e293b; color: white; padding: 12px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Редагувати</a>
+              <form method="POST" action="?/delete" use:enhance style="margin:0;">
+                <input type="hidden" name="id" value={course.id} />
+                <button style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 12px; cursor: pointer;">✕</button>
+              </form>
             </div>
           </div>
-        {/each}
-      </div>
+        </div>
+      {/each}
     </div>
-  {/if}
+  </main>
 </div>
 
-<!-- ─── Модалка "Новий курс" ────────────────────────────────────────────────── -->
 {#if showModal}
   <div
-          role="presentation"
-          style="position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;
-           display:flex;align-items:center;justify-content:center;padding:1rem;"
-          onclick={closeModal}>
+          transition:fade={{ duration: 200 }}
+          style="position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 40px;">
 
-    <div style="background:#0d1b3e;border:1px solid rgba(62,131,255,0.2);border-radius:16px;
-                padding:2rem;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;">
+    <div
+            in:fly={{ y: 100, duration: 600, easing: quintOut }}
+            style="background: #0f172a; width: 100%; max-width: 1100px; height: 90vh; border-radius: 32px; border: 1px solid #1e293b; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
 
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
-        <h2 style="margin:0;font-size:1.25rem;font-weight:700;">Новий курс</h2>
-        <button onclick={() => showModal = false}
-                style="background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:1.25rem;"
-                aria-label="Закрити">✕</button>
-      </div>
-
-      <form method="POST" action="?/create" use:enhance={({ formData }) => {
-        formData.set('modules', JSON.stringify(modules));
-        modLoading = true;
-        return async ({ update }) => { await update(); modLoading = false; showModal = false; };
-      }}>
-
-        <div style="margin-bottom:1rem;">
-          <label for="course-title"
-                 style="display:block;font-size:0.82rem;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;">
-            Назва курсу *
-          </label>
-          <input id="course-title" name="title" required bind:value={title}
-                 placeholder="Python для початківців"
-                 style="width:100%;background:#111827;border:1px solid #1e2d45;border-radius:10px;
-                   padding:0.8rem 1rem;color:#fff;font-size:1rem;outline:none;box-sizing:border-box;" />
-        </div>
-
-        <div style="margin-bottom:1rem;">
-          <label for="course-desc"
-                 style="display:block;font-size:0.82rem;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;">
-            Короткий опис *
-          </label>
-          <textarea id="course-desc" name="description" required bind:value={desc} rows={3}
-                    placeholder="Про що курс, для кого він, що отримає учасник..."
-                    style="width:100%;background:#111827;border:1px solid #1e2d45;border-radius:10px;
-                   padding:0.8rem 1rem;color:#fff;font-size:0.95rem;outline:none;
-                   box-sizing:border-box;resize:vertical;font-family:inherit;"></textarea>
-        </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-          <div>
-            <label for="course-category"
-                   style="display:block;font-size:0.82rem;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;">
-              Категорія
-            </label>
-            <select id="course-category" name="category" bind:value={category}
-                    style="width:100%;background:#111827;border:1px solid #1e2d45;border-radius:10px;
-                     padding:0.8rem 1rem;color:#fff;font-size:1rem;outline:none;box-sizing:border-box;">
-              {#each ['Програмування', 'Бази даних', 'Дизайн', 'Загальне'] as cat}
-                <option value={cat}>{cat}</option>
-              {/each}
-            </select>
-          </div>
-          <div>
-            <label for="course-access"
-                   style="display:block;font-size:0.82rem;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;">
-              Тип доступу
-            </label>
-            <select id="course-access" name="isPaid"
-                    style="width:100%;background:#111827;border:1px solid #1e2d45;border-radius:10px;
-                     padding:0.8rem 1rem;color:#fff;font-size:1rem;outline:none;box-sizing:border-box;">
-              <option value="false">Безкоштовно</option>
-              <option value="true">Платний</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="margin-bottom:1rem;">
-          <label for="course-cert"
-                 style="display:block;font-size:0.82rem;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;">
-            Сертифікат після завершення <span style="opacity:0.5;">(необов'язково)</span>
-          </label>
-          <select id="course-cert" name="certTemplateId"
-                  style="width:100%;background:#111827;border:1px solid #1e2d45;border-radius:10px;
-                   padding:0.8rem 1rem;color:#fff;font-size:1rem;outline:none;box-sizing:border-box;">
-            <option value="">Без сертифіката</option>
-            {#each data.certTemplates as t}
-              <option value={t.id}>{t.name}</option>
-            {/each}
-          </select>
-        </div>
-
-        <!-- Модулі -->
-        <div style="margin-bottom:1.5rem;">
-          <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin:0 0 0.6rem;">Модулі курсу</p>
-          {#each modules as _mod, i}
-            <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-              <label for="module-{i}" class="sr-only">Модуль {i + 1}</label>
-              <input id="module-{i}" bind:value={modules[i]}
-                     placeholder="Модуль {i + 1}: Назва..."
-                     style="flex:1;background:#111827;border:1px solid #1e2d45;border-radius:10px;
-                       padding:0.7rem 1rem;color:#fff;font-size:0.95rem;outline:none;box-sizing:border-box;" />
-              {#if modules.length > 1}
-                <button type="button" onclick={() => removeModule(i)}
-                        aria-label="Видалити модуль {i + 1}"
-                        style="background:none;border:1px solid rgba(248,113,113,0.2);border-radius:8px;
-                         color:#f87171;padding:0 0.75rem;cursor:pointer;font-size:1rem;">✕</button>
+      <header style="padding: 24px 40px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; gap: 32px;">
+          {#each ['general', 'lessons', 'certificate'] as tab}
+            <button
+                    onclick={() => activeTab = tab}
+                    style="background: none; border: none; color: {activeTab === tab ? '#3b82f6' : '#64748b'}; font-weight: 800; font-size: 1.1rem; cursor: pointer; position: relative; padding: 8px 0;">
+              {tab === 'general' ? '1. Інформація' : tab === 'lessons' ? '2. Програма' : '3. Сертифікат'}
+              {#if activeTab === tab}
+                <div in:scale style="position: absolute; bottom: -25px; left: 0; width: 100%; height: 4px; background: #3b82f6; border-radius: 2px;"></div>
               {/if}
-            </div>
+            </button>
           {/each}
-          <button type="button" onclick={addModule}
-                  style="background:none;border:1px dashed rgba(255,255,255,0.15);border-radius:10px;
-                   color:rgba(255,255,255,0.5);padding:0.6rem 1rem;cursor:pointer;font-size:0.875rem;
-                   width:100%;margin-top:4px;">
-            + Додати модуль
-          </button>
         </div>
+        <button onclick={() => showModal = false} style="background: none; border: none; color: #64748b; font-size: 1.5rem; cursor: pointer;">✕</button>
+      </header>
 
-        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
-          <button type="button" onclick={() => showModal = false}
-                  style="padding:0.75rem 1.25rem;border:1px solid rgba(255,255,255,0.12);border-radius:10px;
-                   color:rgba(255,255,255,0.6);background:none;font-size:0.95rem;cursor:pointer;">
-            Скасувати
-          </button>
-          <button type="submit" disabled={modLoading}
-                  style="padding:0.75rem 1.5rem;background:#3E83FF;border:none;border-radius:10px;
-                   color:#fff;font-size:0.95rem;font-weight:600;cursor:pointer;
-                   opacity:{modLoading ? '0.6' : '1'}">
-            {modLoading ? 'Створюємо...' : 'Створити курс'}
-          </button>
-        </div>
+      <form
+              method="POST"
+              action="?/create"
+              use:enhance={() => {
+        loading = true;
+        return async ({ update }) => { await update(); loading = false; showModal = false; };
+      }}
+              style="flex: 1; overflow-y: auto; padding: 40px;">
+
+        <input type="hidden" name="lessons" value={JSON.stringify(lessons)} />
+
+        {#if activeTab === 'general'}
+          <div in:fade style="display: flex; flex-direction: column; gap: 24px;">
+            <div>
+              <label style={labelStyle}>Назва курсу</label>
+              <input name="title" bind:value={title} placeholder="Введіть назву..." required style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>Повний опис / Конспект</label>
+              <textarea name="description" bind:value={description} rows="6" placeholder="Про що цей курс?" style={inputStyle}></textarea>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+              <div>
+                <label style={labelStyle}>Категорія</label>
+                <select name="category" bind:value={category} style={inputStyle}>
+                  <option>IT & Розробка</option>
+                  <option>Кібербезпека</option>
+                  <option>Дизайн</option>
+                  <option>3D Моделювання</option>
+                </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Доступ</label>
+                <select bind:value={isPaid} style={inputStyle}>
+                  <option value={false}>Безкоштовно</option>
+                  <option value={true}>Платний курс</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        {:else if activeTab === 'lessons'}
+          <div in:fade>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+              <h3 style="font-size: 1.25rem; font-weight: 800;">Структура навчання</h3>
+              <button type="button" onclick={addLesson} style="background: #1e293b; color: #3b82f6; border: 1px solid #1e293b; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer;">+ Додати урок</button>
+            </div>
+
+            {#each lessons as lesson, i (lesson.id)}
+              <div style="background: #020617; border: 1px solid #1e293b; border-radius: 20px; margin-bottom: 16px; overflow: hidden;">
+                <div
+                        onclick={() => toggleLesson(lesson.id)}
+                        style="padding: 20px; display: flex; justify-content: space-between; cursor: pointer; background: rgba(255,255,255,0.02);">
+                  <span style="font-weight: 700; color: #3b82f6;">#{i+1} {lesson.title || 'Новий урок'}</span>
+                  <button type="button" onclick={(e) => { e.stopPropagation(); removeLesson(lesson.id); }} style="background:none; border:none; color:#ef4444;">Видалити</button>
+                </div>
+
+                {#if lesson.expanded}
+                  <div style="padding: 24px; border-top: 1px solid #1e293b; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" transition:slide>
+                    <div style="grid-column: span 2;">
+                      <label style={labelStyle}>Заголовок уроку</label>
+                      <input bind:value={lesson.title} placeholder="Вступ до Svelte 5..." style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Відео URL</label>
+                      <input bind:value={lesson.videoUrl} placeholder="YouTube/Vimeo" style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Тест URL</label>
+                      <input bind:value={lesson.testUrl} placeholder="Google Forms" style={inputStyle} />
+                    </div>
+                    <div style="grid-column: span 2;">
+                      <label style={labelStyle}>Конспект уроку</label>
+                      <textarea bind:value={lesson.summary} rows="3" placeholder="Текст уроку..." style={inputStyle}></textarea>
+                    </div>
+                  </div>
+                {/if}
+              </div>
+            {/each}
+          </div>
+
+        {:else if activeTab === 'certificate'}
+          <div in:fade style="text-align: center;">
+            <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 30px;">Макет сертифікату для випускників</h3>
+
+            <div style="background: white; color: #020617; width: 600px; height: 420px; margin: 0 auto; border: 20px solid #0f172a; padding: 40px; box-sizing: border-box; position: relative;">
+              <div style="border: 2px solid #3b82f6; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <h1 style="font-size: 2.5rem; margin: 0; color: #0f172a;">СЕРТИФІКАТ</h1>
+                <p style="font-size: 0.9rem; margin-top: 10px;">Це підтверджує, що</p>
+                <h2 style="font-size: 1.8rem; font-family: serif; font-style: italic; border-bottom: 2px solid #3b82f6; padding: 0 20px; margin: 15px 0;">Nastia (Student)</h2>
+                <p style="font-size: 0.9rem;">Успішно закінчила курс</p>
+                <h3 style="font-size: 1.3rem; color: #3b82f6; margin-top: 5px;">{title || 'Назва курсу'}</h3>
+
+                <div style="margin-top: 30px; width: 100%; display: flex; justify-content: space-between; font-size: 0.7rem; padding: 0 40px;">
+                  <span>Дата: {new Date().toLocaleDateString()}</span>
+                  <span>LvUp Academy</span>
+                </div>
+              </div>
+              <div style="position: absolute; bottom: 30px; right: 30px; width: 60px; height: 60px; border: 4px double #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-weight: 900; font-size: 0.6rem; transform: rotate(-15deg); opacity: 0.5;">STAMP</div>
+            </div>
+
+            <div style="margin-top: 40px; max-width: 400px; margin-inline: auto;">
+              <label style={labelStyle}>Оберіть стиль</label>
+              <select name="template" style={inputStyle}>
+                <option>Modern Blue (Стандарт)</option>
+                <option>Elegant Gold</option>
+                <option>Cyber Dark</option>
+              </select>
+            </div>
+          </div>
+        {/if}
+
+        <footer style="margin-top: 40px; border-top: 1px solid #1e293b; padding-top: 30px; display: flex; justify-content: flex-end; gap: 16px;">
+          <button type="button" onclick={() => showModal = false} style="padding: 12px 24px; background: none; border: 1px solid #1e293b; color: #64748b; border-radius: 12px; cursor: pointer;">Скасувати</button>
+
+          {#if activeTab === 'general'}
+            <button type="button" onclick={() => activeTab = 'lessons'} style="padding: 12px 32px; background: #3b82f6; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;">Далі до уроків</button>
+          {:else if activeTab === 'lessons'}
+            <button type="button" onclick={() => activeTab = 'certificate'} style="padding: 12px 32px; background: #3b82f6; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;">Далі до сертифікату</button>
+          {:else}
+            <button
+                    type="submit"
+                    name="status"
+                    value="PUBLISHED"
+                    disabled={loading}
+                    style="padding: 12px 40px; background: #4ade80; color: #064e3b; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; opacity: {loading ? 0.5 : 1};">
+              {loading ? 'Зберігаємо...' : 'Опублікувати курс'}
+            </button>
+          {/if}
+        </footer>
       </form>
     </div>
   </div>
 {/if}
 
 <style>
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
+  :global(body) {
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Скролбар */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #020617;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6;
   }
 </style>
