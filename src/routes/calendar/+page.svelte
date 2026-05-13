@@ -93,9 +93,10 @@
     const upcomingGrouped = $derived((() => {
         const groups: Record<string, typeof upcoming> = {};
         for (const ev of upcoming) {
-            if (!groups[ev.date]) groups[ev.date] = [];
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            groups[ev.date]!.push(ev);
+            const key = ev.date as string;
+            if (!groups[key]) groups[key] = [];
+            const arr = groups[key];
+            if (arr) arr.push(ev);
         }
         return Object.entries(groups).slice(0, 8);
     })());
