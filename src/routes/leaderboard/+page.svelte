@@ -70,9 +70,9 @@
 .g .ps{color:#FFD700;} .s .ps{color:#C0C0C0;} .b .ps{color:#CD7F32;}
 .pp{font-size:11px;color:var(--text-dim);margin-top:3px;}
 .pb{width:195px;display:flex;align-items:center;justify-content:center;border-radius:0 0 12px 12px;font-size:16px;font-weight:800;}
-.g .pb{height:88px;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);color:#FFD700;}
-.s .pb{height:64px;background:rgba(192,192,192,.08);border:1px solid rgba(192,192,192,.2);color:#C0C0C0;}
-.b .pb{height:48px;background:rgba(205,127,50,.07);border:1px solid rgba(205,127,50,.18);color:#CD7F32;}
+.pb-g{height:88px;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);color:#FFD700;}
+.pb-s{height:64px;background:rgba(192,192,192,.08);border:1px solid rgba(192,192,192,.2);color:#C0C0C0;}
+.pb-b{height:48px;background:rgba(205,127,50,.07);border:1px solid rgba(205,127,50,.18);color:#CD7F32;}
 
 /* Section header */
 .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
@@ -166,7 +166,7 @@
                                 <div class="ps">{scored[1].average.toFixed(1)}</div>
                                 <div class="pp">середній бал</div>
                             </div>
-                            <div class="pb s">2</div>
+                            <div class="pb pb-s">2</div>
                         </div>
                         <div class="pw">
                             <div class="pc g">
@@ -176,7 +176,7 @@
                                 <div class="ps">{scored[0].average.toFixed(1)}</div>
                                 <div class="pp">середній бал</div>
                             </div>
-                            <div class="pb g">1</div>
+                            <div class="pb pb-g">1</div>
                         </div>
                         <div class="pw">
                             <div class="pc b">
@@ -186,7 +186,7 @@
                                 <div class="ps">{scored[2].average.toFixed(1)}</div>
                                 <div class="pp">середній бал</div>
                             </div>
-                            <div class="pb b">3</div>
+                            <div class="pb pb-b">3</div>
                         </div>
                     </div>
                 {/if}
