@@ -237,7 +237,6 @@
 .d-link:hover{text-decoration:underline;}
 .d-teams{font-size:11px;color:var(--text-dim);margin-top:2px;}
 .d-empty{padding:24px;text-align:center;color:var(--text-dim);font-size:13px;}
-.d-hint{padding:24px;text-align:center;color:var(--text-dim);font-size:13px;}
 
 /* ── Right panel ── */
 .right{display:flex;flex-direction:column;gap:16px;}
@@ -273,8 +272,6 @@
 :global(.light-mode) .up-ev-name{color:#0a0e1a;}
 .up-ev-desc{font-size:10px;color:var(--text-muted);}
 .up-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;flex-shrink:0;}
-.up-days{font-size:10px;font-weight:700;color:var(--text-dim);flex-shrink:0;}
-.up-days.soon{color:#f85149;}
 .up-empty{padding:20px;text-align:center;color:var(--text-dim);font-size:13px;}
 
 /* Tournament status */
@@ -491,7 +488,7 @@
                                     </div>
                                     {#each evs as ev}
                                         {@const c = cfg(ev.type)}
-                                        <div class="up-ev"
+                                        <button class="up-ev"
                                             onclick={() => { const d=new Date(ev.date); viewYear=d.getFullYear(); viewMonth=d.getMonth(); selectedDay=ev.date; }}>
                                             <div class="up-icon" style="background:{c.color}18;">{c.icon}</div>
                                             <div style="flex:1;min-width:0;">
