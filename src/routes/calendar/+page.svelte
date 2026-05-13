@@ -94,7 +94,8 @@
         const groups: Record<string, typeof upcoming> = {};
         for (const ev of upcoming) {
             if (!groups[ev.date]) groups[ev.date] = [];
-            groups[ev.date].push(ev);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            groups[ev.date]!.push(ev);
         }
         return Object.entries(groups).slice(0, 8);
     })());
