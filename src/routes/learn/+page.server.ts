@@ -30,10 +30,14 @@ export const load: PageServerLoad = async ({ locals }) => {
     enrollments = await Promise.all(
       raw.map(async (e) => {
         const completedLessons = await prisma.lessonProgress.count({
-          where: { userId: locals.user!.id, completed: true, lesson: { module: { courseId: e.courseId } } },
+          where: {
+            userId: locals.user!.id,
+            completed: true,
+            lesson: { module: { courseId: e.courseId } },
+          },
         });
         return { ...e, completedLessons };
-      })
+      }),
     );
   }
 

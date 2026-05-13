@@ -20,17 +20,28 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
   if (locals.user) {
     enrollment = await prisma.enrollment.findUnique({
-      where: { userId_courseId: { userId: locals.user.id, courseId: params.id } },
+      where: {
+        userId_courseId: { userId: locals.user.id, courseId: params.id },
+      },
     });
 
     if (enrollment) {
       const lp = await prisma.lessonProgress.findUnique({
-        where: { userId_lessonId: { userId: locals.user.id, lessonId: params.lessonId } },
+        where: {
+          userId_lessonId: {
+            userId: locals.user.id,
+            lessonId: params.lessonId,
+          },
+        },
       });
       isCompleted = lp?.completed ?? false;
 
       const allProgress = await prisma.lessonProgress.findMany({
-        where: { userId: locals.user.id, completed: true, lesson: { module: { courseId: params.id } } },
+        where: {
+          userId: locals.user.id,
+          completed: true,
+          lesson: { module: { courseId: params.id } },
+        },
         select: { lessonId: true },
       });
       progress = Object.fromEntries(allProgress.map((p) => [p.lessonId, true]));
@@ -47,7 +58,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
     include: {
       modules: {
         orderBy: { order: "asc" },
-        include: { lessons: { orderBy: { order: "asc" }, select: { id: true, title: true, duration: true, order: true } } },
+        include: {
+          lessons: {
+            orderBy: { order: "asc" },
+            select: { id: true, title: true, duration: true, order: true },
+          },
+        },
       },
     },
   });
@@ -77,12 +93,16 @@ export const actions: Actions = {
     if (!locals.user) return fail(401, { error: "Не авторизовано" });
 
     const enrollment = await prisma.enrollment.findUnique({
-      where: { userId_courseId: { userId: locals.user.id, courseId: params.id } },
+      where: {
+        userId_courseId: { userId: locals.user.id, courseId: params.id },
+      },
     });
     if (!enrollment) return fail(403, { error: "Ви не записані на цей курс" });
 
     const existing = await prisma.lessonProgress.findUnique({
-      where: { userId_lessonId: { userId: locals.user.id, lessonId: params.lessonId! } },
+      where: {
+        userId_lessonId: { userId: locals.user.id, lessonId: params.lessonId! },
+      },
     });
 
     if (existing) {
@@ -92,7 +112,11 @@ export const actions: Actions = {
       });
     } else {
       await prisma.lessonProgress.create({
-        data: { userId: locals.user.id, lessonId: params.lessonId!, completed: true },
+        data: {
+          userId: locals.user.id,
+          lessonId: params.lessonId!,
+          completed: true,
+        },
       });
     }
 
