@@ -23,7 +23,8 @@ export const actions: Actions = {
     // 1. Журі — bcrypt
     const juror = await prisma.juror.findUnique({ where: { email } });
     if (juror) {
-      if (!juror.passwordHash) return fail(401, { error: "Невірний email або пароль" });
+      if (!juror.passwordHash)
+        return fail(401, { error: "Невірний email або пароль" });
       const valid = await bcrypt.compare(password, juror.passwordHash);
       if (!valid) return fail(401, { error: "Невірний email або пароль" });
       setJurySessionCookie(cookies, juror.id);
@@ -42,7 +43,10 @@ export const actions: Actions = {
     if (!res.ok) return fail(401, { error: "Невірний email або пароль" });
 
     // Передаємо всі cookies від Better Auth в браузер
-    const cookieNames = ["better-auth.session_token", "better-auth.session_data"];
+    const cookieNames = [
+      "better-auth.session_token",
+      "better-auth.session_data",
+    ];
     const raw = res.headers.get("set-cookie") ?? "";
     for (const name of cookieNames) {
       const escaped = name.replace(/\./g, "\\.");
