@@ -40,6 +40,7 @@ model User {
   captainOf   Team[]           @relation("TeamCaptain")
   tournaments Tournament[]     @relation("TournamentAdmin")
   juryScores  JuryAssignment[]
+  teamInvites TeamInvite[]
 
   @@map("users")
 }
@@ -125,6 +126,7 @@ model Team {
 
   members     TeamMember[]
   submissions Submission[]
+  invites     TeamInvite[]
 
   @@unique([captainId, tournamentId])
   @@map("teams")
@@ -390,4 +392,25 @@ model LessonProgress {
 
   @@unique([userId, lessonId])
   @@map("lesson_progress")
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model TeamInvite {
+  id        String       @id @default(cuid())
+  status    InviteStatus @default(PENDING)
+  createdAt DateTime     @default(now())
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+  @@map("team_invites")
 }
