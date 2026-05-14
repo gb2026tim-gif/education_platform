@@ -14,17 +14,18 @@ const CSS = "https://www.youtube.com/embed/1Rs2ND1ryYc";
 
 async function main() {
   console.log("📚 Seeding courses...\n");
+  await prisma.$connect();
   const admin = await prisma.user.findFirst({ where: { role: "ADMIN" } });
   if (!admin) {
     console.error("❌ No ADMIN");
     process.exit(1);
   }
 
-  await prisma.lessonProgress.deleteMany();
-  await prisma.enrollment.deleteMany();
-  await prisma.lesson.deleteMany();
-  await prisma.module.deleteMany();
-  await prisma.course.deleteMany();
+  // await prisma.lessonProgress.deleteMany();
+  // await prisma.enrollment.deleteMany();
+  // await prisma.lesson.deleteMany();
+  // await prisma.module.deleteMany();
+  // await prisma.course.deleteMany();
 
   type LessonInput = {
     title: string;

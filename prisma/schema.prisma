@@ -23,6 +23,7 @@ model User {
   role          Role     @default(TEAM)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  enrollments  Enrollment[]
 
   // Поле для логіки запрошень (щоб бачити, чи адмін змінив тимчасовий пароль)
   mustChangePassword Boolean @default(false)
@@ -237,4 +238,64 @@ model Score {
   assignment   JuryAssignment @relation(fields: [assignmentId], references: [id])
 
   @@map("scores")
+}
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  shortDesc   String
+  description String
+  coverUrl    String
+  price       Int      @default(0)
+  isFree      Boolean  @default(false)
+  level       String
+  category    String
+  duration    Int
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  authorId    String
+  modules     Module[]
+  enrollments  Enrollment[]
+
+  @@map("courses")
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  order       Int
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+
+  @@map("modules")
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  videoUrl    String?
+  duration    Int
+  order       Int
+  isFree      Boolean  @default(false)
+  moduleId    String
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@map("lessons")
+}
+model Enrollment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("enrollments")
 }

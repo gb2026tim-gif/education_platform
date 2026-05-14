@@ -3,14 +3,14 @@
 // Шаблон (PDF) зберігається на диску: <project_root>/uploads/cert-templates/
 // При генерації: завантажуємо шаблон → вписуємо ім'я → повертаємо Buffer
 
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import fs from 'fs/promises';
-import path from 'path';
-import { prisma } from './db';
-import { sendCertificateEmail } from './email';
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import fs from "fs/promises";
+import path from "path";
+import { prisma } from "./db";
+import { sendCertificateEmail } from "./email";
 
 // Папка для шаблонів (поза static/, git-ігнорується)
-export const CERT_TEMPLATES_DIR = path.resolve('uploads/cert-templates');
+export const CERT_TEMPLATES_DIR = path.resolve("uploads/cert-templates");
 export const MAX_TEMPLATE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export async function ensureUploadsDir() {
@@ -30,7 +30,7 @@ export async function generateCertificate(certId: string): Promise<Buffer> {
     },
   });
 
-  if (!cert) throw new Error('Сертифікат не знайдено');
+  if (!cert) throw new Error("Сертифікат не знайдено");
 
   const templatePath = path.resolve(cert.template.filePath);
   const templateBytes = await fs.readFile(templatePath);
@@ -51,7 +51,7 @@ export async function generateCertificate(certId: string): Promise<Buffer> {
   const { nameX, nameY, fontSize, fontColor } = cert.template;
 
   // Парсимо hex колір (#1a1a1a → {r,g,b})
-  const hex = fontColor.replace('#', '');
+  const hex = fontColor.replace("#", "");
   const r = parseInt(hex.substring(0, 2), 16) / 255;
   const g = parseInt(hex.substring(2, 4), 16) / 255;
   const b = parseInt(hex.substring(4, 6), 16) / 255;
@@ -69,7 +69,7 @@ export async function generateCertificate(certId: string): Promise<Buffer> {
   });
 
   // Додаткова стрічка внизу: "Турнір: ..." або "Курс: ..."
-  const subtitle = cert.tournament?.title ?? cert.course?.title ?? '';
+  const subtitle = cert.tournament?.title ?? cert.course?.title ?? "";
   if (subtitle) {
     const subFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const subSize = 14;
@@ -99,13 +99,13 @@ export async function issueCertificate(opts: {
     where: { id: opts.userId },
     select: { name: true, email: true },
   });
-  if (!user) throw new Error('Користувача не знайдено');
+  if (!user) throw new Error("Користувача не знайдено");
 
   const template = await prisma.certificateTemplate.findUnique({
     where: { id: opts.templateId },
     select: { name: true },
   });
-  if (!template) throw new Error('Шаблон не знайдено');
+  if (!template) throw new Error("Шаблон не знайдено");
 
   const cert = await prisma.userCertificate.create({
     data: {

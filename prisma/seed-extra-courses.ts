@@ -1,6 +1,8 @@
 // prisma/seed-extra-courses.ts — додаткові курси до 12
 import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: ["query", "error", "warn"],
+});
 
 const SQL = "https://www.youtube.com/embed/qw--VYLpxG4";
 const TS = "https://www.youtube.com/embed/W6NZfCO5SIk";
@@ -91,8 +93,8 @@ async function main() {
     process.exit(1);
   }
 
-  const existing = await prisma.course.count();
-  console.log(`Існуючих курсів: ${existing}`);
+  // const existing = await (prisma as any).course.count();
+  // console.log(`Існуючих курсів: ${existing}`);
 
   const courses = [
     {

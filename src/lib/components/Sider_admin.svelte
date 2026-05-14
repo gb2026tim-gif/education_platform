@@ -5,7 +5,7 @@
         { name: 'Мій акаунт', href: '/admin/dashboard' },
         { name: 'Всі турніри', href: '/admin/tournaments' },
         { name: 'Створити', href: '/admin/tournaments/new' },
-        { name: 'Журі', href: '/admin/jury' }, // <--- Зміни тут на /jury
+        { name: 'Журі', href: '/admin/invite' }, // <--- Зміни тут на /jury
         { name: 'Курси', href: '/admin/courses' }
     ];
 </script>

@@ -47,7 +47,6 @@ export const load: PageServerLoad = async ({ locals }) => {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let userTeams: any[] = [];
 
   if (locals.user) {

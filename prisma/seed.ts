@@ -8,20 +8,20 @@ async function main() {
   console.log("🌱 Seeding database...");
 
   // Очистка даних
-  await prisma.score.deleteMany();
-  await prisma.juryAssignment.deleteMany();
-  await prisma.submission.deleteMany();
-  await prisma.teamMember.deleteMany();
-  await prisma.team.deleteMany();
-  await prisma.task.deleteMany();
-  await prisma.tournament.deleteMany();
-  await prisma.session.deleteMany();
-  await prisma.lessonProgress.deleteMany();
-  await prisma.enrollment.deleteMany();
-  await prisma.lesson.deleteMany();
-  await prisma.module.deleteMany();
-  await prisma.course.deleteMany();
-  await prisma.user.deleteMany();
+  // await prisma.score.deleteMany();
+  // await prisma.juryAssignment.deleteMany();
+  // await prisma.submission.deleteMany();
+  // await prisma.teamMember.deleteMany();
+  // await prisma.team.deleteMany();
+  // await prisma.task.deleteMany();
+  // await prisma.tournament.deleteMany();
+  // await prisma.session.deleteMany();
+  // await prisma.lessonProgress.deleteMany();
+  // await prisma.enrollment.deleteMany();
+  // await prisma.lesson.deleteMany();
+  // await prisma.module.deleteMany();
+  // await prisma.course.deleteMany();
+  // await prisma.user.deleteMany();
 
   console.log("👥 Creating users...");
 

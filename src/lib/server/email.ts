@@ -2,9 +2,9 @@
 // Відправка email через Nodemailer (Gmail SMTP або будь-який SMTP)
 // Налаштування: .env → SMTP_USER, SMTP_PASS, PUBLIC_SITE_URL
 
-import nodemailer from 'nodemailer';
-import { SMTP_USER, SMTP_PASS } from '$env/static/private';
-import { PUBLIC_SITE_URL } from '$env/static/public';
+import nodemailer from "nodemailer";
+import { SMTP_USER, SMTP_PASS } from "$env/static/private";
+import { PUBLIC_SITE_URL } from "$env/static/public";
 
 // Singleton transporter (перевикористовується між запитами)
 let _transporter: nodemailer.Transporter | null = null;
@@ -12,7 +12,7 @@ let _transporter: nodemailer.Transporter | null = null;
 function getTransporter() {
   if (!_transporter) {
     _transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
+      host: "smtp.gmail.com",
       port: 587,
       secure: false, // STARTTLS
       auth: {
@@ -52,10 +52,10 @@ function baseHtml(content: string) {
 export async function sendInviteEmail(opts: {
   to: string;
   name: string;
-  role: 'ADMIN' | 'JURY';
+  role: "ADMIN" | "JURY";
   otp: string;
 }) {
-  const roleLabel = opts.role === 'ADMIN' ? 'адміністратора' : 'члена журі';
+  const roleLabel = opts.role === "ADMIN" ? "адміністратора" : "члена журі";
 
   const html = baseHtml(`
     <h2 style="margin:0 0 8px;font-size:22px;">Вас запрошено на LvUp</h2>

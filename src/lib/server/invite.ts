@@ -1,19 +1,20 @@
 // src/lib/server/invite.ts
 // Бізнес-логіка запрошення нових адмінів та журі
 
-import crypto from 'crypto';
-import bcrypt from 'bcrypt';
-import { prisma } from './db';
-import { sendInviteEmail } from './email';
-import type { Role } from '@prisma/client';
+import crypto from "crypto";
+import bcrypt from "bcrypt";
+import { prisma } from "./db";
+import { sendInviteEmail } from "./email";
+import type { Role } from "@prisma/client";
 
 // Генеруємо читабельний OTP: 4 групи по 3 символи (A3F-B2D-1C9-E5A)
 function generateOtp(): string {
-  return crypto.randomBytes(6)
-    .toString('hex')
+  return crypto
+    .randomBytes(6)
+    .toString("hex")
     .toUpperCase()
     .match(/.{1,3}/g)!
-    .join('-');
+    .join("-");
 }
 
 export async function inviteUser(opts: {
@@ -22,13 +23,15 @@ export async function inviteUser(opts: {
   role: Role;
 }) {
   // Перевіряємо чи email вже зайнятий
-  const existing = await prisma.user.findUnique({ where: { email: opts.email } });
+  const existing = await prisma.user.findUnique({
+    where: { email: opts.email },
+  });
   if (existing) {
     throw new Error(`Користувач з email ${opts.email} вже існує`);
   }
 
   const otp = generateOtp();
-  const hashedOtp = await bcrypt.hash(otp.replace(/-/g, ''), 12); // хешуємо без дефісів
+  const hashedOtp = await bcrypt.hash(otp.replace(/-/g, ""), 12); // хешуємо без дефісів
 
   // Транзакція: створюємо user + account атомарно
   const user = await prisma.$transaction(async (tx) => {
@@ -38,8 +41,8 @@ export async function inviteUser(opts: {
         name: opts.name,
         role: opts.role,
         password: hashedOtp,
-        emailVerified: true,         // адмін підтвердив особисто
-        mustChangePassword: true,    // примусова зміна після першого входу
+        emailVerified: true, // адмін підтвердив особисто
+        mustChangePassword: true, // примусова зміна після першого входу
       },
     });
 
@@ -47,7 +50,7 @@ export async function inviteUser(opts: {
     await tx.account.create({
       data: {
         accountId: newUser.id,
-        providerId: 'credential',
+        providerId: "credential",
         userId: newUser.id,
         password: hashedOtp,
       },
@@ -70,7 +73,7 @@ export async function inviteUser(opts: {
   await sendInviteEmail({
     to: opts.email,
     name: opts.name,
-    role: opts.role as 'ADMIN' | 'JURY',
+    role: opts.role as "ADMIN" | "JURY",
     otp,
   });
 
@@ -83,7 +86,7 @@ export async function changePasswordForced(opts: {
   newPassword: string;
 }) {
   if (opts.newPassword.length < 8) {
-    throw new Error('Пароль має містити мінімум 8 символів');
+    throw new Error("Пароль має містити мінімум 8 символів");
   }
 
   const hashed = await bcrypt.hash(opts.newPassword, 12);
@@ -99,7 +102,7 @@ export async function changePasswordForced(opts: {
     }),
     // Оновлюємо пароль у accounts (better-auth credential)
     prisma.account.updateMany({
-      where: { userId: opts.userId, providerId: 'credential' },
+      where: { userId: opts.userId, providerId: "credential" },
       data: { password: hashed },
     }),
   ]);
