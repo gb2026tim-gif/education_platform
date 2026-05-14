@@ -52,7 +52,7 @@ export const actions: Actions = {
       const escaped = name.replace(/\./g, "\\.");
       const match = raw.match(new RegExp(escaped + "=([^;]+)"));
       if (match) {
-        cookies.set(name, decodeURIComponent(match[1]), {
+        cookies.set(name, decodeURIComponent(match[1] ?? ""), {
           path: "/",
           httpOnly: true,
           sameSite: "lax",
