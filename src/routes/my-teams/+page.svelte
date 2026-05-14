@@ -1,6 +1,8 @@
 <!-- src/routes/my-teams/+page.svelte -->
 <script lang="ts">
     import type { PageData } from './$types';
+    import { enhance } from '$app/forms';
+    import { invalidateAll } from '$app/navigation';
     import Header from '$lib/components/Header.svelte';
     import Footer from '$lib/components/Footer.svelte';
     import Sidebar from '$lib/components/Sidebar.svelte';
@@ -15,6 +17,9 @@
 
     let { data }: { data: PageData } = $props();
     let dismissedInvites = $state<string[]>([]);
+    let joinCode = $state('');
+    let joinMsg = $state('');
+    let joinErr = $state('');
     let showInviteModal  = $state(false);
     let activeInvite     = $state<Invite | null>(null);
 
@@ -322,7 +327,43 @@
                     </div>
                 {/if}
             </div>
-        </main>
+        <div style="margin-top:24px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 24px;">
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;">Доєднатись до команди за кодом</div>
+        <form method="POST" action="?/joinByCode"
+            use:enhance={() => {
+                return async ({ result, update }) => {
+                    if (result.type === 'success') {
+                        const d = result.data as Record<string, unknown>;
+                        if (d?.joinSuccess) {
+                            joinMsg = `✅ Ви тепер в команді "${d.joinSuccess}"!`;
+                            joinErr = '';
+                            joinCode = '';
+                            await invalidateAll();
+                        } else if (d?.joinError) {
+                            joinErr = String(d.joinError);
+                            joinMsg = '';
+                        }
+                    }
+                };
+            }}>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <input
+                    name="code"
+                    type="text"
+                    bind:value={joinCode}
+                    placeholder="Введи код команди (напр. CMP5AH...)"
+                    style="flex:1;min-width:200px;padding:11px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:14px;font-family:monospace;text-transform:uppercase;letter-spacing:.06em;outline:none;box-sizing:border-box;"
+                />
+                <button type="submit"
+                    style="padding:11px 24px;border-radius:10px;border:none;background:#3E83FF;color:#fff;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                    Доєднатись
+                </button>
+            </div>
+            {#if joinErr}<p style="color:#f85149;font-size:13px;margin-top:8px;">{joinErr}</p>{/if}
+            {#if joinMsg}<p style="color:#4ADE80;font-size:13px;margin-top:8px;">{joinMsg}</p>{/if}
+        </form>
+    </div>
+</main>
     </div>
 
     <!-- Invite toasts -->
