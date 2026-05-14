@@ -38,7 +38,6 @@ export const load: PageServerLoad = async (event) => {
   return { team, user, isCaptain, tournamentTask };
 };
 
-
 export const actions: Actions = {
   inviteMember: async (event) => {
     const user = event.locals.user;
@@ -52,9 +51,10 @@ export const actions: Actions = {
 
     // Перевіряємо чи капітан
     const team = await prisma.team.findFirst({
-      where: { id: teamId, captainId: user.id }
+      where: { id: teamId, captainId: user.id },
     });
-    if (!team) return { success: false, error: "Тільки капітан може запрошувати" };
+    if (!team)
+      return { success: false, error: "Тільки капітан може запрошувати" };
 
     // Знаходимо юзера за email
     const invitee = await prisma.user.findUnique({ where: { email } });
@@ -62,7 +62,7 @@ export const actions: Actions = {
 
     // Перевіряємо чи вже є в команді
     const alreadyMember = await prisma.teamMember.findFirst({
-      where: { email, teamId }
+      where: { email, teamId },
     });
     if (alreadyMember) return { success: false, error: "Вже в команді" };
 
@@ -70,9 +70,9 @@ export const actions: Actions = {
     await prisma.teamInvite.upsert({
       where: { teamId_userId: { teamId, userId: invitee.id } },
       create: { teamId, userId: invitee.id, status: "PENDING" },
-      update: { status: "PENDING" }
+      update: { status: "PENDING" },
     });
 
     return { success: true };
-  }
+  },
 };

@@ -4,7 +4,6 @@ import { redirect } from "@sveltejs/kit";
 import { requireAuth } from "$lib/server/middleware";
 import { prisma } from "$lib/server/db";
 
-
 export const load: PageServerLoad = async (event) => {
   const user = requireAuth(event);
 
@@ -27,12 +26,12 @@ export const load: PageServerLoad = async (event) => {
     prisma.teamInvite.findMany({
       where: { userId: user.id, status: "PENDING" },
       include: {
-        team: { include: { tournament: { select: { title: true } } } }
-      }
+        team: { include: { tournament: { select: { title: true } } } },
+      },
     }),
   ]);
 
-  const invites = rawInvites.map(i => ({
+  const invites = rawInvites.map((i) => ({
     id: i.id,
     teamId: i.teamId,
     teamName: i.team.name,
@@ -57,7 +56,7 @@ export const actions: Actions = {
 
     await prisma.teamInvite.update({
       where: { id: inviteId },
-      data: { status: "ACCEPTED" }
+      data: { status: "ACCEPTED" },
     });
     await prisma.teamMember.upsert({
       where: { email_teamId: { email: user.email, teamId } },
@@ -79,7 +78,7 @@ export const actions: Actions = {
 
     await prisma.teamInvite.update({
       where: { id: inviteId },
-      data: { status: "DECLINED" }
+      data: { status: "DECLINED" },
     });
     return { success: true };
   },
@@ -91,7 +90,9 @@ export const actions: Actions = {
     const code = (formData.get("code")?.toString() ?? "").trim().toUpperCase();
     if (!code) return { joinError: "Введіть код" };
 
-    const teams = await prisma.team.findMany({ select: { id: true, name: true } });
+    const teams = await prisma.team.findMany({
+      select: { id: true, name: true },
+    });
     const team = teams.find((t) => t.id.toUpperCase().startsWith(code));
     if (!team) return { joinError: "Команду не знайдено" };
 
