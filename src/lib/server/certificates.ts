@@ -60,7 +60,7 @@ export async function generateCertificate(certId: string): Promise<Buffer> {
   const textWidth = font.widthOfTextAtSize(displayName, fontSize);
   const x = nameX - textWidth / 2;
 
-  firstPage.drawText(displayName, {
+  firstPage?.drawText(displayName, {
     x,
     y: nameY,
     size: fontSize,
