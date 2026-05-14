@@ -25,9 +25,9 @@
     }
 
     const navLinks = [
-        { label: 'Курси',      href: '/courses' },
+        { label: 'Курси',      href: '/learn' },
         { label: 'Календар',   href: '/calendar' },
-        { label: 'Турніри',    href: '/tournaments' },
+        { label: 'Турніри',    href: '/tourments' },
         { label: 'Рейтинг',   href: '/leaderboard' },
         { label: 'Інформація', href: '/about' }
     ];
@@ -153,8 +153,8 @@
                                 <p style="font-size:0.85rem; font-weight:600; color:var(--text);">{user.name}</p>
                                 <p style="font-size:0.75rem; color:var(--text-muted);">{user.email}</p>
                             </div>
-                            <a href="/dashboard" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Дашборд</a>
-                            <a href="/profile" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Профіль</a>
+                            <a href="/my-teams" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Мій кабінет</a>
+                            <a href="/profile" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Налаштування</a>
                             <button onclick={handleLogout}
                                     style="width:100%; text-align:left; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:#f87171; background:none; border:none; cursor:pointer; margin-top:0.25rem; border-top:1px solid var(--border);">
                                 Вийти
@@ -196,7 +196,6 @@
                     {dark ? '☀️ Світла тема' : '🌙 Темна тема'}
                 </button>
                 {#if user}
-                    <a href="/dashboard" onclick={() => (mobileOpen = false)} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; border:1px solid rgba(62,131,255,0.4); color:#3E83FF; text-decoration:none;">Дашборд</a>
                     <button onclick={handleLogout} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; background:none; border:1px solid rgba(248,113,113,0.3); color:#f87171; cursor:pointer;">Вийти</button>
                 {:else}
                     <a href="/auth/login" onclick={() => (mobileOpen = false)} style="padding:0.75rem 1rem; border-radius:15px; font-size:15px; font-weight:600; text-align:center; border:1px solid var(--border-hover); color:var(--text-muted); text-decoration:none;">Увійти</a>

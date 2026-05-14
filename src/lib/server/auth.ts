@@ -8,27 +8,20 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
-  // Додаємо опис полів користувача, щоб Better Auth бачив 'role'
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        required: false,
-        defaultValue: "TEAM"
-      },
-      firstName: { // Оскільки ми його додавали раніше
-        type: "string",
-        required: false
-      }
-    }
-  },
+  // Дозволяємо запити з dev-сервера Vite
+  trustedOrigins: [
+    "http://localhost:5173",
+    "http://localhost:4173",
+    "http://127.0.0.1:5173",
+    process.env.BETTER_AUTH_URL ?? "",
+  ].filter(Boolean),
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,
   },
   session: {
-    expiresIn: 60 * 60 * 24 * 30,
-    updateAge: 60 * 60 * 24,
+    expiresIn: 60 * 60 * 24 * 30, // 30 днів
+    updateAge: 60 * 60 * 24, // оновлювати щодня
     cookieCache: {
       enabled: true,
       maxAge: 60 * 60 * 24 * 30,

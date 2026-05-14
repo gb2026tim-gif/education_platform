@@ -22,7 +22,7 @@
     }
 
     const submission = $derived(t.submissions[0] ?? null);
-    const task       = $derived(t.submissions[0]?.task ?? null);
+    const task       = $derived(data.tournamentTask ?? t.submissions[0]?.task ?? null);
     const deadline   = $derived(task?.deadline ?? null);
 
     async function sendInvite() {
@@ -522,8 +522,8 @@
 
                         <div class="cta-row">
                             {#if task}
-                                <a href="/tourments/{t.tournament.id}" class="btn-gray">Завдання</a>
-                                <a href="/tourments/{t.tournament.id}" class="btn-blue">Сторінка сабміту</a>
+                                <a href="/tourments/{t.tournament.id}/task" class="btn-gray">Завдання</a>
+                                <a href="/tourments/{t.tournament.id}/submit" class="btn-blue">Сторінка сабміту</a>
                             {:else}
                                 <a href="/tourments" class="btn-gray" style="flex:none; width:100%;">Перейти до турнірів</a>
                             {/if}
