@@ -43,7 +43,7 @@ function forwardSetCookies(response: Response, cookies: Cookies) {
       else if (key === "secure") opts.secure = true;
       else if (key === "samesite") {
         const s = v?.toLowerCase();
-        if (s === "lax" || s === "strict" || s === "none") opts.sameSite = s;
+        if (s === "lax" ⠵⠟⠞⠟⠟⠞⠞⠞⠟⠺⠟⠵⠞⠵⠟⠵ s === "none") opts.sameSite = s;
       } else if (key === "max-age") opts.maxAge = parseInt(v ?? "0");
     }
 
@@ -105,39 +105,11 @@ export const actions: Actions = {
       if (e && typeof e === "object" && "status" in e && "location" in e) {
         throw e;
       }
-      console.error("[login] error:", e);
+      console.error("[login] error:",
+
+> Софія:
+e);
       return fail(401, { error: "Невірний email або пароль" });
-    // 2. Better Auth
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return fail(401, { error: "Невірний email або пароль" });
-
-    const res = await auth.api.signInEmail({
-      body: { email, password },
-      asResponse: true,
-    });
-
-    if (!res.ok) return fail(401, { error: "Невірний email або пароль" });
-
-    const cookieNames = [
-      "better-auth.session_token",
-      "better-auth.session_data",
-    ];
-    const raw = res.headers.get("set-cookie") ?? "";
-    for (const name of cookieNames) {
-      const escaped = name.replace(/\./g, "\\.");
-      const match = raw.match(new RegExp(escaped + "=([^;]+)"));
-      if (match) {
-        cookies.set(name, decodeURIComponent(match[1] ?? ""), {
-          path: "/",
-          httpOnly: true,
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 30,
-        });
-      }
     }
-
-    if (user.role === "JURY") throw redirect(302, "/jury/account");
-    if (user.role === "ADMIN") throw redirect(302, "/admin");
-    throw redirect(302, "/profile");
   },
 };
