@@ -98,6 +98,15 @@ jobs:
         env:
           DATABASE_URL: postgresql://sfl_user:sfl_password@localhost:5432/sfl_tournament_2026
 
+      - name: Create .env for build
+        run: |
+          echo "SMTP_USER=test@example.com" >> .env
+          echo "SMTP_PASS=testpass" >> .env
+          echo "PUBLIC_SITE_URL=http://localhost:5173" >> .env
+          echo "BETTER_AUTH_SECRET=ci-secret-placeholder" >> .env
+          echo "BETTER_AUTH_URL=http://localhost:5173" >> .env
+          echo "DATABASE_URL=postgresql://sfl_user:sfl_password@localhost:5432/sfl_tournament_2026" >> .env
+
       - name: Build SvelteKit app
         run: npm run build
         env:
