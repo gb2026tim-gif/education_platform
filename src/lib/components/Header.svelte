@@ -153,8 +153,8 @@
                                 <p style="font-size:0.85rem; font-weight:600; color:var(--text);">{user.name}</p>
                                 <p style="font-size:0.75rem; color:var(--text-muted);">{user.email}</p>
                             </div>
-                            <a href="/my-teams" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Мій кабінет</a>
-                            <a href="/profile" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Налаштування</a>
+                            <a href="/profile" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Мій акаунт</a>
+                            <a href="/settings" style="display:block; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:var(--text); text-decoration:none;">Налаштування</a>
                             <button onclick={handleLogout}
                                     style="width:100%; text-align:left; padding:0.5rem 0.75rem; border-radius:8px; font-size:0.875rem; color:#f87171; background:none; border:none; cursor:pointer; margin-top:0.25rem; border-top:1px solid var(--border);">
                                 Вийти
