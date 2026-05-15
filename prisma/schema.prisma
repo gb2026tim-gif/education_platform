@@ -35,12 +35,14 @@ model User {
 
   sessions        Session[]
   accounts        Account[]
+  authoredCourses Course[]          @relation("CourseAuthor")
   enrollments     Enrollment[]
+  lessonProgress  LessonProgress[]
   captainOf       Team[]            @relation("TeamCaptain")
   tournaments     Tournament[]      @relation("TournamentAdmin")
   juryScores      JuryAssignment[]
   certificates    UserCertificate[]
-  authoredCourses Course[]          @relation("CourseAuthor")
+  teamInvites     TeamInvite[]
 
   @@map("users")
 }
@@ -147,6 +149,7 @@ model Team {
 
   members     TeamMember[]
   submissions Submission[]
+  invites     TeamInvite[]
 
   @@unique([captainId, tournamentId])
   @@map("teams")
@@ -257,9 +260,7 @@ model Score {
   @@map("scores")
 }
 
-// ─────────────────────────────────────────────────────────
 // Jury module
-// ─────────────────────────────────────────────────────────
 
 model Juror {
   id              String   @id @default(cuid())
@@ -357,9 +358,7 @@ model Evaluation {
   @@map("evaluations")
 }
 
-// ─────────────────────────────────────────────────────────
 // Courses
-// ─────────────────────────────────────────────────────────
 
 model Course {
   id          String   @id @default(cuid())
@@ -447,9 +446,7 @@ model LessonProgress {
   @@map("lesson_progress")
 }
 
-// ─────────────────────────────────────────────────────────
 // Certificates
-// ─────────────────────────────────────────────────────────
 
 model UserCertificate {
   id        String   @id @default(cuid())
@@ -480,4 +477,24 @@ model CertificateTemplate {
   certificates UserCertificate[]
 
   @@map("certificate_templates")
+}
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model TeamInvite {
+  id        String       @id @default(cuid())
+  status    InviteStatus @default(PENDING)
+  createdAt DateTime     @default(now())
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+  @@map("team_invites")
 }
