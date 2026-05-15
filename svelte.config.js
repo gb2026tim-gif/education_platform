@@ -1,12 +1,12 @@
-import adapter from "@sveltejs/adapter-auto";
+import adapter from "@sveltejs/adapter-node"; // Змінено з auto на node
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   preprocess: vitePreprocess(),
   kit: {
+    // adapter-node створює папку build з index.js, яку чекає твій Dockerfile
     adapter: adapter(),
-    // Поки не деплоїмо на GitHub Pages, base краще залишити порожнім
     paths: {
       base: "",
     },
@@ -26,7 +26,7 @@ const config = {
     },
   },
   compilerOptions: {
-    runes: true,
+    runes: true, // Твоє налаштування для Svelte 5 (Runes) залишається
   },
 };
 

@@ -40,11 +40,17 @@ services:
     build: .
     ports:
       - "3000:3000"
+    # Додаємо підключення файлу .env
+    env_file:
+      - .env
     environment:
       NODE_ENV: production
+      # Ці змінні можна залишити тут або повністю перенести в .env
       DATABASE_URL: postgresql://sfl_user:sfl_password@db:5432/sfl_tournament_2026
       REDIS_URL: redis://redis:6379
-      JWT_SECRET: your-jwt-secret-key
+      # Додаємо секрети для Better Auth, щоб вони точно прокинулися
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
     depends_on:
       db:
         condition: service_healthy

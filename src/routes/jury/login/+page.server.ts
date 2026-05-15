@@ -53,6 +53,8 @@ export const actions: Actions = {
           },
         });
       }
+      if (!jurorRecord)
+        return fail(500, { error: "Не вдалося створити запис журі" });
 
       setJurySessionCookie(cookies, jurorRecord.id);
       throw redirect(302, "/jury/account");

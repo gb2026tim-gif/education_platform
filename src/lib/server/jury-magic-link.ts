@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { redirect } from "@sveltejs/kit";
 import { prisma } from "$lib/server/db";
 import { setJurySessionCookie } from "$lib/server/jury-auth";

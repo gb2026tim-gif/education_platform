@@ -26,14 +26,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # --- ДОДАЙ ЦЕЙ КРОК СЮДИ ---
+      - name: Generate Prisma client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://sfl_user:sfl_password@localhost:5432/sfl_tournament_2026
+
       - name: Prettier + ESLint
         run: npm run lint
 
       - name: Svelte type check
         run: npm run check
         env:
+          # Додаємо всі змінні, на які свариться Svelte-check
           DATABASE_URL: postgresql://sfl_user:sfl_password@localhost:5432/sfl_tournament_2026
-
+          SMTP_USER: test@example.com
+          SMTP_PASS: testpass
+          PUBLIC_SITE_URL: http://localhost:5173
   # ──────────────────────────────────────────────
   # 2. Unit tests (Vitest)
   # ──────────────────────────────────────────────
@@ -92,9 +101,12 @@ jobs:
       - name: Build SvelteKit app
         run: npm run build
         env:
-          DATABASE_URL: postgresql://sfl_user:sfl_password@localhost:5432/sfl_tournament_2026
-          BETTER_AUTH_SECRET: ci-secret-placeholder
-          BETTER_AUTH_URL: http://localhost:5173
+        DATABASE_URL: postgresql://sfl_user:sfl_password@localhost:5432/sfl_tournament_2026
+        BETTER_AUTH_SECRET: ci-secret-placeholder
+        BETTER_AUTH_URL: http://localhost:5173
+    SMTP_USER: test@example.com
+    SMTP_PASS: testpass
+    PUBLIC_SITE_URL: http://localhost:5173
 
   # ──────────────────────────────────────────────
   # 4. DB schema + E2E tests (Playwright)
