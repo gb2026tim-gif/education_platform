@@ -1,14 +1,20 @@
-// src/routes/admin/tournaments/new/+page.server.ts
+// src/routes/admin/tournaments/[id]/edit/+page.server.ts
 import { prisma } from "$lib/server/db";
-import { fail, redirect } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import type { TournamentStatus } from "@prisma/client";
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
   if (!locals.user || locals.user.role !== "ADMIN") throw redirect(302, "/");
+
+  const tournament = await prisma.tournament.findUnique({
+    where: { id: params.id },
+  });
+  if (!tournament) throw error(404, "Турнір не знайдено");
+
   const certTemplates =
     (await prisma.certificateTemplate.findMany().catch(() => [])) || [];
-  return { certTemplates };
+
+  return { tournament, certTemplates };
 };
 
 function parseDate(v: FormDataEntryValue | null): Date | null {
@@ -25,30 +31,24 @@ function parseInt0(v: FormDataEntryValue | null, fallback: number): number {
 }
 
 export const actions: Actions = {
-  create: async ({ request, locals }) => {
-    if (!locals.user || locals.user.role !== "ADMIN") {
-      return fail(403, { error: "Доступ заборонено" });
-    }
+  save: async ({ request, params, locals }) => {
+    if (!locals.user || locals.user.role !== "ADMIN") return fail(403);
 
     const data = await request.formData();
     const title = String(data.get("title") ?? "").trim();
     const description = String(data.get("description") ?? "").trim();
-
     if (!title) return fail(400, { error: "Введіть назву турніру" });
     if (!description) return fail(400, { error: "Введіть опис турніру" });
-
-    const publish = data.get("publish") === "true";
-    const status: TournamentStatus = publish ? "REGISTRATION" : "DRAFT";
 
     const certTemplateIdRaw = String(data.get("certTemplateId") ?? "").trim();
     const certTemplateId = certTemplateIdRaw || null;
 
     try {
-      const created = await prisma.tournament.create({
+      await prisma.tournament.update({
+        where: { id: params.id },
         data: {
           title,
           description,
-          status,
           format: String(data.get("format") ?? "") || null,
           rounds: parseInt0(data.get("rounds"), 1),
           regStart: parseDate(data.get("regStart")),
@@ -65,17 +65,24 @@ export const actions: Actions = {
           databaseReq: String(data.get("databaseReq") ?? "") || null,
           deployReq: String(data.get("deployReq") ?? "") || null,
           certTemplateId,
-          admin: { connect: { id: locals.user.id } },
         },
       });
-
-      throw redirect(303, `/admin/tournaments/${created.id}`);
     } catch (e) {
-      // Re-throw redirects (SvelteKit redirects are objects with `status` & `location`)
-      if (e && typeof e === "object" && "status" in e && "location" in e)
-        throw e;
-      console.error("Prisma Error:", e);
-      return fail(500, { error: "Не вдалося створити турнір" });
+      console.error(e);
+      return fail(500, { error: "Не вдалося зберегти зміни" });
     }
+
+    throw redirect(303, `/admin/tournaments/${params.id}`);
+  },
+
+  delete: async ({ params, locals }) => {
+    if (!locals.user || locals.user.role !== "ADMIN") return fail(403);
+    try {
+      await prisma.tournament.delete({ where: { id: params.id } });
+    } catch (e) {
+      console.error(e);
+      return fail(500, { error: "Не вдалося видалити турнір" });
+    }
+    throw redirect(303, "/admin/tournaments");
   },
 };

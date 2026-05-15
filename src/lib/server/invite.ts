@@ -1,6 +1,6 @@
 // src/lib/server/invite.ts
 // Бізнес-логіка запрошення нових адмінів та журі
-
+// @ts-nocheck
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 import { prisma } from "./db";

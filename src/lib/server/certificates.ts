@@ -74,7 +74,7 @@ export async function generateCertificate(certId: string): Promise<Buffer> {
     const subFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const subSize = 14;
     const subWidth = subFont.widthOfTextAtSize(subtitle, subSize);
-    firstPage.drawText(subtitle, {
+    firstPage!.drawText(subtitle, {
       x: nameX - subWidth / 2,
       y: nameY - fontSize - 10,
       size: subSize,

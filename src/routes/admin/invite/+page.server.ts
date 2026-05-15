@@ -45,7 +45,9 @@ export const actions: Actions = {
     const parsed = Schema.safeParse(data);
 
     if (!parsed.success) {
-      return fail(400, { error: parsed.error.issues[0].message });
+      return fail(400, {
+        error: parsed.error.issues[0]?.message ?? "Помилка валідації",
+      });
     }
 
     try {

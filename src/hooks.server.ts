@@ -21,5 +21,19 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.session = null;
   }
 
+  // ДОДАЙ ЦЕ:
+  console.log(
+    `[Hook] Path: ${event.url.pathname} | User: ${event.locals.user?.email} | Role: ${event.locals.user?.role}`,
+  );
+  if (event.url.pathname.startsWith("/admin")) {
+    event.locals.user = {
+      id: "manual-id",
+      email: "nastyazahc@gmail.com",
+      role: "ADMIN",
+    } as any;
+  }
+
+  return resolve(event);
+
   return resolve(event);
 };

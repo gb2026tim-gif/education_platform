@@ -58,6 +58,7 @@ export async function isRegistrationOpen(
   if (!tournament || tournament.status !== "REGISTRATION") return false;
 
   const now = new Date();
+  if (!tournament.regStart || !tournament.regEnd) return false;
   if (now < tournament.regStart || now > tournament.regEnd) return false;
 
   if (tournament.maxTeams) {

@@ -20,7 +20,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const parsed = InviteSchema.safeParse(body);
 
   if (!parsed.success) {
-    throw error(400, parsed.error.issues[0].message);
+    throw error(400, parsed.error.issues[0]?.message ?? "Помилка валідації");
   }
 
   try {

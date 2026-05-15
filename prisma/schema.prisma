@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
@@ -15,50 +15,49 @@ enum Role {
 }
 
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  name          String
-  password      String?
-  emailVerified Boolean  @default(false)
-  role          Role     @default(TEAM)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  enrollments  Enrollment[]
+  id                 String   @id @default(cuid())
+  email              String   @unique
+  name               String
+  password           String?
+  emailVerified      Boolean  @default(false)
+  role               Role     @default(TEAM)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  mustChangePassword Boolean  @default(false)
 
-  // Поле для логіки запрошень (щоб бачити, чи адмін змінив тимчасовий пароль)
-  mustChangePassword Boolean @default(false)
+  firstName String?
+  lastName  String?
+  city      String?
+  school    String?
+  phone     String?
+  discord   String?
+  image     String?
 
-  // Profile fields
-  firstName     String?
-  lastName      String?
-  city          String?
-  school        String?
-  phone         String?
-  discord       String?
-  image         String?
-
-  sessions     Session[]
-  accounts     Account[]
-  captainOf    Team[]           @relation("TeamCaptain")
-  tournaments  Tournament[]     @relation("TournamentAdmin")
-  juryScores   JuryAssignment[]
+  sessions        Session[]
+  accounts        Account[]
+  enrollments     Enrollment[]
+  captainOf       Team[]            @relation("TeamCaptain")
+  tournaments     Tournament[]      @relation("TournamentAdmin")
+  juryScores      JuryAssignment[]
+  certificates    UserCertificate[]
+  authoredCourses Course[]          @relation("CourseAuthor")
 
   @@map("users")
 }
 
 model Account {
-  id            String    @id @default(cuid())
-  accountId     String
-  providerId    String
-  userId        String
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken   String?
-  refreshToken  String?
-  idToken       String?
-  expiresAt     DateTime?
-  password      String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id           String    @id @default(cuid())
+  accountId    String
+  providerId   String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken  String?
+  refreshToken String?
+  idToken      String?
+  expiresAt    DateTime?
+  password     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@map("accounts")
 }
@@ -79,8 +78,10 @@ model Session {
 
 enum TournamentStatus {
   DRAFT
+  PUBLISHED
   REGISTRATION
   RUNNING
+  EVALUATION
   FINISHED
 }
 
@@ -89,17 +90,35 @@ model Tournament {
   title       String
   description String
   status      TournamentStatus @default(DRAFT)
-  regStart    DateTime
-  regEnd      DateTime
+
+  regStart     DateTime?
+  regEnd       DateTime?
+  startAt      DateTime?
+  taskDeadline DateTime?
+
   maxTeams    Int?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  minTeamSize Int? @default(1)
+  maxTeamSize Int? @default(5)
+
+  backendReq  String?
+  frontendReq String?
+  databaseReq String?
+  deployReq   String?
+
+  format         String?
+  rounds         Int?    @default(1)
+  certTemplateId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   adminId String
   admin   User   @relation("TournamentAdmin", fields: [adminId], references: [id])
 
-  teams Team[]
-  tasks Task[]
+  teams        Team[]
+  tasks        Task[]
+  works        Work[]
+  certificates UserCertificate[]
 
   @@map("tournaments")
 }
@@ -111,17 +130,15 @@ enum TeamStatus {
 }
 
 model Team {
-  id        String     @id @default(cuid())
-  name      String
-  city      String?
-  contact   String?
-  status    TeamStatus @default(PENDING)
+  id       String     @id @default(cuid())
+  name     String
+  city     String?
+  contact  String?
+  status   TeamStatus @default(PENDING)
+  verified Boolean    @default(false)
 
-  // ДОДАНО: Поле для швидкої перевірки статусу підтвердження
-  verified  Boolean    @default(false)
-
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   captainId    String
   captain      User       @relation("TeamCaptain", fields: [captainId], references: [id])
@@ -135,22 +152,22 @@ model Team {
   @@map("teams")
 }
 
-// Модель для збереження кодів запрошень
 model Invitation {
   id        String   @id @default(cuid())
   email     String   @unique
   role      Role     @default(JURY)
-  token     String   @unique
+  token     String   @unique @default(cuid())
   createdAt DateTime @default(now())
   expiresAt DateTime
+  name      String?
 
   @@map("invitations")
 }
 
 model TeamMember {
-  id     String @id @default(cuid())
-  name   String
-  email  String
+  id    String @id @default(cuid())
+  name  String
+  email String
 
   teamId String
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
@@ -239,24 +256,134 @@ model Score {
 
   @@map("scores")
 }
-model Course {
+
+// ─────────────────────────────────────────────────────────
+// Jury module
+// ─────────────────────────────────────────────────────────
+
+model Juror {
+  id              String   @id @default(cuid())
+  name            String
+  email           String   @unique
+  passwordHash    String?
+  passwordChanged Boolean  @default(false)
+  avatarUrl       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  assignments Assignment[]
+  tokens      JuryToken[]
+
+  @@map("jurors")
+}
+
+model JuryToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  jurorId String
+  juror   Juror  @relation(fields: [jurorId], references: [id], onDelete: Cascade)
+
+  @@map("jury_tokens")
+}
+
+model Work {
   id          String   @id @default(cuid())
-  title       String
-  shortDesc   String
+  teamName    String
+  githubUrl   String
+  videoUrl    String?
+  liveDemoUrl String?
   description String
-  coverUrl    String
-  price       Int      @default(0)
-  isFree      Boolean  @default(false)
-  level       String
-  category    String
-  duration    Int
-  published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  authorId    String
-  modules     Module[]
+  tournamentId String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  assignments Assignment[]
+
+  @@map("works")
+}
+
+model Assignment {
+  id            String    @id @default(cuid())
+  displayNumber Int       @default(1)
+  evaluated     Boolean   @default(false)
+  evaluatedAt   DateTime?
+  isDraft       Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  jurorId String
+  juror   Juror  @relation(fields: [jurorId], references: [id], onDelete: Cascade)
+
+  workId String
+  work   Work   @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  evaluation Evaluation?
+
+  @@unique([jurorId, workId])
+  @@map("assignments")
+}
+
+model Evaluation {
+  id String @id @default(cuid())
+
+  backendCode       Int @default(0)
+  databaseStructure Int @default(0)
+  frontendCode      Int @default(0)
+
+  backendFunctionality  Int @default(0)
+  databaseFunctionality Int @default(0)
+  frontendFunctionality Int @default(0)
+
+  requirementsRest     Boolean @default(false)
+  requirementsDb       Boolean @default(false)
+  requirementsAuth     Boolean @default(false)
+  requirementsFrontend Boolean @default(false)
+  requirementsDeploy   Boolean @default(false)
+
+  comment String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assignmentId String     @unique
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@map("evaluations")
+}
+
+// ─────────────────────────────────────────────────────────
+// Courses
+// ─────────────────────────────────────────────────────────
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  shortDesc   String   @default("")
+  description String
+  coverUrl    String   @default("")
+  price       Int      @default(0)
+  isFree      Boolean  @default(true)
+  level       String   @default("BEGINNER")
+  category    String   @default("Programming")
+  duration    Int      @default(0)
+  published   Boolean  @default(false)
+  status      String   @default("DRAFT")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  authorId       String
+  author         User    @relation("CourseAuthor", fields: [authorId], references: [id])
+  certTemplateId String?
+
+  modules      Module[]
   enrollments  Enrollment[]
+  certificates UserCertificate[]
 
   @@map("courses")
 }
@@ -265,7 +392,7 @@ model Module {
   id          String   @id @default(cuid())
   title       String
   description String?
-  order       Int
+  order       Int      @default(0)
   courseId    String
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   lessons     Lesson[]
@@ -274,28 +401,83 @@ model Module {
 }
 
 model Lesson {
-  id          String   @id @default(cuid())
-  title       String
-  content     String
-  videoUrl    String?
-  duration    Int
-  order       Int
-  isFree      Boolean  @default(false)
-  moduleId    String
-  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  id       String  @id @default(cuid())
+  title    String
+  content  String  @default("")
+  videoUrl String?
+  testUrl  String?
+  summary  String?
+  duration Int     @default(0)
+  order    Int     @default(0)
+  isFree   Boolean @default(false)
+  moduleId String
+  module   Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  progress LessonProgress[]
 
   @@map("lessons")
 }
+
 model Enrollment {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  enrolledAt DateTime @default(now())
+  completed  Boolean  @default(false)
 
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  courseId  String
-  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
   @@map("enrollments")
+}
+
+model LessonProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  lessonId  String
+  completed Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("lesson_progress")
+}
+
+// ─────────────────────────────────────────────────────────
+// Certificates
+// ─────────────────────────────────────────────────────────
+
+model UserCertificate {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId       String
+  user         User                @relation(fields: [userId], references: [id])
+  templateId   String
+  template     CertificateTemplate @relation(fields: [templateId], references: [id])
+  tournamentId String?
+  tournament   Tournament?         @relation(fields: [tournamentId], references: [id])
+  courseId     String?
+  course       Course?             @relation(fields: [courseId], references: [id])
+
+  @@map("user_certificates")
+}
+
+model CertificateTemplate {
+  id           String            @id @default(cuid())
+  name         String
+  filePath     String
+  fileSize     Int
+  nameX        Float             @default(0)
+  nameY        Float             @default(0)
+  fontSize     Int               @default(30)
+  fontColor    String            @default("#000000")
+  createdAt    DateTime          @default(now())
+  certificates UserCertificate[]
+
+  @@map("certificate_templates")
 }

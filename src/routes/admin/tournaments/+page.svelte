@@ -2,28 +2,38 @@
   // src/routes/admin/tournaments/+page.svelte
   let { data } = $props();
 
-  const statusLabel: Record<string, string> = {
-    DRAFT: 'Чернетка',
-    REGISTRATION: 'Реєстрація',
-    RUNNING: 'Триваєть',
-    EVALUATION: 'Оцінювання',
-    FINISHED: 'Завершено',
-  };
-
-  const statusColor: Record<string, string> = {
-    DRAFT:        'rgba(255,255,255,0.3)',
-    REGISTRATION: '#3E83FF',
-    RUNNING:      '#4ade80',
-    EVALUATION:   '#eab308',
-    FINISHED:     'rgba(255,255,255,0.4)',
-  };
-
-  const statusBg: Record<string, string> = {
-    DRAFT:        'rgba(255,255,255,0.05)',
-    REGISTRATION: 'rgba(62,131,255,0.15)',
-    RUNNING:      'rgba(74,222,128,0.12)',
-    EVALUATION:   'rgba(234,179,8,0.12)',
-    FINISHED:     'rgba(255,255,255,0.05)',
+  // Unified status mapping for cleaner maintenance and less token usage
+  const statusMap = {
+    DRAFT: {
+      label: 'Чернетка',
+      bg: 'bg-white/5',
+      text: 'text-white/30',
+      border: 'border-transparent'
+    },
+    REGISTRATION: {
+      label: 'Реєстрація',
+      bg: 'bg-[#3E83FF]/15',
+      text: 'text-[#3E83FF]',
+      border: 'border-[#3E83FF]/30'
+    },
+    RUNNING: {
+      label: 'Триває',
+      bg: 'bg-green-400/12',
+      text: 'text-green-400',
+      border: 'border-green-400/20'
+    },
+    EVALUATION: {
+      label: 'Оцінювання',
+      bg: 'bg-yellow-500/12',
+      text: 'text-yellow-500',
+      border: 'border-yellow-500/20'
+    },
+    FINISHED: {
+      label: 'Завершено',
+      bg: 'bg-white/5',
+      text: 'text-white/40',
+      border: 'border-transparent'
+    },
   };
 
   const groups = [
@@ -35,96 +45,137 @@
   ];
 </script>
 
-<svelte:head><title>Турніри — LvUp Admin</title></svelte:head>
+<svelte:head>
+  <title>Турніри — LvUp Admin</title>
+</svelte:head>
 
-<div style="max-width:1100px;margin:0 auto;padding:2rem;">
+<div class="max-w-[1100px] mx-auto py-8 px-4 sm:px-8">
 
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+  <!-- Header Section -->
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
     <div>
-      <p style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin:0 0 4px;">Адмін / Турніри</p>
-      <h1 style="margin:0;font-size:1.75rem;font-weight:800;">Всі турніри</h1>
+      <p class="text-white/40 text-xs font-medium mb-1 tracking-wide uppercase">Адмін / Турніри</p>
+      <h1 class="text-3xl font-extrabold text-white m-0 tracking-tight">Всі турніри</h1>
     </div>
-    <a href="/admin/tournaments/create"
-       style="background:#3E83FF;color:#fff;padding:0.7rem 1.4rem;border-radius:10px;
-              text-decoration:none;font-weight:600;font-size:0.95rem;">
+    <a
+            href="/admin/tournaments/new"
+            class="inline-flex items-center justify-center bg-[#3E83FF] hover:bg-blue-600 text-white px-6 py-3 rounded-xl no-underline font-bold text-sm transition-all active:scale-95 shadow-lg shadow-blue-500/20"
+    >
       + Створити турнір
     </a>
   </div>
 
+  <!-- Tournament Groups -->
   {#each groups as group}
     {@const items = data.tournaments.filter(t => t.status === group.key)}
     {#if items.length > 0}
-      <div style="margin-bottom:2rem;">
-        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem;">
-          <span style="width:3px;height:16px;background:#3E83FF;border-radius:2px;display:block;"></span>
-          <p style="margin:0;font-size:0.78rem;font-weight:700;color:rgba(255,255,255,0.45);
-                    text-transform:uppercase;letter-spacing:0.08em;">
+      <div class="mb-10">
+        <!-- Group Header -->
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-1 h-4 bg-[#3E83FF] rounded-full"></span>
+          <p class="m-0 text-[0.75rem] font-black text-white/40 uppercase tracking-[0.15em]">
             {group.label}
           </p>
         </div>
 
-        {#each items as t}
-          <div style="background:#0d1b3e;border:1px solid rgba(255,255,255,0.06);border-radius:14px;
-                      padding:1.25rem 1.5rem;margin-bottom:0.75rem;
-                      display:flex;align-items:center;gap:1rem;">
+        <!-- Tournament Cards List -->
+        <div class="space-y-3">
+          {#each items as t}
+            <div class="group bg-[#0d1b3e] border border-white/5 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center gap-5 transition-all hover:border-white/10 hover:shadow-xl hover:shadow-black/20">
 
-            <!-- Іконка -->
-            <div style="width:44px;height:44px;border-radius:10px;background:rgba(62,131,255,0.15);
-                        display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3E83FF" stroke-width="1.5"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
-            </div>
-
-            <!-- Інфо -->
-            <div style="flex:1;min-width:0;">
-              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:3px;">
-                <h3 style="margin:0;font-size:1rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                  {t.title}
-                </h3>
+              <!-- Icon Box -->
+              <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 border border-blue-500/20 group-hover:bg-blue-500/20 transition-colors">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3E83FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+                </svg>
               </div>
-              <p style="margin:0;font-size:0.82rem;color:rgba(255,255,255,0.45);">
-                {t._count.teams} команд
-                {#if t.taskDeadline}
-                  · Дедлайн: {new Date(t.taskDeadline).toLocaleDateString('uk-UA', {day:'numeric',month:'short'})}
-                {/if}
-                {#if t.tasks.length > 0}
-                  · {t.tasks.length} завдань
-                {/if}
-              </p>
-            </div>
 
-            <!-- Статус -->
-            <span style="background:{statusBg[t.status]};color:{statusColor[t.status]};
-                         padding:4px 14px;border-radius:20px;font-size:0.8rem;font-weight:600;
-                         white-space:nowrap;flex-shrink:0;">
-              {statusLabel[t.status]}
-            </span>
+              <!-- Content Info -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-3 mb-1">
+                  <h3 class="m-0 text-base font-bold text-white truncate">
+                    {t.title}
+                  </h3>
+                </div>
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.82rem] text-white/45">
+                  <span class="flex items-center gap-1.5">
+                    <span class="w-1 h-1 rounded-full bg-white/20"></span>
+                    {t._count.teams} команд
+                  </span>
 
-            <!-- Дії -->
-            <div style="display:flex;gap:0.5rem;flex-shrink:0;">
-              {#if t.status === 'DRAFT' || t.status === 'REGISTRATION'}
-                <a href="/admin/tournaments/{t.id}/edit"
-                   style="padding:0.5rem 1rem;border:1px solid rgba(255,255,255,0.12);border-radius:8px;
-                          color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.85rem;">
-                  Редагувати
+                  {#if t.taskDeadline}
+                    <span class="flex items-center gap-1.5">
+                      <span class="w-1 h-1 rounded-full bg-white/20"></span>
+                      Дедлайн: {new Date(t.taskDeadline).toLocaleDateString('uk-UA', { day: 'numeric', month: 'short' })}
+                    </span>
+                  {/if}
+
+                  {#if t.tasks?.length > 0}
+                    <span class="flex items-center gap-1.5">
+                      <span class="w-1 h-1 rounded-full bg-white/20"></span>
+                      {t.tasks.length} завдань
+                    </span>
+                  {/if}
+                </div>
+              </div>
+
+              <!-- Status Badge -->
+              <div class="shrink-0">
+                <span class="px-4 py-1.5 rounded-full text-[0.75rem] font-bold uppercase tracking-wider {statusMap[t.status].bg} {statusMap[t.status].text} border {statusMap[t.status].border}">
+                  {statusMap[t.status].label}
+                </span>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex items-center gap-2 shrink-0 w-full md:w-auto">
+                {#if ['DRAFT', 'REGISTRATION'].includes(t.status)}
+                  <a
+                          href="/admin/tournaments/{t.id}/edit"
+                          class="flex-1 md:flex-none px-4 py-2.5 border border-white/10 rounded-xl text-white/70 no-underline text-xs font-bold hover:bg-white/5 hover:text-white transition-all text-center"
+                  >
+                    Редагувати
+                  </a>
+                {/if}
+                <a
+                        href="/admin/tournaments/{t.id}"
+                        class="flex-1 md:flex-none px-5 py-2.5 bg-blue-500/10 border border-blue-500/30 rounded-xl text-blue-500 no-underline text-xs font-black hover:bg-blue-500/20 transition-all text-center"
+                >
+                  Керувати →
                 </a>
-              {/if}
-              <a href="/admin/tournaments/{t.id}"
-                 style="padding:0.5rem 1rem;background:rgba(62,131,255,0.15);border:1px solid rgba(62,131,255,0.3);
-                        border-radius:8px;color:#3E83FF;text-decoration:none;font-size:0.85rem;font-weight:600;">
-                Керувати →
-              </a>
+              </div>
             </div>
-          </div>
-        {/each}
+          {/each}
+        </div>
       </div>
     {/if}
   {/each}
 
+  <!-- Empty State -->
   {#if data.tournaments.length === 0}
-    <div style="text-align:center;padding:4rem;color:rgba(255,255,255,0.35);">
-      <p style="font-size:1rem;">Турнірів ще немає.</p>
-      <a href="/admin/tournaments/create"
-         style="color:#3E83FF;text-decoration:none;font-weight:600;">Створити перший →</a>
+    <div class="flex flex-col items-center justify-center text-center py-20 px-4 bg-white/5 border border-dashed border-white/10 rounded-[2rem]">
+      <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-4">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5">
+          <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-white mb-2">Турнірів ще немає</h2>
+      <p class="text-white/40 max-w-xs mb-8 text-sm leading-relaxed">
+        Схоже, ви ще не створили жодного турніру. Почніть з натискання кнопки нижче.
+      </p>
+      <a
+              href="/admin/tournaments/new"
+              class="text-[#3E83FF] no-underline font-bold text-sm border-b border-[#3E83FF]/30 hover:border-[#3E83FF] pb-0.5 transition-all"
+      >
+        Створити перший турнір →
+      </a>
     </div>
   {/if}
 </div>
+
+<style>
+  /* Optional: Custom scrollbar or specific adjustments if needed */
+  :global(body) {
+    background-color: #050a1a; /* Matching the admin theme background */
+    color: white;
+  }
+</style>

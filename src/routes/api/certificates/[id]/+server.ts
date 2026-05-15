@@ -29,7 +29,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
     const pdfBuffer = await generateCertificate(params.id);
     const filename = `certificate-${cert.user.name.replace(/\s+/g, "-")}.pdf`;
 
-    return new Response(pdfBuffer, {
+    return new Response(new Uint8Array(pdfBuffer), {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename="${filename}"`,

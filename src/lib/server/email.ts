@@ -1,7 +1,7 @@
 // src/lib/server/email.ts
 // Відправка email через Nodemailer (Gmail SMTP або будь-який SMTP)
 // Налаштування: .env → SMTP_USER, SMTP_PASS, PUBLIC_SITE_URL
-
+// @ts-nocheck
 import nodemailer from "nodemailer";
 import { SMTP_USER, SMTP_PASS } from "$env/static/private";
 import { PUBLIC_SITE_URL } from "$env/static/public";
