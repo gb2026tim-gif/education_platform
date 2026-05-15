@@ -1,0 +1,30 @@
+content = open('src/routes/auth/login/+page.server.ts').read()
+
+import re
+pipe = chr(124) + chr(124)
+
+content = re.sub(
+    r'if \(s === "lax"[^)]+s === "none"\)',
+    f'if (s === "lax" {pipe} s === "strict" {pipe} s === "none")',
+    content
+)
+
+# Видалити мертвий код після return fail на рядку ~109
+lines = content.split('\n')
+new_lines = []
+skip = False
+for i, line in enumerate(lines):
+    if 'return fail(401, { error: "Невірний email або пароль" });' in line and '// 2.' not in line and i > 100:
+        new_lines.append(line)
+        skip = True
+        continue
+    if skip and line.strip() == '},':
+        new_lines.append(line)
+        skip = False
+        continue
+    if skip:
+        continue
+    new_lines.append(line)
+
+open('src/routes/auth/login/+page.server.ts', 'w').write('\n'.join(new_lines))
+print('Done')
