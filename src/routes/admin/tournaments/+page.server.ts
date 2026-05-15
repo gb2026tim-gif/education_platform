@@ -10,6 +10,10 @@ export const load: PageServerLoad = async ({ locals }) => {
     (await prisma.certificateTemplate.findMany().catch(() => [])) || [];
   const tournaments = await prisma.tournament.findMany({
     orderBy: { createdAt: "desc" },
+    include: {
+      tasks: true,
+      _count: { select: { teams: true } },
+    },
   });
   return { certTemplates, tournaments };
 };

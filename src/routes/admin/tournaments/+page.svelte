@@ -34,6 +34,12 @@
       text: 'text-white/40',
       border: 'border-transparent'
     },
+  PUBLISHED: {
+    label: 'Опубліковано',
+    bg: 'bg-purple-500/15',
+    text: 'text-purple-400',
+    border: 'border-purple-500/30'
+  },
   };
 
   const groups = [
