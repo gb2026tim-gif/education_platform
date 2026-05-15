@@ -8,7 +8,9 @@ export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user || locals.user.role !== "ADMIN") throw redirect(302, "/");
   const certTemplates =
     (await prisma.certificateTemplate.findMany().catch(() => [])) || [];
-  const tournaments = await prisma.tournament.findMany({ orderBy: { createdAt: "desc" } });
+  const tournaments = await prisma.tournament.findMany({
+    orderBy: { createdAt: "desc" },
+  });
   return { certTemplates, tournaments };
 };
 
