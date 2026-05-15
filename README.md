@@ -29,7 +29,7 @@
 
 ## 📌 Project Overview
 
-**SFL Tournament 2026** is a web-based educational platform built for *Star for Life Ukraine*. It combines a **tournament management system** with an **online learning platform**, allowing student teams to compete in technology challenges while also accessing educational courses.
+**SFL Tournament 2026** is a web-based educational platform built for _Star for Life Ukraine_. It combines a **tournament management system** with an **online learning platform**, allowing student teams to compete in technology challenges while also accessing educational courses.
 
 The platform supports the full tournament lifecycle - from team registration and task submission to jury evaluation and leaderboard results - alongside a structured course catalog with module-based lessons and progress tracking.
 
@@ -47,56 +47,56 @@ The full UI/UX design for this platform is available in Figma:
 
 ## 🛠 Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Framework** | [SvelteKit](https://kit.svelte.dev/) v2 |
-| **Language** | TypeScript 5 |
-| **Styling** | Tailwind CSS v3 |
-| **ORM** | [Prisma](https://www.prisma.io/) v5 |
-| **Authentication** | [Better Auth](https://www.better-auth.com/) v1 |
-| **Validation** | [Zod](https://zod.dev/) v4 |
-| **Icons** | Lucide Svelte |
-| **Build Tool** | Vite 6 |
-| **Testing (Unit)** | Vitest |
-| **Testing (E2E)** | Playwright |
-| **Linting** | ESLint + Prettier |
-| **Git Hooks** | Husky + lint-staged |
-| **Containerization** | Docker + Docker Compose |
+| Layer                | Technology                                     |
+| -------------------- | ---------------------------------------------- |
+| **Framework**        | [SvelteKit](https://kit.svelte.dev/) v2        |
+| **Language**         | TypeScript 5                                   |
+| **Styling**          | Tailwind CSS v3                                |
+| **ORM**              | [Prisma](https://www.prisma.io/) v5            |
+| **Authentication**   | [Better Auth](https://www.better-auth.com/) v1 |
+| **Validation**       | [Zod](https://zod.dev/) v4                     |
+| **Icons**            | Lucide Svelte                                  |
+| **Build Tool**       | Vite 6                                         |
+| **Testing (Unit)**   | Vitest                                         |
+| **Testing (E2E)**    | Playwright                                     |
+| **Linting**          | ESLint + Prettier                              |
+| **Git Hooks**        | Husky + lint-staged                            |
+| **Containerization** | Docker + Docker Compose                        |
 
 ---
 
 ## 🗄 Database
 
-| | |
-|---|---|
-| **Engine** | PostgreSQL 15 |
-| **Cache** | Redis 7 |
-| **ORM** | Prisma (with migrations) |
+|            |                          |
+| ---------- | ------------------------ |
+| **Engine** | PostgreSQL 15            |
+| **Cache**  | Redis 7                  |
+| **ORM**    | Prisma (with migrations) |
 
 The database schema is managed via Prisma Migrate. All migrations are located in `prisma/migrations/`.
 
 ### Key Models
 
-| Model | Description |
-|---|---|
-| `User` | Platform users with role-based access |
-| `Tournament` | Tournament events with lifecycle statuses |
-| `Team` | Participating teams linked to tournaments |
-| `TeamMember` | Members within a team |
-| `Task` | Tournament tasks/challenges |
-| `Submission` | Team submissions for tasks |
-| `JuryAssignment` | Jury-to-submission assignments |
-| `Score` | Detailed evaluation scores per submission |
-| `Juror` | Dedicated jury member model (legacy/parallel) |
-| `Work` | Works submitted for jury review |
-| `Assignment` | Jury-work assignments with evaluation state |
-| `Evaluation` | Detailed jury evaluation criteria |
-| `Course` | Educational courses |
-| `Module` | Course modules |
-| `Lesson` | Individual lessons within modules |
-| `Enrollment` | User enrollments in courses |
-| `LessonProgress` | Per-user lesson progress tracking |
-| `TeamInvite` | Invitation system for team members |
+| Model            | Description                                   |
+| ---------------- | --------------------------------------------- |
+| `User`           | Platform users with role-based access         |
+| `Tournament`     | Tournament events with lifecycle statuses     |
+| `Team`           | Participating teams linked to tournaments     |
+| `TeamMember`     | Members within a team                         |
+| `Task`           | Tournament tasks/challenges                   |
+| `Submission`     | Team submissions for tasks                    |
+| `JuryAssignment` | Jury-to-submission assignments                |
+| `Score`          | Detailed evaluation scores per submission     |
+| `Juror`          | Dedicated jury member model (legacy/parallel) |
+| `Work`           | Works submitted for jury review               |
+| `Assignment`     | Jury-work assignments with evaluation state   |
+| `Evaluation`     | Detailed jury evaluation criteria             |
+| `Course`         | Educational courses                           |
+| `Module`         | Course modules                                |
+| `Lesson`         | Individual lessons within modules             |
+| `Enrollment`     | User enrollments in courses                   |
+| `LessonProgress` | Per-user lesson progress tracking             |
+| `TeamInvite`     | Invitation system for team members            |
 
 ---
 
@@ -175,7 +175,9 @@ education_platform/
 The platform implements a **role-based access control (RBAC)** system with three distinct roles:
 
 ### 👤 TEAM (Participant) - Default Role
+
 Assigned automatically upon registration. A participant can:
+
 - Register and manage a personal profile
 - Create or join a team for a tournament
 - View available tournaments and tasks
@@ -185,7 +187,9 @@ Assigned automatically upon registration. A participant can:
 - View the leaderboard and calendar
 
 ### ⚖️ JURY
+
 Jury members are invited by admins and operate through a dedicated portal (`/jury`). A jury member can:
+
 - Log in via a secure token-based link
 - View assigned submissions/works
 - Evaluate submissions across multiple criteria:
@@ -199,7 +203,9 @@ Jury members are invited by admins and operate through a dedicated portal (`/jur
 - Save evaluations as drafts before final submission
 
 ### 🛡️ ADMIN
+
 Administrators have full platform control. An admin can:
+
 - Access the admin dashboard (`/admin/dashboard`) with platform-wide statistics
 - Create, edit, and manage tournaments (`/admin/tournaments`)
 - Manage tournament tasks and their lifecycle statuses
@@ -216,6 +222,7 @@ Administrators have full platform control. An admin can:
 ## ✨ Core Features
 
 ### 🏆 Tournament System
+
 - Tournament lifecycle: `DRAFT → REGISTRATION → RUNNING → FINISHED`
 - Team registration with captain & member management
 - Task creation with deadlines and tech stack requirements
@@ -223,6 +230,7 @@ Administrators have full platform control. An admin can:
 - Team invitation system with `PENDING / ACCEPTED / DECLINED` statuses
 
 ### 📚 Learning Platform
+
 - Course catalog with categories and difficulty levels (`BEGINNER / INTERMEDIATE / ADVANCED`)
 - Module & lesson structure with video support
 - Lesson progress tracking per user
@@ -230,12 +238,14 @@ Administrators have full platform control. An admin can:
 - Course enrollment system
 
 ### 🏅 Jury & Evaluation
+
 - Jury members assigned to specific works via `JuryAssignment`
 - Detailed scoring across 6 dimensions
 - Draft evaluations before final submission
 - Token-based secure jury authentication
 
 ### 🎓 Admin Panel
+
 - Dedicated admin dashboard with full platform overview
 - Tournament creation wizard and lifecycle management
 - Jury invitation via email with secure token links
@@ -243,10 +253,12 @@ Administrators have full platform control. An admin can:
 - Course publishing workflow
 
 ### 📊 Leaderboard & Calendar
+
 - Real-time leaderboard based on jury scores
 - Event calendar for tournament milestones
 
 ### 👤 User Profiles
+
 - Extended profile: first/last name, city, school, phone, Discord
 - Avatar upload support
 - Personal dashboard with enrolled courses and active teams
@@ -302,6 +314,7 @@ docker-compose exec app npm run db:seed
 The app will be available at **http://localhost:3000**
 
 > **Services started by Docker Compose:**
+>
 > - `app` - SvelteKit application on port `3000`
 > - `db` - PostgreSQL 15 on port `5432`
 > - `db_test` - PostgreSQL 15 (test DB) on port `5433`
@@ -378,30 +391,30 @@ REDIS_URL="redis://localhost:6379"
 
 ## 🗃 Database Management
 
-| Command | Description |
-|---|---|
-| `npm run db:generate` | Generate the Prisma Client |
-| `npm run db:migrate` | Create and apply a new migration |
-| `npm run db:push` | Push schema changes without migration |
-| `npm run db:studio` | Open Prisma Studio (GUI) at `localhost:5555` |
-| `npm run db:seed` | Seed the database with initial data |
-| `npm run db:reset` | Reset the database (⚠️ destructive) |
+| Command               | Description                                  |
+| --------------------- | -------------------------------------------- |
+| `npm run db:generate` | Generate the Prisma Client                   |
+| `npm run db:migrate`  | Create and apply a new migration             |
+| `npm run db:push`     | Push schema changes without migration        |
+| `npm run db:studio`   | Open Prisma Studio (GUI) at `localhost:5555` |
+| `npm run db:seed`     | Seed the database with initial data          |
+| `npm run db:reset`    | Reset the database (⚠️ destructive)          |
 
 ---
 
 ## 📜 Available Scripts
 
-| Script | Description |
-|---|---|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build locally |
-| `npm run test` | Run unit tests (Vitest) |
-| `npm run test:coverage` | Run tests with coverage report |
-| `npm run lint` | Check code style (Prettier + ESLint) |
-| `npm run lint:fix` | Auto-fix linting issues |
-| `npm run format` | Format all files with Prettier |
-| `npm run check` | Run SvelteKit type checking |
+| Script                  | Description                          |
+| ----------------------- | ------------------------------------ |
+| `npm run dev`           | Start development server             |
+| `npm run build`         | Build for production                 |
+| `npm run preview`       | Preview production build locally     |
+| `npm run test`          | Run unit tests (Vitest)              |
+| `npm run test:coverage` | Run tests with coverage report       |
+| `npm run lint`          | Check code style (Prettier + ESLint) |
+| `npm run lint:fix`      | Auto-fix linting issues              |
+| `npm run format`        | Format all files with Prettier       |
+| `npm run check`         | Run SvelteKit type checking          |
 
 ---
 
@@ -419,19 +432,19 @@ The project uses **GitHub Actions** for continuous integration. The pipeline run
 └─────────────┘     └─────────────────┘     └──────────────┘     └──────────────┘
 ```
 
-| Step | What it checks |
-|---|---|
+| Step                  | What it checks                                  |
+| --------------------- | ----------------------------------------------- |
 | **Lint & Type Check** | ESLint, Prettier formatting, Svelte type safety |
-| **Unit Tests** | Vitest test suite with V8 coverage |
-| **Build** | SvelteKit production build succeeds |
-| **E2E Tests** | Full Playwright browser tests against a real DB |
+| **Unit Tests**        | Vitest test suite with V8 coverage              |
+| **Build**             | SvelteKit production build succeeds             |
+| **E2E Tests**         | Full Playwright browser tests against a real DB |
 
 ---
 
 ## 🌿 Branches
 
-| Branch | Description |
-|---|---|
+| Branch | Description                                                                                                                                        |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `main` | The only branch - contains all features including the full admin panel, tournament management, certificate system, and core platform functionality |
 
 ---
