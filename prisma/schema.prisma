@@ -35,21 +35,14 @@ model User {
 
   sessions        Session[]
   accounts        Account[]
+  authoredCourses Course[]          @relation("CourseAuthor")
   enrollments     Enrollment[]
+  lessonProgress  LessonProgress[]
   captainOf       Team[]            @relation("TeamCaptain")
   tournaments     Tournament[]      @relation("TournamentAdmin")
   juryScores      JuryAssignment[]
   certificates    UserCertificate[]
-  authoredCourses Course[]          @relation("CourseAuthor")
-  sessions    Session[]
-  accounts    Account[]
-  authoredCourses Course[]       @relation("CourseAuthor")
-  enrollments     Enrollment[]   @relation("CourseEnrollments")
-  lessonProgress  LessonProgress[] @relation("LessonProgress")
-  captainOf   Team[]           @relation("TeamCaptain")
-  tournaments Tournament[]     @relation("TournamentAdmin")
-  juryScores  JuryAssignment[]
-  teamInvites TeamInvite[]
+  teamInvites     TeamInvite[]
 
   @@map("users")
 }
