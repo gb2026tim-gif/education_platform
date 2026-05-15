@@ -16,7 +16,6 @@ export const load: PageServerLoad = async ({ locals }) => {
   return {};
 };
 
-// Перекладаємо Set-Cookie з better-auth Response → SvelteKit cookies API
 function forwardSetCookies(response: Response, cookies: Cookies) {
   const headers = response.headers as Headers & {
     getSetCookie?: () => string[];
@@ -105,10 +104,7 @@ export const actions: Actions = {
       if (e && typeof e === "object" && "status" in e && "location" in e) {
         throw e;
       }
-      console.error("[login] error:",
-
-> Софія:
-e);
+      console.error("[login] error:", e);
       return fail(401, { error: "Невірний email або пароль" });
     }
   },
