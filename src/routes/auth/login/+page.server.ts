@@ -43,7 +43,7 @@ function forwardSetCookies(response: Response, cookies: Cookies) {
       else if (key === "secure") opts.secure = true;
       else if (key === "samesite") {
         const s = v?.toLowerCase();
-        if (s === "lax" ⠵⠟⠞⠟⠟⠞⠞⠞⠟⠺⠟⠵⠞⠵⠟⠵ s === "none") opts.sameSite = s;
+        if (s === "lax" || s === "strict" || s === "none") opts.sameSite = s;
       } else if (key === "max-age") opts.maxAge = parseInt(v ?? "0");
     }
 
